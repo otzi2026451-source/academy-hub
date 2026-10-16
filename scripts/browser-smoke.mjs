@@ -64,6 +64,20 @@ try{
  assert(await emptyGrade.isVisible(),'Missing-grade empty state not shown');
  const gradeMetrics=await emptyGrade.evaluate(e=>({width:e.getBoundingClientRect().width,text:e.textContent}));
  assert(gradeMetrics.width>200,'Missing grade message is displayed in a narrow column');
+ const gradeStrong=await emptyGrade.locator('strong').evaluate(el=>({width:el.getBoundingClientRect().width,display:getComputedStyle(el).display,text:el.textContent}));
+ assert(gradeStrong.width>150,'Grade heading still forced into narrow grid column');
+ assert(gradeStrong.display==='block','Grade heading must be block-level');
+ const noticeLayout=await page.evaluate(()=>{
+  const panel=document.querySelector('.wb-notice');
+  const title=panel.querySelector('.section-header').getBoundingClientRect();
+  const content=panel.querySelector('#noticeBox').getBoundingClientRect();
+  const outer=panel.getBoundingClientRect();
+  return {outer:outer.toJSON(),title:title.toJSON(),content:content.toJSON(),display:getComputedStyle(panel).display};
+ });
+ assert(noticeLayout.display==='grid','Bottom announcement must use stable grid layout');
+ assert(noticeLayout.content.left>noticeLayout.title.right,'Announcement message must be beside the heading');
+ assert(noticeLayout.content.bottom<=noticeLayout.outer.bottom+3,'Announcement must stay inside banner');
+
  await page.screenshot({path:'/tmp/academy-tv-1756.png'});
  await page.setViewportSize({width:1920,height:1080});
  await page.waitForTimeout(200);
