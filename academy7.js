@@ -420,7 +420,7 @@ searchInput.addEventListener('input',doSearch);groupSelect.addEventListener('cha
 button(panels.search,'Обновить защищённый реестр',async()=>{await loadRoster();doSearch()});
 
 // 6. TV: last successful sync shown WITHOUT persisting personal data locally.
-let lastLive=null;
+let lastLive=null,lastSyncStatus='';
 function refreshTvHealth(){
  if(!document.body.classList.contains('wallboard-mode'))return;
  let badge=$7('tvHealth7');
@@ -431,7 +431,7 @@ function refreshTvHealth(){
  }
  const label=$7('status')?.textContent||'';
  const online=navigator.onLine&&!/нет связи|потеряна|нет сети/i.test(label);
- if(online&&/обновлено|синхронизировано/i.test(label))lastLive=Date.now();
+ if(online&&/обновлено|синхронизировано/i.test(label)&&label!==lastSyncStatus){lastLive=Date.now();lastSyncStatus=label;}
  const age=lastLive?Math.floor((Date.now()-lastLive)/60000):null;
  badge.classList.toggle('a7-offline',!online);
  badge.textContent=online?(age===null?'Подключение к базе…':'Синхронизация '+(age===0?'сейчас':age+' мин. назад')):'Нет связи · данные на экране';
