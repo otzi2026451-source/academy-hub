@@ -217,7 +217,7 @@ click(xlsxButtons,'Проверить Excel',async()=>{
   if(typeof lib!=='function')throw Error('Модуль импорта не загружен');
   await lib('xlsx','XLSX');
   const wb=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:false});
-  const result={weekSchedules:{},groupGrades:{},summary:[]};
+  const result={weekSchedules:{},groupGrades:{},summary:[],issues:[]};
   for(const name of wb.SheetNames.slice(0,18)){
    const key=aliasOfSheet(name);if(!key)continue;
    const matrix=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:'',raw:false});
@@ -236,18 +236,34 @@ click(xlsxButtons,'Проверить Excel',async()=>{
      if(!d||!/^([01]?\d|2[0-3]):[0-5]\d$/.test(time)||!subject)continue;
      (byDay[d]??=[]).push(time.padStart(5,'0')+' | '+subject);total++;
     }
-    if(total){result.weekSchedules[key]=byDay;result.summary.push(groupName(key)+': '+total+' пар')}
+    if(total){
+      const minutes=Math.max(1,Math.min(240,Number(current.lessonMinutes)||90));
+      for(const [weekday,items] of Object.entries(byDay)){
+       const starts=items.map(v=>{const m=v.match(/^(\d{2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):null}).filter(v=>v!==null).sort((a,b)=>a-b);
+       for(let n=1;n<starts.length;n++)if(starts[n]<starts[n-1]+minutes)
+         result.issues.push(groupName(key)+' день '+weekday+': пересечение занятий');
+      }
+      result.weekSchedules[key]=byDay;result.summary.push(groupName(key)+': '+total+' пар');
+    }
    }
    if(nameColumn>=0&&gradeColumn>=0){
-    const pairs=[];
+    const pairs=[],seenNames=new Set();
     for(const row of matrix.slice(1,501)){
      const nm=cap(row[nameColumn],120),v=Number(String(row[gradeColumn]).replace(',','.'));
-     if(nm&&Number.isFinite(v)&&v>=0&&v<=100)pairs.push([nm,v]);
+     if(nm&&Number.isFinite(v)&&v>=0&&v<=100){
+       const id=nm.toLocaleLowerCase('ru-RU').replace(/\s+/g,' ');
+       if(seenNames.has(id))result.issues.push(groupName(key)+': повтор ФИО «'+nm+'»');
+       seenNames.add(id);pairs.push([nm,v]);
+     }
     }
     if(pairs.length){result.groupGrades[key]=pairs;result.summary.push(groupName(key)+': '+pairs.length+' оценок')}
    }
   }
   if(!result.summary.length)throw Error('Не найдены корректные листы KRD1–OTZI2 или нужные заголовки колонок');
+  if(result.issues.length){
+   xlsxPreview.textContent=result.summary.concat(['Проблемы:'],result.issues.slice(0,25)).join('\n');
+   throw Error('Обнаружены дубликаты или конфликты: '+result.issues.length+'. Исправь Excel и проверь снова.');
+  }
   pendingXlsx=result;
   xlsxPreview.textContent=result.summary.join('\n');
   xlsxStatus.textContent='Проверь данные и нажми «Сохранить Excel на табло». Остальные группы останутся без изменений.';
