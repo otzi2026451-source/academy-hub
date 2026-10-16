@@ -179,3 +179,45 @@ body.wallboard-mode #dashboard.wallboard .tv-health.aged{color:#ecc389}
  body.wallboard-mode #dashboard.wallboard .wb-sections .sport-card{padding:6px!important}
  body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-item{padding:3px 0!important}
 }
+
+/* Final specificity fixes: base .wallboard-grid>.panel is more specific than a panel class. */
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel.wb-notice{
+  display:grid!important;grid-template-columns:max-content minmax(0,1fr) max-content!important;
+  grid-template-rows:1fr!important;align-items:center!important;justify-items:stretch!important;
+  gap:clamp(8px,.85vw,17px)!important;flex-direction:row!important;
+  padding:8px clamp(12px,1vw,20px)!important;
+  height:100%!important;min-height:0!important;
+}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel.wb-notice .section-header{
+  display:block!important;grid-column:1!important;grid-row:1!important;
+  width:auto!important;min-width:0!important;align-self:center!important;
+  margin:0!important;padding:0!important;text-align:left!important;
+}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel.wb-notice .section-title{
+  font-size:clamp(16px,1.1vw,22px)!important;margin:0!important;line-height:1.25!important;
+  white-space:nowrap!important;
+}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel.wb-notice #noticeBox{
+  grid-column:2!important;grid-row:1!important;
+  position:static!important;display:flex!important;align-items:center!important;
+  width:100%!important;height:auto!important;min-height:0!important;max-height:100%!important;
+  padding:6px 13px!important;margin:0!important;
+  background:rgba(255,255,255,.04)!important;
+  border-left:2px solid var(--gold)!important;border-radius:9px!important;
+  overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important;
+  font-size:clamp(14px,1vw,21px)!important;line-height:1.35!important;
+}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel.wb-notice .notice-priority{
+  grid-column:3!important;grid-row:1!important;margin:0!important;white-space:nowrap!important;align-self:center!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-grades #gradeRotator .ranking li.rank-empty-state{
+ display:block!important;grid-template-columns:minmax(0,1fr)!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ overflow:hidden!important;padding:14px 13px!important;
+ word-break:normal!important;overflow-wrap:normal!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-grades #gradeRotator .ranking li.rank-empty-state strong{
+ display:block!important;width:100%!important;white-space:normal!important;margin-bottom:5px!important;
+ overflow-wrap:normal!important;word-break:normal!important;
+}
+body.wallboard-mode #dashboard.wallboard .topbar .tv-health{display:none!important}
