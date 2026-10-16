@@ -305,6 +305,8 @@ function openPreview(){
  tvFrame=node('iframe','v6-preview-frame',null,stage);
  tvFrame.title='Предпросмотр информационного табло 1920 на 1080';
  tvFrame.src='?tv=1#dashboard';
+ const resize=()=>{stage.style.transform='scale('+(previewHolder.clientWidth/1920)+')'};
+ resize();window.addEventListener('resize',resize,{passive:true});
 }
 const ticker={
  index:0,lastSignature:'',lastValue:'',tick:()=>{}
