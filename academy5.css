@@ -41,3 +41,6 @@ body.wallboard-mode #dashboard.wallboard .wallboard-grid{transform:translate(var
 body.wallboard-mode #dashboard.wallboard .wb-sections .v5-tv-entry:nth-of-type(n+5){display:none}
 @media(max-width:700px){.v5-inline{grid-template-columns:1fr}.v5-body{padding:12px}}
 @media(prefers-reduced-motion:reduce){body.wallboard-mode #dashboard.wallboard .wallboard-grid{transform:none!important}}
+
+.v5-chart-legend{display:flex;gap:9px 15px;flex-wrap:wrap;margin-top:8px;font-size:12px;font-weight:750;line-height:1.4}
+.v5-analytics svg{margin-top:10px;max-width:100%;background:#18262c;border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:8px}
