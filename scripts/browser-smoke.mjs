@@ -59,6 +59,15 @@ try{
  assert(await page.locator('#v5Group').count()===1,'Week group selector missing');
  assert(await page.locator('#v5Excel').count()===1,'Excel bulk import missing');
  assert(await page.locator('#v5ViewerEmail').count()===1,'TV read-only account management missing');
+ assert(await page.locator('#academy6Workspace').isVisible(),'Academy 6 admin console not visible');
+ assert(await page.locator('#v6-overview').isVisible(),'Academy 6 overview missing');
+ await page.locator('[data-tab="drafts"]').click();
+ assert(await page.locator('#v6-drafts').isVisible(),'Drafts tab missing');
+ assert(await page.locator('.v6-draft-area input[type="datetime-local"]').count()===1,'Scheduled publication time missing');
+ await page.locator('[data-tab="preview"]').click();
+ assert(await page.locator('#academy6PreviewHolder iframe').count()===1,'Samsung TV preview missing');
+ await page.locator('[data-tab="schedule"]').click();
+
   await page.locator('#v5Group').selectOption('KRD1');
  await page.locator('#v5Day').selectOption('2');
  await page.locator('#v5Schedule').fill('09:00 | Тестовая физика · кабинет 204');
@@ -69,6 +78,36 @@ try{
 
 
  await page.screenshot({path:'/tmp/academy-admin.png'});
+
+
+ const editorCtx=await browser.newContext({viewport:{width:1366,height:768}});
+ const editorPage=await editorCtx.newPage();
+ try {
+  const editorErr=[];editorPage.on('pageerror',e=>editorErr.push(e.message));
+  await editorPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])}));
+  await editorPage.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+  await editorPage.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
+  await editorPage.route('**/rest/v1/rpc/academy_role**',route=>route.fulfill({status:200,contentType:'application/json',body:'"editor"'}));
+  await editorPage.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'editor-mock-jwt',refresh_token:'editor-refresh',expires_in:3600})}));
+  let receivedDraft=null;
+  await editorPage.route('**/rest/v1/rpc/academy_create_publication**',route=>{
+   receivedDraft=JSON.parse(route.request().postData()||'{}');
+   return route.fulfill({status:200,contentType:'application/json',body:'"00000000-0000-0000-0000-000000000006"'});
+  });
+  await editorPage.goto(base+'#editor6',{waitUntil:'domcontentloaded'});
+  await editorPage.locator('#academyLockEmail').fill('editor@example.invalid');
+  await editorPage.locator('#academyLockPassword').fill('test-role');
+  await editorPage.locator('#academyLockSubmit').click();
+  await editorPage.waitForSelector('html.academy-editor');
+  assert(await editorPage.locator('#editor6').isVisible(),'Editor cabinet not visible');
+  assert(!(await editorPage.locator('#admin').isVisible()),'Editor cannot access admin workspace');
+  await editorPage.locator('#v6EditorTitle').fill('Тестовое объявление');
+  await editorPage.locator('#v6EditorNotice').fill('Тестовая учебная информация');
+  await editorPage.locator('#editor6 .btn.primary').click();
+  await editorPage.waitForTimeout(350);
+  assert(receivedDraft?.p_patch?.notice==='Тестовая учебная информация','Editor draft not submitted');
+  assert.equal(editorErr.length,0,'Editor script exceptions: '+editorErr.join(' | '));
+ }finally{await editorCtx.close()}
 
  const viewerContext=await browser.newContext({viewport:{width:1920,height:1080}});
  const viewerPage=await viewerContext.newPage();
