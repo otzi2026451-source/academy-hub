@@ -1212,6 +1212,8 @@ async function callAI(payload){
 $('parseBtn').onclick = async () => {
   try{
     const files=[...$('docFile').files]; if(!files.length) throw Error('Выбери хотя бы один файл');
+    if(files.length>6||files.some(f=>f.size>10*1024*1024))throw Error('До 6 файлов по 10 МБ.');
+    if(!confirm('Содержимое выбранных файлов будет передано Google Gemini. Не загружай персональные, служебные и конфиденциальные данные без разрешения. Продолжить?'))return;
     $('parseInfo').textContent='Обработка…'; $('applyBtn').disabled=true; $('previewBox').textContent='Чтение файла…';
     const texts=[]; for(const f of files){ const txt=await extractText(f); if(txt) texts.push('Файл: '+f.name+'\n'+txt); }
     const images=await extractImages(files);
