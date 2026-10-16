@@ -402,14 +402,22 @@ let lastDow=dayToday();
 const priorRotators=renderRotators;
 renderRotators=function(animate){
  const g=GROUPS[scheduleIndex];
- if(!g||!current.weekSchedules?.[g.key])return priorRotators(animate);
- const d=dayToday();
- const weekly=current.weekSchedules[g.key]?.[String(d)];
- if(!Array.isArray(weekly))return priorRotators(animate);
+ if(!g)return priorRotators(animate);
+ const d=dayToday(),weekly=current.weekSchedules?.[g.key]?.[String(d)];
+ const hasValidDay=Array.isArray(weekly)&&weekly.length>0;
  const previous=current;
- const clonedGroup={...previous.groups[g.key],schedule:weekly};
+ const clonedGroup={...previous.groups[g.key],schedule:hasValidDay?weekly:[]};
  current={...previous,groups:{...previous.groups,[g.key]:clonedGroup}};
- try{return priorRotators(animate)}finally{current=previous}
+ try{
+  const result=priorRotators(animate);
+  const badge=document.querySelector('#groupGrid .group-top .badge');
+  if(badge)badge.textContent=hasValidDay?'ПРОВЕРЕНО НА СЕГОДНЯ':'НЕ ЗАПОЛНЕНО';
+  if(!hasValidDay){
+   const list=document.querySelector('#groupGrid ul.schedule');
+   if(list){list.replaceChildren();const li=document.createElement('li');li.className='academy-no-schedule';li.textContent='Расписание на сегодня ещё не опубликовано';list.appendChild(li)}
+  }
+  return result;
+ }finally{current=previous}
 };
 setInterval(()=>{const dow=dayToday();if(dow!==lastDow){lastDow=dow;lastScheduleSignature='';renderRotators(false);renderBirthdays();sportsSignature='';renderSpotlight()}},15000);
 // Kiosk stability: microscopic shift every 5 minutes, and network revalidation.
