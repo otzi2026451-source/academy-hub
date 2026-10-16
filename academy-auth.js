@@ -56,6 +56,7 @@ function authorize(){
  if(el('password'))el('password').value='';
  if(password)password.value='';
  if(adminRole&&typeof fillAdmin==='function')fillAdmin();
+ if(adminRole&&typeof window.academy6ShowTab==='function')window.academy6ShowTab('overview');
  if(editorRole&&typeof go==='function')go('editor6');
  else if(!adminRole&&typeof go==='function')go('dashboard');
  if(typeof load==='function')load();
