@@ -61,6 +61,7 @@ function authorize(){
  else if(!adminRole&&typeof go==='function')go('dashboard');
  if(typeof load==='function')load();
  if(typeof loadBirthdays==='function')loadBirthdays();
+ if(typeof window.academy7OnAuthorized==='function')window.academy7OnAuthorized();
  if(adminRole&&typeof loadRoster==='function')loadRoster();
 }
 function logout(message='Вы вышли из системы.'){
