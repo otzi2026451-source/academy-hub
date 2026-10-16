@@ -17,7 +17,7 @@ try{
  await page.route('**/rest/v1/cadets**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
  await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt',refresh_token:'mock-refresh',expires_in:3600})}));
  await page.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
- await page.route('**/rest/v1/rpc/can_edit_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
+ await page.route('**/rest/v1/rpc/academy_role**',route=>route.fulfill({status:200,contentType:'application/json',body:'"admin"'}));
  await page.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
  await page.waitForSelector('#dashboard.wallboard .wallboard-grid',{state:'attached'});
  assert(await page.locator('#academyLock').isVisible(),'Unauthorized screen must display login gate');
@@ -52,16 +52,17 @@ try{
  assert(!(await page.locator('#loginBox').isVisible()),'Legacy login should be hidden after sign-in');
  await page.waitForTimeout(600);
  assert(await page.locator('#adminContent').isVisible(),'Admin content did not unlock with mocked auth');
- assert(await page.locator('#academyVersionPanel').isVisible(),'History panel missing');
- assert(await page.locator('#academy5Admin').isVisible(),'Academy 5 planning tools missing');
+ assert(await page.locator('#academy6Workspace').isVisible(),'Academy 6 workspace is missing');
+ assert(await page.locator('#v6-overview').isVisible(),'Overview tab not visible');
+ await page.locator('[data-tab="schedule"]').click();
+ assert(await page.locator('#v6-schedule').isVisible(),'Schedules tab missing');
  assert(await page.locator('#v5Group').count()===1,'Week group selector missing');
  assert(await page.locator('#v5Excel').count()===1,'Excel bulk import missing');
  assert(await page.locator('#v5ViewerEmail').count()===1,'TV read-only account management missing');
- await page.locator('#academy5Admin details').first().locator('summary').click();
- await page.locator('#v5Group').selectOption('KRD1');
+  await page.locator('#v5Group').selectOption('KRD1');
  await page.locator('#v5Day').selectOption('2');
  await page.locator('#v5Schedule').fill('09:00 | Тестовая физика · кабинет 204');
- await page.locator('#saveBtn').click();
+ await page.locator('.v6-top-actions .btn.primary').click();
  await page.waitForTimeout(850);
  assert(lastWrite&&lastWrite.content,'Saving weekly schedule should write data');
  assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
@@ -77,7 +78,7 @@ try{
   await viewerPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])}));
   await viewerPage.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
   await viewerPage.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
-  await viewerPage.route('**/rest/v1/rpc/can_edit_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'false'}));
+  await viewerPage.route('**/rest/v1/rpc/academy_role**',route=>route.fulfill({status:200,contentType:'application/json',body:'"viewer"'}));
   await viewerPage.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'viewer-mock-jwt',refresh_token:'viewer-refresh',expires_in:3600})}));
   await viewerPage.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
   await viewerPage.waitForSelector('#academyLockForm');
@@ -89,6 +90,7 @@ try{
   assert(!(await viewerPage.locator('#admin').isVisible()),'Viewer must not see admin page');
   assert(!(await viewerPage.locator('#cadets').isVisible()),'Viewer must not see cadet registry');
   assert(!(await viewerPage.locator('#ai').isVisible()),'Viewer must not see AI center');
+  assert(!(await viewerPage.locator('#academy6Workspace').isVisible()),'Viewer must not see management workspace');
   assert(!(await viewerPage.locator('.nav button[data-go="admin"]').isVisible()),'Viewer must not see admin navigation');
   assert.equal(responses.length,0,'Viewer script exceptions: '+responses.join(' | '));
  }finally{await viewerContext.close()}
