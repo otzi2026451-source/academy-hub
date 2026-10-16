@@ -38,6 +38,35 @@ try{
  assert(tv.rect.height<=tv.h+3,'TV board taller than viewport');
  assert(tv.birthScrollHeight<=tv.birthHeight+8,'Birthday panel is clipped');
  assert(/\d{2}:\d{2}:\d{2}/.test(tv.date),'Clock not updating');
+
+ assert.equal(await page.locator('#studyList > li').count(),10,'TV must reserve all ten academic places');
+ assert.equal(await page.locator('#sportSections .sport-card').count(),5,'All five sports disciplines must stay visible');
+ await page.setViewportSize({width:1756,height:830});
+ await page.waitForTimeout(300);
+ const wide=await page.evaluate(()=>{
+  const board=document.querySelector('#dashboard').getBoundingClientRect();
+  const grid=document.querySelector('#dashboard .wallboard-grid').getBoundingClientRect();
+  const grades=document.querySelector('.wb-grades').getBoundingClientRect();
+  const sports=document.querySelector('.wb-sections').getBoundingClientRect();
+  const names=[...document.querySelectorAll('#studyList .rank-name b')].map(e=>e.textContent);
+  return {left:board.left,right:board.right,width:board.width,viewport:innerWidth,height:board.height,viewportH:innerHeight,gridWidth:grid.width,gradesWidth:grades.width,sportsWidth:sports.width,names};
+ });
+ assert(wide.right>=wide.viewport-3,'TV must fill the full browser width without right-side gap');
+ assert(wide.height<=wide.viewportH+3,'TV must fit available height');
+ assert(wide.gradesWidth>250,'Grade panel too narrow to read');
+ assert(wide.sportsWidth>450,'Five sports need sufficient space');
+ await page.evaluate(()=>{
+  const g=GROUPS[1];current.groupGrades[g.key]=[];
+  gradeIndex=1;lastGradeSignature='';
+  renderRotators(false);
+ });
+ const emptyGrade=await page.locator('#gradeRotator .rank-empty-state').first();
+ assert(await emptyGrade.isVisible(),'Missing-grade empty state not shown');
+ const gradeMetrics=await emptyGrade.evaluate(e=>({width:e.getBoundingClientRect().width,text:e.textContent}));
+ assert(gradeMetrics.width>200,'Missing grade message is displayed in a narrow column');
+ await page.screenshot({path:'/tmp/academy-tv-1756.png'});
+ await page.setViewportSize({width:1920,height:1080});
+ await page.waitForTimeout(200);
  await page.screenshot({path:'/tmp/academy-tv-1920.png'});
  await page.setViewportSize({width:1366,height:768});
  await page.waitForTimeout(400);
