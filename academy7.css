@@ -1,0 +1,60 @@
+
+/* Academy Hub 7: administrative operations only in signed-in, admin-only tabs. */
+#admin .v6-screen .a7-head{padding:3px 0 14px;margin:0 0 15px;border-bottom:1px solid rgba(227,202,155,.16)}
+#admin .v6-screen .a7-title{font-size:18px;line-height:1.3;color:#f4e1bb;font-weight:800;letter-spacing:-.015em}
+.a7-note{margin:7px 0 12px;font-size:13px;color:#b9cac8;line-height:1.55}
+.a7-actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:10px 0}
+.a7-actions .btn{min-height:34px;padding:8px 10px;font-size:12px;white-space:nowrap}
+.a7-status{white-space:pre-wrap;font-size:13px;color:#d6e0dc;margin:12px 0;line-height:1.5}
+.a7-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.a7-stat{padding:17px;border:1px solid rgba(233,209,168,.18);background:#1b2a30;border-radius:11px;display:flex;gap:7px;flex-direction:column}
+.a7-stat strong{font-variant-numeric:tabular-nums;font-size:29px;color:#edce90}
+.a7-stat small{font-size:12px;color:#bdd0cc}
+.a7-table-wrap{overflow:auto;border:1px solid #46575c;background:#19262c;border-radius:11px;max-width:100%;margin-top:15px}
+.a7-table{width:100%;border-collapse:collapse;min-width:570px}
+.a7-table th{background:#314148;font-size:12px;text-align:left;white-space:nowrap;color:#ead29e;font-weight:750;padding:12px 14px;border-bottom:1px solid #42555b}
+.a7-table td{font-size:12.5px;color:#e1e9e5;padding:10px 12px;vertical-align:middle;border-bottom:1px solid rgba(255,255,255,.07);max-width:270px;overflow-wrap:anywhere}
+.a7-table td .btn{font-size:11px!important;padding:7px 10px!important;min-width:auto!important}
+.a7-table tr:hover td{background:rgba(255,255,255,.025)}
+.a7-muted{color:#a9b8b5;font-size:12px}
+.a7-diagnostics{display:flex;flex-direction:column;gap:7px;margin-top:16px}
+.a7-diagnostic{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:15px;background:#1a282d;border:1px solid rgba(255,255,255,.09);border-radius:8px}
+.a7-diagnostic strong{font-size:13px}
+.a7-diagnostic span{font-size:12px;text-align:right;overflow-wrap:anywhere}
+.a7-pass{color:#bfe4b3}
+.a7-fail{color:#ffc5b5}
+.a7-log{border-top:1px solid #4c5b5c;margin-top:22px;padding-top:12px}
+.a7-subtitle{color:#ebd59f;margin:10px 0;font-size:16px;font-weight:800}
+.a7-filter{max-width:300px;margin:5px 0 13px}
+.a7-calendar{display:flex;flex-direction:column;gap:8px;max-width:100%}
+.a7-event{display:grid;grid-template-columns:120px minmax(0,1fr) max-content;gap:12px;align-items:center;background:#1a282d;border:1px solid rgba(255,255,255,.07);padding:10px 12px;border-radius:10px}
+.a7-date,.a7-event-label{display:flex;flex-direction:column;gap:5px;min-width:0}
+.a7-date strong{font-size:16px;color:#efd39a}
+.a7-date small,.a7-event-label small{font-size:12px;color:#b7c8c4}
+.a7-event-label strong{font-size:15px;color:#ecf0eb}
+.a7-pill{color:#eed095;border:1px solid rgba(216,187,130,.31);background:rgba(216,187,130,.08);padding:5px 8px;border-radius:20px;white-space:nowrap;font-size:11px}
+.a7-changes{display:flex;flex-direction:column;gap:9px;margin:14px 0}
+.a7-change{display:grid;grid-template-columns:22px minmax(0,1fr);align-items:start;gap:12px;cursor:pointer;border:1px solid rgba(228,197,138,.2);border-radius:10px;background:#18282c;padding:12px 14px}
+.a7-change input{margin-top:5px;accent-color:#d9bb83}
+.a7-change strong,.a7-change small{display:block;line-height:1.45}
+.a7-change strong{color:#f4dfb0;font-size:14px}
+.a7-change small{color:#b4c7c3;font-size:12px;overflow-wrap:anywhere;margin-top:2px}
+.a7-error,.a7-warning{font-size:12.5px;padding:9px 12px;border-radius:7px;line-height:1.45}
+.a7-error{border:1px solid rgba(255,119,102,.5);color:#ffd2c9;background:rgba(255,119,102,.10)}
+.a7-warning{border:1px solid rgba(234,190,116,.32);color:#f3dbab;background:rgba(234,190,116,.06)}
+.a7-search-tools{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px;margin:12px 0;align-items:center}
+.a7-search-tools .input{min-height:45px;font-size:14px}
+.a7-import-check{border-top:1px solid rgba(255,255,255,.12);margin-top:22px;padding-top:14px}
+body.wallboard-mode #dashboard.wallboard .a7-tv-health{
+  color:#b8d1bf;font-size:11px;line-height:1.2;white-space:nowrap;
+  display:block;margin-top:4px;font-variant-numeric:tabular-nums;
+}
+body.wallboard-mode #dashboard.wallboard .a7-tv-health.a7-offline{color:#f5c2a2}
+body.wallboard-mode.tv-tight #dashboard.wallboard .wb-grades .ranking li{padding-block:4px!important}
+body.wallboard-mode.tv-tight #dashboard.wallboard .wb-birthdays .birthday-calendar-item{padding-block:3px!important}
+html:not(.academy-admin) #v6-search7,
+html:not(.academy-admin) #v6-security7,
+html:not(.academy-admin) #v6-diagnostics7,
+html:not(.academy-admin) #v6-backups7{display:none!important}
+@media(max-width:850px){.a7-stats{grid-template-columns:1fr 1fr}.a7-event{grid-template-columns:90px minmax(0,1fr)}.a7-pill{grid-column:2;justify-self:start}}
+@media(max-width:600px){.a7-search-tools{grid-template-columns:1fr}.a7-diagnostic{display:block}.a7-diagnostic span{display:block;text-align:left;margin-top:4px}.a7-stats{grid-template-columns:1fr}}
