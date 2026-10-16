@@ -523,13 +523,13 @@ html.academy-authorized #academyLock,#academyLock[hidden]{display:none!important
               <div class="chip">Топ-5 по спорту</div>
               <div class="chip">5 спортивных секций</div>
               <div class="chip">6 учебных групп</div>
-              <div class="chip">132 курсанта</div>
+              <div class="chip">132 места по плану</div>
               <div class="chip">КРД и ОТЗИ</div>
             </div>
           </div>
           <div class="panel">
             <div class="hero-grid">
-              <div class="stat-card"><small>Личный состав</small><strong id="heroCadets">132</strong><span>Общий контингент по всем группам</span></div>
+              <div class="stat-card"><small>Личный состав</small><strong id="heroCadets">132</strong><span>Плановая вместимость шести групп</span></div>
               <div class="stat-card"><small>Группы</small><strong>6</strong><span>4 КРД и 2 ОТЗИ</span></div>
               <div class="stat-card"><small>Учебные топы</small><strong>10</strong><span>Лучшие по общей успеваемости</span></div>
               <div class="stat-card"><small>Спортивный топ</small><strong>5</strong><span>Лучшие по общему зачёту</span></div>
@@ -937,7 +937,7 @@ function renderMetrics(){
   const krd=GROUPS.filter(g=>g.direction==='КРД').reduce((s,g)=>s+(Number(current.groups[g.key]?.cadets)||g.cadets),0);
   const otzi=GROUPS.filter(g=>g.direction==='ОТЗИ').reduce((s,g)=>s+(Number(current.groups[g.key]?.cadets)||g.cadets),0);
   const html=[
-    ['Курсанты',totalCadets(),'Общий состав по системе'],
+    ['Плановый состав',totalCadets(),'Места по штатному плану, не загруженные профили'],
     ['КРД',krd,'Гуманитарно-правовой профиль'],
     ['ОТЗИ',otzi,'Технический усиленный профиль'],
     ['Спортсекции',SPORTS.length,'Рукопашка, борьба, Л/А, футбол, волейбол'],
