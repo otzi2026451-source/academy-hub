@@ -257,13 +257,37 @@ body:not(.wallboard-mode) #dashboard.wallboard .wb-sections{grid-column:span 6;g
 body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays,body:not(.wallboard-mode) #dashboard.wallboard .wb-notice{grid-column:span 3;grid-row:auto}
 body:not(.wallboard-mode) #dashboard.wallboard .topbar{height:auto!important}
 @media(max-width:1050px){body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid{display:block}body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid>.panel{margin-bottom:14px}}
+
+/* Academy editorial refresh — restrained daylight stone and brass */
+:root{--bg:#161d20;--bg2:#1b2428;--surface:#202a2f;--surface-2:#273239;--surface-3:#303b42;--line:#48555b;--line-2:#627078;--fg:#f8f7f1;--muted:#c8d0cd;--gold:#e2c58b;--gold-2:#c3a164;--olive:#a7b69a;--shadow:0 12px 28px rgba(0,0,0,.15);--radius:12px}
+body{background:#1b252b}
+.sidebar{background:#182328}
+.panel,.metric,.sport-card,.group-card,.stat-card,.head-panel{border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+.panel{background:linear-gradient(165deg,#28353b,#202c32);border-color:#43535b}
+.brand{border-radius:12px}
+.crest.academy-seal{background:#e8ecea;padding:2px;border:2px solid var(--gold);overflow:hidden}
+.crest.academy-seal img{width:100%;height:100%;object-fit:contain;border-radius:50%}
+.title,.section-title,.brand h1{letter-spacing:0;text-transform:none}
+.eyebrow{letter-spacing:.12em}
+.clock{font-family:'IBM Plex Sans',monospace;font-variant-numeric:tabular-nums;letter-spacing:0;min-width:9ch;font-size:clamp(24px,2.4vw,38px);line-height:1.2;white-space:nowrap}
+.rotating-card{animation:groupCrossfade .3s ease-out both}
+@keyframes groupCrossfade{from{opacity:.25;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{grid-template-rows:minmax(0,1fr) minmax(0,.92fr) minmax(80px,.22fr)!important}
+body.wallboard-mode #dashboard.wallboard .wb-study{grid-column:span 3!important;grid-row:span 2!important}
+body.wallboard-mode #dashboard.wallboard .wb-sport,body.wallboard-mode #dashboard.wallboard .wb-schedule,body.wallboard-mode #dashboard.wallboard .wb-grades{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-sections{grid-column:span 6!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-notice{grid-column:1/-1!important;grid-row:3!important;padding:9px 22px!important;min-height:0!important;display:flex!important;align-items:center;gap:25px}
+body.wallboard-mode #dashboard.wallboard .wb-notice .section-header{margin:0!important;flex-shrink:0}
+body.wallboard-mode #dashboard.wallboard .wb-notice .section-title{margin:0!important}
+body.wallboard-mode #dashboard.wallboard .wb-notice #noticeBox{flex:1;min-width:0;font-size:20px!important;line-height:1.3!important;padding:6px 12px!important}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar" id="adminSidebar">
     <div class="brand">
-      <div class="crest">A.H</div>
+      <div class="crest academy-seal"><img alt="Эмблема Академии КНБ РК" src="https://img.press.kz/press-photobank/media/2024-05-17/898ea016-26cc-4ca5-912d-f6527d588163.jpeg" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='АК'" /></div>
       <div>
         <h1>Academy Hub</h1>
         <p>Информационно-командный центр для курсантов. Военный академический интерфейс для единого контроля учёбы, спорта, расписания и событий.</p>
@@ -720,10 +744,12 @@ function buildPayloadFromState(st){
 function totalCadets(){ return GROUPS.reduce((sum,g)=>sum+(Number(current.groups[g.key]?.cadets)||g.cadets),0)}
 function todayList(){ return publicBirthdays.map(x=>'🎉 '+x.display_name) }
 function setStatus(msg,ok=false){$('status').textContent=msg;$('sideStatus').textContent=msg;$('sideDot').classList.toggle('on',!!ok)}
+let lastClock='';
 function updateClock(){
-  const d=new Date();
-  const t=d.toLocaleTimeString('ru-RU');
-  $('clock').textContent=t; if($('adminClock')) $('adminClock').textContent=t;
+  const t=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  if(t===lastClock)return;lastClock=t;
+  if($('clock'))$('clock').textContent=t;
+  if($('adminClock'))$('adminClock').textContent=t;
 }
 function go(id){
   const isTv=new URLSearchParams(location.search).get('tv')==='1';
@@ -762,17 +788,26 @@ function renderSports(){
 let scheduleIndex=0,gradeIndex=0,lastRotation=Date.now();
 function tabs(el,selected,onSelect){
   el.replaceChildren();
-  GROUPS.forEach((g,i)=>{const b=document.createElement('button');b.textContent=g.label;b.className=i===selected?'active':'';b.setAttribute('aria-pressed',String(i===selected));b.onclick=()=>{onSelect(i);lastRotation=Date.now();renderRotators()};el.appendChild(b)})
+  GROUPS.forEach((g,i)=>{const b=document.createElement('button');b.textContent=g.label;b.className=i===selected?'active':'';b.setAttribute('aria-pressed',String(i===selected));b.onclick=()=>{onSelect(i);lastRotation=Date.now();renderRotators(true)};el.appendChild(b)})
 }
-function renderRotators(){
-  const g=GROUPS[scheduleIndex], row=current.groups[g.key]||{};
-  tabs($('scheduleTabs'),scheduleIndex,i=>scheduleIndex=i);
-  $('groupGrid').innerHTML=`<div class="group-card rotating-card"><div class="group-top"><div><h3>${esc(row.label||g.label)}</h3><div class="muted">Направление ${esc(g.direction)} · ${Number(row.cadets)||g.cadets} курсантов</div></div><span class="badge">Расписание ${esc(g.label)}</span></div><ul class="schedule" style="margin-top:14px">${scheduleHtml(row.schedule||[])}</ul></div>`;
-  const gg=GROUPS[gradeIndex], grades=(current.groupGrades||{})[gg.key]||[];
-  tabs($('gradeTabs'),gradeIndex,i=>gradeIndex=i);
-  $('gradeRotator').innerHTML=`<div class="rotating-card"><div class="eyebrow" style="margin-bottom:12px">${esc(gg.label)} · ${esc(gg.direction)}</div><ol class="ranking">${rankHtml(grades,'Результат группы')}</ol></div>`;
+let lastScheduleSignature='',lastGradeSignature='';
+function renderRotators(animate=false){
+  const g=GROUPS[scheduleIndex],row=current.groups[g.key]||{};
+  const sig=JSON.stringify([g.key,row.schedule,row.label]);
+  if(sig!==lastScheduleSignature){
+    lastScheduleSignature=sig;
+    tabs($('scheduleTabs'),scheduleIndex,i=>{scheduleIndex=i;renderRotators(true)});
+    $('groupGrid').innerHTML=`<div class="group-card ${animate?'rotating-card':''}"><div class="group-top"><h3>${esc(row.label||g.label)}</h3><span class="badge">Расписание</span></div><ul class="schedule" style="margin-top:10px">${scheduleHtml(row.schedule||[])}</ul></div>`;
+  }
+  const gg=GROUPS[gradeIndex],grades=(current.groupGrades||{})[gg.key]||[];
+  const gradeSig=JSON.stringify([gg.key,grades]);
+  if(gradeSig!==lastGradeSignature){
+    lastGradeSignature=gradeSig;
+    tabs($('gradeTabs'),gradeIndex,i=>{gradeIndex=i;renderRotators(true)});
+    $('gradeRotator').innerHTML=`<div class="${animate?'rotating-card':''}"><div class="eyebrow" style="margin-bottom:8px">${esc(gg.label)}</div><ol class="ranking">${rankHtml(grades,'Результат группы')}</ol></div>`;
+  }
 }
-function renderGroups(){renderRotators()}
+function renderGroups(){renderRotators(false)}
 function rotationTick(){if(document.hidden)return;const elapsed=Date.now()-lastRotation;if(elapsed>=15000){scheduleIndex=(scheduleIndex+1)%GROUPS.length;gradeIndex=(gradeIndex+1)%GROUPS.length;lastRotation=Date.now();renderRotators()};const width=Math.min(100,(Date.now()-lastRotation)/150);$('scheduleProgress').style.width=width+'%';$('gradeProgress').style.width=width+'%'}
 function renderBirthdays(){
   const today=todayList();
@@ -1050,7 +1085,7 @@ function init(){
   const hash=(location.hash||'#dashboard').slice(1);
   if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); fitWallboardToViewport(); }
   else if(['dashboard','admin','cadets','ai'].includes(hash)) go(hash); else go('dashboard');
-  load(); loadBirthdays(); setInterval(rotationTick,200); setInterval(()=>{updateClock(); if(document.visibilityState==='visible'){load(); loadBirthdays();}},15000);
+  load(); loadBirthdays(); setInterval(rotationTick,250); setInterval(updateClock,200); setInterval(()=>{if(document.visibilityState==='visible'){load();loadBirthdays();}},15000);
 }
 init();
 </script>
