@@ -63,7 +63,7 @@ const securityBtns=elem('div','a7-actions',null,panels.security);
 const securityCount=elem('div','a7-stats',null,panels.security);
 const securityState=resultBox(panels.security);
 const deviceList=elem('div','a7-table-wrap',null,panels.security);
-const securityDetail=note(panels.security,'Отзыв доступа отключает выбранную учётную запись на всех устройствах. Отзыв одного отдельного токена не поддерживается.');
+const securityDetail=note(panels.security,'Можно отозвать одну зарегистрированную сессию или все права учётной записи.');
 function deviceClientId(){
  const key='academy-hub-client-id-v7';
  try{
@@ -123,8 +123,13 @@ async function refreshSecurity(){
    elem('td','',toDate(d.last_seen),row);
    const action=elem('td','',null,row);
    if(d.role==='admin')elem('span','a7-muted','Владелец',action);
+   else if(d.role!=='revoked'&&d.session_id)button(action,'Закрыть устройство',async()=>{
+    if(!confirm('Отозвать только эту сессию?'))return;
+    try{await rpc('academy_revoke_session',{p_session_id:d.session_id});await refreshSecurity()}
+    catch(e){securityState.textContent=e.message}
+   });
    else if(d.role==='revoked')elem('span','a7-muted','Отозван',action);
-   else button(action,'Отозвать аккаунт',async()=>{
+   if(d.role!=='admin'&&d.role!=='revoked')button(action,'Отозвать аккаунт',async()=>{
     if(!confirm('Отозвать ВСЕ права учётной записи '+d.email+'? Доступ со всех устройств прекратится после следующей проверки.'))return;
     try{await rpc('academy_revoke_member',{p_user_id:d.user_id});await refreshSecurity()}
     catch(e){securityState.textContent=e.message}
@@ -250,7 +255,8 @@ function audit(next){
  }
  for(const [key,days] of Object.entries(next.weekSchedules||{})){
   for(const [day,rows] of Object.entries(days||{})){
-   const seen=new Set();
+   const seen=new Set(),starts=[];
+   const duration=Math.max(1,Math.min(240,Number(next.lessonMinutes)||90));
    for(const line of safeList(rows)){
     const m=String(line).match(/^\s*(\d{1,2}):(\d{2})/);
     if(!m){warnings.push('Расписание '+key+' ('+day+'): отсутствует время');continue}
@@ -258,7 +264,10 @@ function audit(next){
     if(hh>23||mm>59)fatals.push('Неверное время: '+key+' '+String(line).slice(0,40));
     if(seen.has(time))fatals.push('Конфликт пар: '+key+' · день '+day+' · '+m[0]);
     seen.add(time);
+    if(hh<=23&&mm<=59)starts.push(time);
    }
+   starts.sort((a,b)=>a-b);
+   for(let j=1;j<starts.length;j++)if(starts[j]<starts[j-1]+duration)fatals.push('Пересечение пар: '+key+' · день '+day+' · '+duration+' мин.');
   }
  }
  for(const e of safeList(next.events)){
@@ -320,7 +329,7 @@ async function saveReview(){
   next.lastContentUpdate=new Date().toISOString();
   await saveState(next);
   current=normalizeState(next);
-  render();fillAdmin();pending=null;
+  render();pending=null; // Keep unsaved edits from unchecked sections.
   reviewInfo.textContent='Сохранено. Предыдущая версия доступна в истории.';
   reviewDiff.replaceChildren();reviewAlerts.replaceChildren();
   if($7('saveInfo'))$7('saveInfo').textContent='✓ Сохранено после проверки';
