@@ -1,0 +1,89 @@
+
+/* Academy Hub 4.0 — coherent on-screen signage styles, no AI-neon flourishes */
+:root { --gold:#d9bc82; --muted:#c6d1d0; --radius:13px }
+html {scroll-behavior:auto}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #eed49d;outline-offset:3px}
+.sidebar{border-right-color:rgba(217,188,130,.26)}
+.nav button:hover,.nav button.active{background:linear-gradient(90deg,rgba(217,188,130,.17),rgba(217,188,130,.035))}
+.panel,.group-card,.sport-card{background-image:linear-gradient(145deg,rgba(230,240,226,.045),rgba(255,255,255,.005))}
+.ranking li:nth-child(1) .rank-no:after,.ranking li:nth-child(2) .rank-no:after,.ranking li:nth-child(3) .rank-no:after {display:none}
+.notice-priority{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:5px 11px;border-radius:99px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.notice-priority.normal{background:rgba(211,188,130,.11);color:#efdcad}
+.notice-priority.important{background:rgba(255,193,110,.2);color:#ffe3ae}
+.notice-priority.urgent{background:rgba(245,116,98,.22);color:#ffd1c8}
+body.notice-important #dashboard.wallboard .wb-notice{border:1px solid rgba(231,188,106,.6)!important;background:#3a3327}
+body.notice-urgent #dashboard.wallboard .wb-notice{border:2px solid #dd8872!important;background:#46332f}
+.page .panel h2.section-title{word-break:normal}
+.admin-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.admin-history-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.08)}
+.admin-history-row time{font-size:13px;color:#dfe6e3}
+.admin-history-row button{white-space:nowrap}
+.ai-attachment-field{margin-top:16px}
+.ai-help{margin-top:8px;font-size:12px;line-height:1.5;color:#b9c9c6}
+.ai-attachment-field label{display:block;margin-bottom:8px;color:#e1e7e3;font-size:13px;font-weight:750}
+.lesson-current{background:rgba(145,171,120,.19)!important;border-color:rgba(163,203,125,.45)!important}
+.lesson-next{background:rgba(217,188,130,.11)!important;border-color:rgba(217,188,130,.21)!important}
+.lesson-past{opacity:.59}
+.lesson-status{font-size:11px;font-weight:700;letter-spacing:.02em;display:block;margin-top:4px;color:#d8b87a}
+.lesson-current .lesson-status{color:#b5e49d}
+.lesson-remaining{margin-left:5px;color:#d2e0cc;font-size:11px}
+#dashboard.wallboard .wb-schedule .schedule li {align-items:flex-start}
+#dashboard.wallboard .wb-schedule .schedule span{flex:1;min-width:0;overflow-wrap:anywhere}
+.status-offline{color:#ffcab4!important}
+.rotate-resting{animation:none!important}
+.tv-daypart{font-size:13px;letter-spacing:.03em;color:#dfc78d}
+body[data-daypart="morning"] #dashboard.wallboard .wb-schedule{border-color:rgba(185,205,143,.34)}
+body[data-daypart="evening"] #dashboard.wallboard .wb-notice{border-color:rgba(219,187,124,.38)}
+/* Large TV layout uses fixed 1920×1080 canvas, scaled once from actual viewport */
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{
+ grid-template-columns:repeat(12,minmax(0,1fr))!important;
+ grid-template-rows:minmax(0,1.02fr) minmax(0,1fr) minmax(82px,.22fr)!important;
+ gap:13px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-study{grid-column:span 3!important;grid-row:span 2!important}
+body.wallboard-mode #dashboard.wallboard .wb-sport{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-schedule{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-grades{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-sections{grid-column:span 5!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays{grid-column:span 4!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-notice{grid-column:1/-1!important;grid-row:3!important}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel{
+ padding:15px 17px!important;overflow:hidden!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-study .ranking{gap:7px!important}
+body.wallboard-mode #dashboard.wallboard .wb-study .ranking li{
+ min-height:59px!important;grid-template-columns:35px minmax(0,1fr) auto!important;
+ padding:7px 8px!important;gap:10px!important
+}
+body.wallboard-mode #dashboard.wallboard .wb-study .rank-name b{
+ font-size:20px!important;line-height:1.22!important;
+ overflow-wrap:anywhere;white-space:normal!important;overflow:visible!important;text-overflow:clip!important
+}
+body.wallboard-mode #dashboard.wallboard .wb-study .score{font-size:21px!important}
+body.wallboard-mode #dashboard.wallboard .wb-sport .rank-name b,
+body.wallboard-mode #dashboard.wallboard .wb-grades .rank-name b{
+ font-size:19px!important;line-height:1.23!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-sections .mini-rank b{font-size:13px!important;line-height:1.32!important;white-space:normal!important;overflow-wrap:anywhere!important}
+body.wallboard-mode #dashboard.wallboard .wb-schedule .schedule li{
+ padding:10px!important;min-height:55px!important;gap:14px!important
+}
+body.wallboard-mode #dashboard.wallboard .wb-schedule .schedule span,
+body.wallboard-mode #dashboard.wallboard .wb-schedule .schedule time{font-size:16px!important;line-height:1.3!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-header{padding:0 0 9px!important;flex-wrap:nowrap!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-header h2{font-size:22px!important;line-height:1.32!important;white-space:normal!important;overflow:visible!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-today-area{padding:10px 12px!important;min-height:53px!important;margin:9px 0 2px!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-person-name{font-size:19px!important;line-height:1.3!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-item{padding:7px 0!important;line-height:1.28!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-item>span:last-child{font-size:17px!important;line-height:1.28!important}
+body.wallboard-mode #dashboard.wallboard .wb-notice{min-height:76px!important;display:flex!important;align-items:center!important}
+body.wallboard-mode #dashboard.wallboard .wb-notice #noticeBox{line-height:1.38!important;word-break:normal!important;overflow-wrap:anywhere!important;font-size:19px!important}
+body.wallboard-mode #dashboard.wallboard .wb-notice .notice-priority{flex-shrink:0}
+body.wallboard-mode #dashboard.wallboard .footer-note{font-size:12px!important}
+@media(max-width:1050px){
+ body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid{display:flex!important;flex-direction:column!important;min-height:0!important}
+ body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid>.panel{min-height:220px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
