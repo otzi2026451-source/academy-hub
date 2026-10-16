@@ -33,7 +33,7 @@ assert.match(planner,/academy_grant_viewer/);
 assert.match(planner,/weekSchedules/);
 assert.match(planner,/v5Excel/);
 assert.match(planner,/gradeSnapshots/);
-assert.match(auth,/can_edit_academy/);
+assert.match(auth,/academy_role/);
 assert.match(plannerCSS,/academy-viewer/);
 assert.match(html,/<script src="academy-auth\.js\?v=4\.1\.0"><\/script>/);
 assert.match(html,/html:not\(\.academy-authorized\) body \.app/);
