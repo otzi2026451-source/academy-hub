@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Academy Hub 8 — Изолированный стенд</title><style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#e9f1ed;background:#142229}
+*{box-sizing:border-box}body{margin:0;padding:clamp(18px,3vw,45px);max-width:1500px;margin:auto}
+header{display:flex;justify-content:space-between;gap:18px;align-items:start;flex-wrap:wrap;border-bottom:1px solid #465651;padding-bottom:22px}
+small{font-weight:750;color:#e2c18d;letter-spacing:.12em}h1{font-size:clamp(26px,4vw,45px);letter-spacing:-.05em;line-height:1.12;margin:12px 0 5px}
+p{color:#bed0c9;line-height:1.55}.badge{border:1px solid #e2c18d;border-radius:30px;padding:10px 16px;color:#eed7a7;font-weight:750}
+.metrics,.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:#213238;border:1px solid #40555a;border-radius:15px;padding:23px;min-width:0}.metric strong{display:block;font-size:35px;color:#e8c48c;font-variant-numeric:tabular-nums}.metric span{display:block;margin-top:4px;color:#c6d5ce}
+h2{font-size:19px;letter-spacing:-.02em;margin:0 0 13px}button{border:1px solid #b99a66;border-radius:9px;padding:12px 16px;background:#d9ba81;color:#17262c;font-weight:800;cursor:pointer;font-size:14px}button.secondary{background:#25373e;color:#f4e5c6;margin-left:8px}
+table{width:100%;border-collapse:collapse}td,th{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:13px;text-align:left}th{color:#e2c18d}
+.status{padding:13px;border-radius:8px;background:#18272d;color:#e4d1aa;margin-top:14px;white-space:pre-wrap;min-height:44px}
+ul{margin:0;padding-left:18px;color:#cfe0d8;font-size:14px;line-height:1.8}
+footer{border-top:1px solid #415155;margin-top:25px;padding-top:16px;color:#9fb8af;font-size:12px}
+@media(max-width:950px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}@media(max-width:460px){.metrics{grid-template-columns:1fr}}
+</style></head><body>
+<header><div><small>ACADEMY HUB / QUALITY ASSURANCE</small><h1>Изолированный тестовый стенд</h1><p>Только вымышленные курсанты. Здесь нет запросов к рабочей базе Supabase и реального импорта.</p></div><span class="badge">SANDBOX · 8.0</span></header>
+<section class="metrics" id="metrics"></section>
+<div class="grid"><article class="card"><h2>Шесть учебных групп</h2><table><thead><tr><th>Группа</th><th>Записей</th><th>Лимит</th></tr></thead><tbody id="rows"></tbody></table></article>
+<article class="card"><h2>Самопроверки</h2><p>Границы вместимости, уникальность кодов и суммы рейтингов — без изменения данных в базе.</p><button id="check">Запустить проверки</button><div id="status" class="status">Проверка ещё не запускалась.</div></article>
+<article class="card"><h2>Сценарии с ошибками</h2><p>Тестовые ситуации, которые должен блокировать мастер импорта.</p><button id="dup">Повтор ФИО</button><button class="secondary" id="overflow">Переполнение группы</button><div id="fault" class="status">Выбери сценарий.</div></article></div>
+<footer>Демонстрационный стенд не содержит персональных данных, учётных записей или API-ключей.</footer>
+<script>
+'use strict';
+const counts={KRD1:25,KRD2:25,KRD3:25,KRD4:25,OTZI1:14,OTZI2:18};
+const data=Object.entries(counts).flatMap(([group,n])=>Array.from({length:n},(_,i)=>({code:'DEMO-'+group+'-'+String(i+1).padStart(2,'0'),name:'Вымышленный курсант '+group+' '+(i+1),group,score:70+i%30})));
+const q=id=>document.getElementById(id);
+function metric(title,value,note){const div=document.createElement('div');div.className='card metric';const strong=document.createElement('strong');strong.textContent=value;const span=document.createElement('span');span.textContent=title+' · '+note;div.append(strong,span);q('metrics').append(div)}
+metric('Всего',''+data.length,'только тестовые записи');
+metric('Группы',''+Object.keys(counts).length,'контроль состава');
+metric('Сходство','0%','нет настоящих персональных сведений');
+metric('Сеть','0','запросов к Supabase');
+Object.entries(counts).forEach(([key,n])=>{const row=document.createElement('tr');[key,n,n].forEach(x=>{const c=document.createElement('td');c.textContent=x;row.append(c)});q('rows').append(row)});
+function check(records){
+ const seenCodes=new Set(),seenNames=new Set(),groupCounts={},problems=[];
+ for(const row of records){
+  if(seenCodes.has(row.code))problems.push('Повтор кода: '+row.code);
+  seenCodes.add(row.code);
+  if(seenNames.has(row.name))problems.push('Повтор имени: '+row.name);
+  seenNames.add(row.name);groupCounts[row.group]=(groupCounts[row.group]||0)+1;
+ }
+ for(const [key,n]of Object.entries(groupCounts))if(n>counts[key])problems.push('Превышен лимит '+key);
+ if(records.length!==132)problems.push('Не 132 записи');
+ return problems;
+}
+q('check').onclick=()=>{const faults=check(data);q('status').textContent=faults.length?faults.join('\n'):'ПРОЙДЕНО: 132 записи; все 6 групп; ошибок и повторов нет.'};
+q('dup').onclick=()=>{const clone=data.map(x=>({...x}));clone[1].name=clone[0].name;q('fault').textContent=check(clone).join('\n')};
+q('overflow').onclick=()=>{const clone=data.map(x=>({...x}));clone[100].group='KRD1';q('fault').textContent=check(clone).join('\n')};
+</script></body></html>
