@@ -3,7 +3,8 @@
 'use strict';
 const el=id=>document.getElementById(id);
 const storageKey='academy-hub-session-v1';
-const usePersistentSession=new URLSearchParams(location.search).get('tv')==='1';
+const isEmbeddedPreview=window.self!==window.top;
+const usePersistentSession=new URLSearchParams(location.search).get('tv')==='1'&&!isEmbeddedPreview;
 const selectedStorage=usePersistentSession?localStorage:sessionStorage;
 let session=null,refreshPending=null,ready=false,adminRole=false,editorRole=false;
 const lock=el('academyLock'),form=el('academyLockForm'),error=el('academyLockError'),submit=el('academyLockSubmit');
