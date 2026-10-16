@@ -92,3 +92,9 @@ body.wallboard-mode .v6-layout{display:none!important}
 @media(max-width:1320px){.v6-layout{grid-template-columns:210px minmax(0,1fr)}.v6-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.v6-preview-stage{transform:scale(.33)}}
 @media(max-width:1050px){.v6-layout{display:block}.v6-sidebar{position:relative;top:0;max-height:unset;margin-bottom:15px}.v6-nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.v6-preview-stage{transform:scale(.25)}}
 @media(max-width:720px){.v6-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.v6-top{display:block}.v6-top-actions{margin-top:10px}.v6-kpis{grid-template-columns:1fr}.v6-screen{padding:15px}.v6-layout{margin:4px}.v6-preview-stage{transform:scale(.19)}#v6-ai .v6-ai-grid{grid-template-columns:1fr}}
+
+/* Academy 6 owns its own heading; suppress the oversized legacy intro. */
+#admin>.wrap>.topbar{display:none!important}
+#admin .v6-screen .v5-section>summary{border-radius:8px}
+#admin .v6-main .v6-top{padding-top:6px}
+#admin .v6-screen{scroll-margin-top:15px}
