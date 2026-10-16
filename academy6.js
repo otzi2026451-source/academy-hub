@@ -168,7 +168,10 @@ function drawOverview(){
   const tr=node('tr','',null,tbody);
   node('td','',g.label,tr);node('td','',g.direction,tr);
   node('td','',String(g.lessonCount),tr);node('td','',String(g.gradeCount),tr);
-  const td=node('td','',null,tr);btn(td,'Расписание',()=>{showTab('schedule');document.getElementById('v5Group')?.dispatchEvent(new Event('change'))},'v6-link');
+  const td=node('td','',null,tr);btn(td,'Расписание',()=>{
+   showTab('schedule');
+   const select=q('v5Group');if(select){select.value=g.key;select.dispatchEvent(new Event('change'))}
+  },'v6-link');
  }
 }
 function dayNumber(extra=0){
