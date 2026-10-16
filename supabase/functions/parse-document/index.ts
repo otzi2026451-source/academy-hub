@@ -40,21 +40,33 @@ Deno.serve(async(req)=>{
   if(listing.ok){const list=await listing.json();allowed=(list.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')).map((m:any)=>String(m.name).replace('models/',''))}
  }catch(e){console.warn('Model discovery unavailable',String(e))}
  const configured=(Deno.env.get('GEMINI_MODEL')||'').trim();
- const preferred=[configured,'gemini-2.5-flash','gemini-2.5-flash-lite','gemini-2.0-flash'].filter(Boolean);
- const candidateModels=[...new Set(allowed.length?preferred.filter(m=>allowed.includes(m)):preferred)];
- if(allowed.length&&!candidateModels.length)candidateModels.push(...allowed.filter(m=>m.includes('flash')).slice(0,3));
- let g:Response|null=null;let lastCode=0;let lastError='';
- for(const model of candidateModels.slice(0,5)){
+ const preferred=[configured,'gemini-3.5-flash-lite','gemini-3.8-flash','gemini-3.1-flash-lite'].filter(Boolean);
+ const approved=allowed.filter(m=>/gemini/i.test(m)&&/flash/i.test(m)&&!/preview|exp|image|audio|tts|live/i.test(m));
+ const candidates=[...new Set([...preferred.filter(m=>!allowed.length||allowed.includes(m)),...approved])].slice(0,8);
+ if(!candidates.length)return json({error:'Нет доступных моделей Gemini для этого API-ключа. Проверь доступ в Google AI Studio.',code:404},503);
+ let g:Response|null=null,lastCode=0,lastError='';
+ for(const model of candidates){
   try{
-   g=await fetch(modelsApi+'/'+encodeURIComponent(model)+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gemini},body:payload,signal:AbortSignal.timeout(45000)});
+   g=await fetch(modelsApi+'/'+encodeURIComponent(model)+':generateContent',{
+    method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gemini},body:payload,
+    signal:AbortSignal.timeout(30000)
+   });
    if(g.ok)break;
-   lastCode=g.status;let er:any={};try{er=await g.json()}catch{}
+   lastCode=g.status;
+   let er:any={};try{er=await g.json()}catch{}
    lastError=String(er.error?.message||'').slice(0,250);
-   console.warn('Gemini candidate failed',model,lastCode,lastError);
+   console.warn('Gemini unavailable:',model,lastCode,lastError);
    if(![404,429,500,502,503,504].includes(lastCode))break;
-  }catch(e){lastError=String(e);lastCode=504;console.warn('Gemini network failure',model,lastError)}
+   if(lastCode===503||lastCode===429)await new Promise(resolve=>setTimeout(resolve,250));
+  }catch(e){lastCode=504;lastError=String(e).slice(0,200);console.warn('Gemini request timed out',model)}
  }
- if(!g||!g.ok)return json({error:lastCode===404?'Для API-ключа не найдена доступная модель Gemini. Проверь проект ключа и доступные модели.':lastCode===429?'Лимит Gemini исчерпан. Проверь квоты и биллинг.':lastCode===401||lastCode===403?'API-ключ Gemini отклонён. Проверь Secrets и доступ.':'Gemini временно недоступен: '+(lastError||'ошибка соединения'),code:lastCode},502);
+ if(!g||!g.ok){
+   const msg=lastCode===404?'Нет доступной модели Gemini. Проверь доступные модели.'
+     :lastCode===429?'Достигнут лимит Gemini. Проверь квоты и биллинг.'
+     :lastCode===401||lastCode===403?'API-ключ Gemini отклонён. Проверь ключ и разрешения.'
+     :'Gemini временно перегружен. Попробуй через минуту.';
+   return json({error:msg,code:lastCode,retryable:[429,500,502,503,504].includes(lastCode)},lastCode===429?429:503);
+ }
  const d=await g.json();const answer=d.candidates?.[0]?.content?.parts?.map((p:any)=>p.text||'').join('');
  if(!answer)return json({error:'Gemini не вернул текст'},502);
  if(b.mode==='chat')return json({answer:answer.slice(0,12000)});
