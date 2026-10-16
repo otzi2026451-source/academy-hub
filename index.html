@@ -428,10 +428,39 @@ body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-empty{
  text-align:left!important;color:#c4cfcd!important;
 }
 
+html:not(.academy-authorized) body .app{visibility:hidden!important;pointer-events:none!important}
+html.academy-authorized #academyLock,#academyLock[hidden]{display:none!important}
+#academyLock{position:fixed;inset:0;z-index:999999;overflow:auto;min-height:100dvh;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#15242b,#243238 55%,#17272d);color:#f4f3ed;font-family:Manrope,system-ui,sans-serif}
+.academy-lock-card{width:min(100%,500px);padding:clamp(24px,4vw,46px);border-radius:17px;background:#26363b;border:1px solid rgba(230,202,152,.33);box-shadow:0 25px 80px rgba(0,0,0,.24)}
+.academy-lock-eyebrow{font-size:12px;font-weight:800;color:#e9c78c;text-transform:uppercase;letter-spacing:.15em}
+.academy-lock-card h1{font-size:clamp(29px,3.6vw,39px);line-height:1.12;margin:13px 0 8px;font-weight:750;letter-spacing:-.035em}
+.academy-lock-card p{color:#d2ddda;line-height:1.55;font-size:15px;margin:10px 0 17px}
+.academy-lock-card form{display:grid;gap:14px;margin-top:18px}
+.academy-lock-card label{display:grid;gap:7px;font-size:14px;font-weight:650;color:#e4e9e6}
+.academy-lock-card input{font-family:inherit;font-size:19px;line-height:1.25;min-height:55px;width:100%;padding:12px 15px;border-radius:9px;border:1px solid #6d7c7d;color:#fff;background:#17262d}
+.academy-lock-card input:focus-visible{outline:3px solid #edd3a2;outline-offset:2px}
+.academy-lock-card button{background:#e0c28d;color:#17212a;font-size:17px;font-weight:800;border:0;border-radius:10px;padding:16px;margin-top:5px;min-height:54px}
+.academy-lock-card button[disabled]{opacity:.65}
+#academyLockError{min-height:20px;font-size:13px;color:#d7e0df}#academyLockError.bad{color:#ffd1c8}
+.academy-lock-foot{font-size:12px!important;color:#9fb6b7!important}
 </style>
 <link rel="stylesheet" href="academy4.css?v=4.0.1">
 </head>
 <body>
+<div id="academyLock" role="dialog" aria-modal="true" aria-labelledby="academyLockTitle">
+  <div class="academy-lock-card">
+    <div class="academy-lock-eyebrow">Academy Hub · Защищённый доступ</div>
+    <h1 id="academyLockTitle">Информационное табло</h1>
+    <p id="academyLockStatus">Проверяем доступ к защищённому информационному центру…</p>
+    <form id="academyLockForm" autocomplete="on">
+      <label>Электронная почта <input id="academyLockEmail" type="email" autocomplete="username" placeholder="Администратор" required></label>
+      <label>Пароль <input id="academyLockPassword" type="password" autocomplete="current-password" placeholder="Введите пароль" required></label>
+      <button id="academyLockSubmit" type="submit">Войти в Academy Hub</button>
+      <div id="academyLockError" role="status" aria-live="polite"></div>
+    </form>
+    <p class="academy-lock-foot">Вход только для владельца авторизованной учётной записи. На Samsung TV достаточно войти один раз на этом устройстве.</p>
+  </div>
+</div>
 <div class="app">
   <aside class="sidebar" id="adminSidebar">
     <div class="brand">
@@ -1030,7 +1059,7 @@ function authHeaders(){ return {apikey:pub,Authorization:'Bearer '+token,'Conten
 async function load(){
   if(!configured){ setStatus('Настрой config.js',false); return; }
   try{
-    const r = await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+pub}});
+    const r = await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+token}});
     if(!r.ok) throw Error('Supabase: '+r.status);
     const d = await r.json();
     if(d[0]?.content) current = normalizeState(d[0].content); else current = normalizeState(current);
@@ -1041,7 +1070,7 @@ async function load(){
 async function loadBirthdays(){
   if(!configured) return;
   try{
-    const r = await fetch(base+'/rest/v1/birthday_public?select=display_name',{headers:{apikey:pub,Authorization:'Bearer '+pub}});
+    const r = await fetch(base+'/rest/v1/birthday_public?select=display_name',{headers:{apikey:pub,Authorization:'Bearer '+token}});
     if(r.ok){ publicBirthdays = await r.json(); $('cadetToday').textContent=publicBirthdays.length; render(); }
   }catch(e){ console.warn(e); }
 }
@@ -1253,10 +1282,11 @@ function init(){
   const hash=(location.hash||'#dashboard').slice(1);
   if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); fitWallboardToViewport(); }
   else if(['dashboard','admin','cadets','ai'].includes(hash)) go(hash); else go('dashboard');
-  load(); loadBirthdays(); setInterval(rotationTick,250); setInterval(updateClock,200); setInterval(()=>{if(document.visibilityState==='visible'){load();loadBirthdays();}},15000);
+  /* Protected data is fetched after authentication by academy-auth.js. */ setInterval(rotationTick,250); setInterval(updateClock,200); setInterval(()=>{if(document.visibilityState==='visible'){load();loadBirthdays();}},15000);
 }
 init();
 </script>
 <script src="academy4.js?v=4.0.1"></script>
+<script src="academy-auth.js?v=4.1.0"></script>
 </body>
 </html>
