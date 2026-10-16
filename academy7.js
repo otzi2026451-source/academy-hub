@@ -470,7 +470,7 @@ window.addEventListener('resize',()=>{refreshTvHealth();checkClipping()},{passiv
 setInterval(checkClipping,60000);
 
 // 7. Backups: daily app_state snapshot; no additional cadet roster copy.
-makeHead(panels.backup,'Автоматические резервные копии','Каждые сутки сервер создаёт защищённый снимок состояния табло. Последние 35 копий доступны только администратору. Закрытый реестр курсантов не дублируется.');
+makeHead(panels.backup,'Автоматические резервные копии','Каждые сутки сервер создаёт закрытый снимок табло И реестра курсантов. Последние 35 копий доступны только администратору. Восстановление реестра требует дополнительного подтверждения.');
 const backupTools=elem('div','a7-actions',null,panels.backup);
 const backupStatus=resultBox(panels.backup),backupList=elem('div','a7-table-wrap',null,panels.backup);
 async function listBackups(){
@@ -496,6 +496,15 @@ async function listBackups(){
      const url=URL.createObjectURL(file),a=document.createElement('a');a.href=url;a.download='academy-state-'+item.backup_id+'.json';a.click();
      setTimeout(()=>URL.revokeObjectURL(url),800);
     }catch(e){backupStatus.textContent=e.message}
+   });
+   button(actions,'Восстановить реестр',async()=>{
+    const phrase=prompt('Это заменит ВЕСЬ закрытый реестр курсантов снимком №'+item.backup_id+'. Введи RESTORE_CADETS для подтверждения:');
+    if(phrase!=='RESTORE_CADETS')return;
+    if(!confirm('Последнее подтверждение: заменить весь реестр данными копии №'+item.backup_id+'? Текущий реестр сначала будет сохранён.'))return;
+    try{
+     const count=await rpc('academy_restore_cadets',{p_backup_id:item.backup_id,p_confirmation:phrase});
+     await loadRoster();backupStatus.textContent='Реестр восстановлен: '+count+' записей.';await listBackups();
+    }catch(e){backupStatus.textContent='Ошибка восстановления реестра: '+e.message}
    });
    button(actions,'Восстановить',async()=>{
     if(!confirm('Восстановить копию №'+item.backup_id+'? Текущие данные сначала сохранятся в отдельную резервную копию.'))return;
