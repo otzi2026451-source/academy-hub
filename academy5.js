@@ -266,6 +266,35 @@ const drawAnalytics=()=>{
   E('td',{text:String(safeArray(current.groupGrades?.[g.key]).length)},tr);
  }
  E('p',{class:'v5-note',text:snapshots.length?'Сравнение с предыдущим сохранённым результатом. История: '+snapshots.length+' сохранений.':'Тенденция появится после двух сохранений оценок.'},analytics);
+ const dataPoints=snapshots.slice(-7).map(item=>item.averages||{});
+ dataPoints.push(last);
+ if(dataPoints.length>1){
+  const w=540,h=156,left=34,top=12,plotH=112;
+  const svg=E('svg',{viewBox:'0 0 '+w+' '+h,width:'100%',height:'156',role:'img','aria-label':'Изменение средних баллов шести групп'},analytics);
+  const ns='http://www.w3.org/2000/svg';
+  const line=(tag,attributes)=>{
+   const e=document.createElementNS(ns,tag);
+   Object.entries(attributes).forEach(([k,v])=>e.setAttribute(k,String(v)));
+   svg.appendChild(e);return e;
+  };
+  const palette=['#e2c58b','#8fbea5','#caa4a1','#95b9d7','#d3be8a','#b9abc9'];
+  [50,75,100].forEach(v=>{
+    const y=top+(100-v)/50*plotH;
+    line('line',{x1:left,x2:w-12,y1:y,y2:y,stroke:'#47595a','stroke-width':'1'});
+    const t=line('text',{x:0,y:y+4,fill:'#c6d2cc','font-size':11});t.textContent=String(v);
+  });
+  GROUPS.forEach((g,i)=>{
+    const positions=dataPoints.map((p,j)=>{
+      const v=p[g.key];if(v===null||v===undefined||!Number.isFinite(Number(v)))return null;
+      return [left+j*(w-left-18)/(dataPoints.length-1),top+(100-Number(v))/50*plotH];
+    }).filter(Boolean);
+    if(positions.length>1)line('polyline',{points:positions.map(p=>p.join(',')).join(' '),fill:'none',stroke:palette[i],'stroke-width':2.4,'stroke-linecap':'round','stroke-linejoin':'round'});
+  });
+  const label=line('text',{x:left,y:h-6,fill:'#c6d2cc','font-size':11});label.textContent='Изменение среднего балла по сохранениям';
+  const legend=E('div',{class:'v5-chart-legend'},analytics);
+  GROUPS.forEach((g,i)=>{const el=E('span',{text:'● '+g.label},legend);el.style.color=palette[i]});
+ }
+
 };
 function draftReadSafe(){
  try{
@@ -329,10 +358,12 @@ function upcomingEvents(){
 }
 function achievementEntries(){
  const items=safeArray(current.achievements).slice(-3).reverse();
- const matches=parseWins(current.matches);
+ const date=new Date(),yy=Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Almaty',year:'numeric'}).format(date));
+ const mm=Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Almaty',month:'numeric'}).format(date));
+ const matches=parseWins(current.matches).filter(match=>{const d=new Date(match.date);return d.getUTCFullYear()===yy&&d.getUTCMonth()+1===mm});
  const top=standings(matches);
  const leader=matches.length&&top[0]?.[1]>0?groupName(top[0][0])+' · '+top[0][1]+' очков':'';
- let html=leader?'<div class="v5-tv-entry"><strong>Спортивный лидер: '+escapeHtml(leader)+'</strong></div>':'';
+ let html=leader?'<div class="v5-tv-entry"><strong>Спортивный лидер месяца: '+escapeHtml(leader)+'</strong></div>':'';
  html+=items.map(i=>{const p=String(i).split('|').map(t=>cap(t,100));return '<div class="v5-tv-entry"><strong>'+escapeHtml(p[0]||'Достижение')+'</strong><small>'+escapeHtml(p.slice(1).join(' · '))+'</small></div>'}).join('');
  return html||'<p class="v5-empty">Подтверждённые достижения пока не добавлены</p>';
 }
@@ -378,5 +409,14 @@ setInterval(()=>{
  document.documentElement.style.setProperty('--v5-burn-y',[0,0,1,0][burnShift]+'px');
 },300000);
 window.addEventListener('online',()=>{if(window.academySession?.isAuthorized()){load();loadBirthdays()}});
+// The Screen Wake Lock API is optional; Samsung browser compatibility varies.
+let wakeLock=null;
+async function requestWakeLock(){
+ if(!document.body.classList.contains('wallboard-mode')||document.hidden||!navigator.wakeLock?.request)return;
+ try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null})}
+ catch(e){console.info('Screen wake lock is unavailable on this device')}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestWakeLock()});
+setTimeout(requestWakeLock,1600);
 render5Fields();renderSpotlight();
 })();
