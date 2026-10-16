@@ -1048,7 +1048,7 @@ function init(){
   current=normalizeState(current); enableWallboard(); fitWallboardToViewport(); render(); updateClock();
   fillAdmin();
   const hash=(location.hash||'#dashboard').slice(1);
-  if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); }
+  if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); fitWallboardToViewport(); }
   else if(['dashboard','admin','cadets','ai'].includes(hash)) go(hash); else go('dashboard');
   load(); loadBirthdays(); setInterval(rotationTick,200); setInterval(()=>{updateClock(); if(document.visibilityState==='visible'){load(); loadBirthdays();}},15000);
 }
