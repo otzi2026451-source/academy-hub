@@ -26,8 +26,8 @@ new Script(planner,{filename:'academy5.js'});
 new Script(controls,{filename:'academy6.js'});
 new Script(tvCode,{filename:'academy-tv-6.2.js'});
 new Script(ops7,{filename:'academy7.js'});
-assert.match(html,/<script src="academy7\.js\?v=7\.0\.0"><\/script>/);
-assert.match(html,/<link rel="stylesheet" href="academy7\.css\?v=7\.0\.0">/);
+assert.match(html,/<script src="academy7\.js\?v=7\.0\.1"><\/script>/);
+assert.match(html,/<link rel="stylesheet" href="academy7\.css\?v=7\.0\.1">/);
 for(const marker of ['academy_admin_device_report','academy_revoke_member','academy_state_backups','academy_restore_state_backup','v6-security7','v6-search7','v6-diagnostics7','v6-calendar7','v6-review7']){
  assert.match(ops7,new RegExp(marker));
 }
