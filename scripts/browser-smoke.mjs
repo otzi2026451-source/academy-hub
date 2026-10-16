@@ -103,6 +103,7 @@ try{
   await editorPage.locator('#academyLockPassword').fill('test-role');
   await editorPage.locator('#academyLockSubmit').click();
   await editorPage.waitForSelector('html.academy-editor');
+  console.log('EDITOR_DEBUG',JSON.stringify(await editorPage.locator('#editor6').evaluate(e=>({className:e.className,display:getComputedStyle(e).display,parent:e.parentElement?.className,hash:location.hash,adminClass:document.documentElement.className}))));
   assert(await editorPage.locator('#editor6').isVisible(),'Editor cabinet not visible');
   assert(!(await editorPage.locator('#admin').isVisible()),'Editor cannot access admin workspace');
   await editorPage.locator('#v6EditorTitle').fill('Тестовое объявление');
