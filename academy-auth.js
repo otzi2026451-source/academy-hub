@@ -45,7 +45,7 @@ async function getToken(){
 function authorize(){
  ready=true;
  document.documentElement.classList.add('academy-authorized');
- document.documentElement.classList.toggle('academy-viewer',!adminRole);
+ document.documentElement.classList.toggle('academy-viewer',!adminRole&&!editorRole);
  document.documentElement.classList.toggle('academy-admin',adminRole);
  document.documentElement.classList.toggle('academy-editor',editorRole);
  if(lock)lock.hidden=true;
