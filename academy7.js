@@ -222,7 +222,7 @@ function renderCalendar(){
   elem('strong','',e.title,name);
   elem('small','',e.category+(e.place?' · '+e.place:''),name);
   const days=Math.max(0,Math.ceil((e.stamp-Date.now())/86400000));
-  elem('span','a7-pill','Через '+days+' дн.',row);
+  elem('span','a7-pill',days===0?'Сегодня':'Через '+days+' дн.',row);
  }
 }
 eventFilter.addEventListener('change',renderCalendar);
@@ -398,9 +398,10 @@ function doSearch(){
  searchRows.replaceChildren();
  const query=cleanName(searchInput.value);
  const group=groupSelect.value;
+ const normalizeGroup=v=>safeText(v,30).toLocaleUpperCase('ru-RU').replace(/КРД/g,'KRD').replace(/ОТЗИ/g,'OTZI').replace(/[\s_\-]/g,'');
  const people=safeList(roster).filter(v=>{
   const g=v.group_name||'';
-  if(group&&g!==group)return false;
+  if(group&&normalizeGroup(g)!==normalizeGroup(group))return false;
   return !query||cleanName([v.full_name,v.group_name,v.cadet_code].join(' ')).includes(query);
  });
  searchStatus.textContent='Найдено: '+people.length+' из '+safeList(roster).length;
@@ -436,6 +437,16 @@ function refreshTvHealth(){
  badge.textContent=online?(age===null?'Подключение к базе…':'Синхронизация '+(age===0?'сейчас':age+' мин. назад')):'Нет связи · данные на экране';
  if(age!==null&&age>5)badge.classList.add('a7-offline');
  else if(online)badge.classList.remove('a7-offline');
+ let upcoming=$7('nextEvent7');
+ const dates=parseEvents7(current.events);
+ const soon=dates.find(e=>e.stamp>Date.now()-(e.hour?0:86400000));
+ if(soon){
+   if(!upcoming){upcoming=elem('div','a7-tv-upcoming',null,badge.parentElement);upcoming.id='nextEvent7'}
+   const minutes=Math.max(0,Math.ceil((soon.stamp-Date.now())/60000));
+   const days=Math.ceil(minutes/1440);
+   const left=minutes<60?minutes+' мин':minutes<1440?Math.ceil(minutes/60)+' ч':days+' дн';
+   upcoming.textContent='Ближайшее: '+safeText(soon.title,42)+' · '+(minutes===0?'сегодня':'через '+left);
+ }else if(upcoming)upcoming.remove();
 }
 setInterval(refreshTvHealth,30000);
 window.addEventListener('online',()=>{refreshTvHealth();if(window.academySession?.isAuthorized?.()){load();loadBirthdays()}});
