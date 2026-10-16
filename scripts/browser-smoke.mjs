@@ -132,6 +132,13 @@ try{
  assert(await page.locator('#v6-review7 .a7-change').count()>0,'Preview must list changed sections');
  await page.locator('#v6-review7 .a7-actions .btn.primary').click();
  await page.waitForTimeout(950);
+ console.log('ACADEMY7_SAVE_DEBUG',JSON.stringify({
+ status:await page.locator('#v6-review7 .a7-status').first().textContent(),
+ warnings:await page.locator('#v6-review7 .a7-warnings').first().textContent(),
+ changes:await page.locator('#v6-review7 .a7-change').count(),
+ write:!!lastWrite,
+ errors
+ }));
  assert(lastWrite&&lastWrite.content,'Saving weekly schedule should write data');
  assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
 
