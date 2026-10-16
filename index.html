@@ -309,6 +309,125 @@ body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays #birthdayList{max-h
 
 #dashboard.wallboard .wb-birthdays #birthdayList.is-empty{flex:1;display:flex;align-items:center;justify-content:center;min-height:45px}
 #dashboard.wallboard .wb-birthdays #birthdayList.is-empty .birthday-calendar-empty{font-size:13px!important;color:#aabbb9!important;text-align:center;line-height:1.5}
+
+/* TV readability for 132-cadet roster — font sizes based on visible 10/5 rankings. */
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{
+ grid-template-columns:repeat(12,minmax(0,1fr))!important;
+ grid-template-rows:minmax(0,1.06fr) minmax(0,1fr) minmax(80px,.22fr)!important;
+ gap:14px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-sections{grid-column:span 5!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays{grid-column:span 4!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-study .ranking{gap:8px!important}
+body.wallboard-mode #dashboard.wallboard .wb-study .ranking li{
+ grid-template-columns:34px minmax(0,1fr) auto!important;
+ min-height:57px!important;gap:12px!important;padding:7px 9px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-study .rank-name,
+body.wallboard-mode #dashboard.wallboard .wb-sport .rank-name,
+body.wallboard-mode #dashboard.wallboard .wb-grades .rank-name{min-width:0}
+body.wallboard-mode #dashboard.wallboard .wb-study .rank-name b,
+body.wallboard-mode #dashboard.wallboard .wb-sport .rank-name b,
+body.wallboard-mode #dashboard.wallboard .wb-grades .rank-name b{
+ white-space:normal!important;overflow:visible!important;
+ text-overflow:clip!important;overflow-wrap:anywhere!important;
+ letter-spacing:0!important;display:block!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-study .rank-name b{
+ font-size:21px!important;line-height:1.24!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-study .score{font-size:21px!important}
+body.wallboard-mode #dashboard.wallboard .wb-sport .rank-name b{
+ font-size:20px!important;line-height:1.24!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-sport .ranking li{min-height:57px!important;gap:12px!important}
+body.wallboard-mode #dashboard.wallboard .wb-grades .rank-name b{
+ font-size:18px!important;line-height:1.23!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-grades .ranking li{min-height:44px!important;gap:9px!important}
+body.wallboard-mode #dashboard.wallboard .wb-sections .sport-card h3{
+ font-size:15px!important;line-height:1.32!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-sections .mini-rank b{
+ font-size:14px!important;line-height:1.3!important;
+ white-space:normal!important;overflow-wrap:anywhere!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-sections .mini-rank li{min-height:36px}
+body.wallboard-mode #dashboard.wallboard .wb-sections .mini-rank span{font-size:14px!important}
+/* Wider single birthday panel, with no clipped letters or artificial inner card. */
+body.wallboard-mode #dashboard.wallboard .wb-birthdays{
+ display:flex!important;flex-direction:column!important;
+ min-width:0!important;min-height:0!important;overflow:hidden!important;
+ padding:17px 20px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-grid{
+ display:flex!important;flex-direction:column!important;flex:1;
+ min-width:0!important;min-height:0!important;width:100%!important;
+ height:auto!important;gap:0!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-header{
+ display:flex!important;align-items:center!important;flex-wrap:wrap!important;
+ gap:8px 14px!important;padding:0 0 12px!important;min-height:46px;
+ border-bottom:1px solid rgba(226,197,139,.24);
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-header h2{
+ font-size:24px!important;line-height:1.34!important;letter-spacing:0!important;
+ margin:0!important;min-width:0!important;white-space:normal!important;
+ overflow:visible!important;text-overflow:clip!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-today-badge{
+ font-size:13px!important;line-height:1.3!important;padding:5px 10px!important;
+ flex-shrink:0!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-today-area{
+ flex:0 0 auto!important;margin:13px 0 3px!important;
+ min-width:0!important;min-height:60px!important;
+ border-radius:11px!important;padding:11px 13px!important;overflow:visible!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-today-list li{
+ font-size:18px!important;line-height:1.38!important;white-space:normal!important;
+ overflow:visible!important;overflow-wrap:anywhere!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-person{
+ align-items:flex-start!important;gap:9px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-person-dot{
+ font-size:21px!important;line-height:1.2!important;margin-top:2px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-divider{
+ flex:0 0 auto;padding:15px 1px 10px!important;font-size:14px!important;
+ line-height:1.25!important;letter-spacing:.07em!important;min-height:42px;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays #birthdayList{
+ display:flex!important;flex-direction:column!important;gap:0!important;
+ flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+ overflow:visible!important;width:100%!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-item{
+ display:flex!important;align-items:flex-start!important;gap:11px!important;
+ padding:9px 0!important;min-width:0!important;flex-shrink:0!important;
+ border-bottom:1px solid rgba(255,255,255,.08)!important;
+ line-height:1.33!important;font-size:18px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-item:nth-child(n+4){display:none!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-item>span:last-child{
+ display:block!important;min-width:0!important;font-size:18px!important;
+ line-height:1.33!important;overflow-wrap:anywhere!important;
+ white-space:normal!important;overflow:visible!important;
+ text-overflow:clip!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-marker{
+ width:7px!important;height:7px!important;flex-shrink:0!important;margin-top:9px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays #birthdayList.is-empty{
+ display:flex!important;align-items:flex-start!important;
+ justify-content:flex-start!important;min-height:0!important;padding-top:14px!important;
+}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays .birthday-calendar-empty{
+ font-size:17px!important;line-height:1.35!important;padding:0!important;
+ text-align:left!important;color:#c4cfcd!important;
+}
+
 </style>
 </head>
 <body>
@@ -847,9 +966,8 @@ function renderBirthdays(){
     return {day,month};
   }
   function isToday(value){
-    if(/сегодня/i.test(String(value)))return true;
     const date=getBirthdayDate(value);
-    return !!date&&date.day===todayDay&&date.month===todayMonth;
+    return date?(date.day===todayDay&&date.month===todayMonth):/сегодня/i.test(String(value));
   }
   const manualToday=entries.filter(isToday);
   const today=[...todayList(),...manualToday];
@@ -873,9 +991,9 @@ function renderBirthdays(){
   }).sort((a,b)=>a.daysAway-b.daysAway||a.index-b.index);
   $('birthdayList').classList.toggle('is-empty',!calendar.length);
   $('birthdayList').innerHTML=calendar.length
-    ?calendar.map(({text})=>`<li class="birthday-calendar-item"><span class="birthday-calendar-marker"></span><span>${esc(text)}</span></li>`).join('')
+    ?calendar.slice(0,3).map(({text})=>`<li class="birthday-calendar-item"><span class="birthday-calendar-marker"></span><span>${esc(text)}</span></li>`).join('')
     :'<li class="birthday-calendar-empty">Ближайшие даты пока не добавлены</li>';
-  const hidden=Math.max(0,calendar.length-5);
+  const hidden=Math.max(0,calendar.length-3);
   $('birthdayMoreCount').textContent=hidden?'Ещё '+hidden:'';
 }
 function renderOverview(){
