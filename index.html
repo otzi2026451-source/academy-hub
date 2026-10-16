@@ -243,11 +243,25 @@ body.wallboard-mode #dashboard.wallboard .rank-name b{font-size:15px!important}
 body.wallboard-mode #dashboard.wallboard .rank-no{width:28px!important;height:28px!important}
 body.wallboard-mode #dashboard.wallboard .footer-note{padding:0!important;background:none!important;border:0!important;font-size:10px!important;color:#758388!important}
 
+
+/* Editorial admin navigation is visible on desktop; only TV hides it. */
+.sidebar .tv-link{display:block;margin:2px 0 12px;padding:13px 15px;border:1px solid rgba(210,176,106,.45);border-radius:14px;background:linear-gradient(110deg,rgba(210,176,106,.18),rgba(53,70,60,.16));color:var(--gold);font-size:13px;font-weight:800}
+body:not(.wallboard-mode) #dashboard.wallboard{width:100%;height:auto!important;min-height:100vh;overflow:visible;padding:18px}
+body:not(.wallboard-mode) #dashboard.wallboard .wrap{width:auto!important;min-width:0;max-width:none;transform:none!important;height:auto!important}
+body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid{height:auto!important;min-height:0;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:auto;gap:14px}
+body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid>.panel{min-height:290px;max-height:none}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-study{grid-column:span 3;grid-row:span 2}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-sport{grid-column:span 3;grid-row:span 2}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-schedule,body:not(.wallboard-mode) #dashboard.wallboard .wb-grades{grid-column:span 3;grid-row:auto}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-sections{grid-column:span 6;grid-row:auto}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays,body:not(.wallboard-mode) #dashboard.wallboard .wb-notice{grid-column:span 3;grid-row:auto}
+body:not(.wallboard-mode) #dashboard.wallboard .topbar{height:auto!important}
+@media(max-width:1050px){body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid{display:block}body:not(.wallboard-mode) #dashboard.wallboard .wallboard-grid>.panel{margin-bottom:14px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="adminSidebar">
     <div class="brand">
       <div class="crest">A.H</div>
       <div>
@@ -266,6 +280,7 @@ body.wallboard-mode #dashboard.wallboard .footer-note{padding:0!important;backgr
     <div class="status"><span class="dot" id="sideDot"></span><span id="sideStatus">Подключение…</span></div>
 
     <nav class="nav">
+      <a class="tv-link" href="?tv=1#dashboard" target="_self">📺 Режим Samsung TV · 16:9</a>
       <button data-go="dashboard" class="active"><div class="left"><div class="emoji">🛡️</div><div><strong>Командный центр</strong><span>Полная обзорная панель</span></div></div><i>01</i></button>
       <button data-go="admin"><div class="left"><div class="emoji">⚙️</div><div><strong>Управление</strong><span>Контент, группы и топы</span></div></div><i>02</i></button>
       <button data-go="cadets"><div class="left"><div class="emoji">📁</div><div><strong>Реестр курсантов</strong><span>Закрытое хранение</span></div></div><i>03</i></button>
@@ -580,7 +595,7 @@ body.wallboard-mode #dashboard.wallboard .footer-note{padding:0!important;backgr
             <div class="spacer"></div>
             <div class="preview" id="previewBox">Здесь появится структурированный результат разбора.</div>
             <div class="info" style="margin-top:10px" id="notesBox">ИИ не сохраняет данные автоматически.</div>
-            <div class="btnrow" style="margin-top:14px"><button class="btn secondary" id="applyBtn" disabled>Перенести в редактор</button><button class="btn ghost" data-go="admin">Открыть управление</button></div>
+            <div class="btnrow" style="margin-top:14px"><button class="btn secondary" id="applyBtn" disabled>Перенести в редактор</button><button class="btn primary" id="publishAiBtn" disabled>Проверено — сразу на табло</button><button class="btn ghost" data-go="admin">Открыть управление</button></div>
           </div>
           <div class="panel">
             <div class="section-header"><div><div class="eyebrow">Assistant</div><h2 class="section-title">AI-чат</h2></div></div>
@@ -711,11 +726,12 @@ function updateClock(){
   $('clock').textContent=t; if($('adminClock')) $('adminClock').textContent=t;
 }
 function go(id){
-  document.body.classList.toggle('wallboard-mode',id==='dashboard'||location.search.includes('tv=1'));
+  const isTv=new URLSearchParams(location.search).get('tv')==='1';
+  if(isTv)id='dashboard';
+  document.body.classList.toggle('wallboard-mode',isTv);
   $$('.page').forEach(p=>p.classList.toggle('active',p.id===id));
   $$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
-  if(location.search.includes('tv=1')) id='dashboard';
-  if(!location.search.includes('tv=1')) history.replaceState(null,'','#'+id);
+  if(!isTv) history.replaceState(null,'','#'+id);
 }
 $$('.nav button,[data-go]').forEach(btn=>btn.addEventListener('click',()=>go(btn.dataset.go)));
 
@@ -962,8 +978,8 @@ $('parseBtn').onclick = async () => {
     const texts=[]; for(const f of files){ const txt=await extractText(f); if(txt) texts.push('Файл: '+f.name+'\n'+txt); }
     const images=await extractImages(files);
     const res=await callAI({mode:'import',text:texts.join('\n\n').slice(0,50000),images});
-    importedData=res.data||{}; $('previewBox').textContent=JSON.stringify(importedData,null,2); $('notesBox').textContent=res.notes || 'Проверь значения перед переносом.'; $('applyBtn').disabled=false; $('parseInfo').textContent='✓ Готово';
-  }catch(e){ $('parseInfo').textContent=e.message || String(e); $('previewBox').textContent='Ошибка разбора'; $('notesBox').textContent=''; }
+    importedData=res.data||{}; $('publishAiBtn').disabled=false; $('previewBox').textContent=JSON.stringify(importedData,null,2); $('notesBox').textContent=res.notes || 'Проверь значения перед переносом.'; $('applyBtn').disabled=false; $('parseInfo').textContent='✓ Готово';
+  }catch(e){ $('publishAiBtn').disabled=true; $('parseInfo').textContent=e.message || String(e); $('previewBox').textContent='Ошибка разбора'; $('notesBox').textContent=''; }
 };
 $('applyBtn').onclick = () => {
   if(!importedData) return;
@@ -973,6 +989,20 @@ $('applyBtn').onclick = () => {
   if(importedData.notice && $('cnotice').checked) $('noticeEdit').value = importedData.notice;
   $('notesBox').textContent='Данные перенесены в редактор. Открой раздел «Управление» и сохрани изменения.';
   if(token) $('adminContent').classList.remove('hidden');
+};
+$('publishAiBtn').onclick=async()=>{
+  if(!token||!importedData){$('notesBox').textContent='Сначала войди и обработай файл.';return}
+  if(!confirm('Ты проверил распознанные данные? Выбранные разделы сразу появятся на табло.'))return;
+  try{
+    const next=normalizeState(current);
+    if($('cstudy').checked&&Array.isArray(importedData.study))next.studyTop=importedData.study.slice(0,10);
+    if($('csport').checked&&Array.isArray(importedData.sport))next.sportTopOverall=importedData.sport.slice(0,5);
+    if($('cbirthdays').checked&&Array.isArray(importedData.birthdays))next.birthdays=importedData.birthdays.slice(0,300);
+    if($('cnotice').checked&&typeof importedData.notice==='string')next.notice=importedData.notice;
+    if(Array.isArray(importedData.schedule))next.overviewSchedule=importedData.schedule.slice(0,30);
+    next.study=next.studyTop;next.sport=next.sportTopOverall;next.schedule=next.overviewSchedule;
+    await saveState(next);current=normalizeState(next);render();fillAdmin();$('notesBox').textContent='✓ Данные опубликованы на табло. Обновление на телевизоре — до 15 секунд.';
+  }catch(e){$('notesBox').textContent='Ошибка публикации: '+(e.message||e)}
 };
 $('chatBtn').onclick = async () => {
   try{
@@ -998,7 +1028,7 @@ function enableWallboard(){
   }
   wrap.append(layout);
   const foot=wrap.querySelector('.footer-note');if(foot)wrap.append(foot);
-  dash.classList.add('wallboard');document.body.classList.add('wallboard-mode');
+  dash.classList.add('wallboard');
   // Retain editable admin behind a direct URL while wallboard needs no mouse.
   if(!location.search.includes('tv=1')&&!location.hash)history.replaceState(null,'','#dashboard');
 }
@@ -1006,7 +1036,7 @@ function enableWallboard(){
 
 function fitWallboardToViewport(){
   const board=$('dashboard');
-  if(!board||!board.classList.contains('wallboard'))return;
+  if(!board||!board.classList.contains('wallboard')||!document.body.classList.contains('wallboard-mode'))return;
   const scale=Math.min(window.innerWidth/1920,window.innerHeight/1080);
   board.style.setProperty('--tv-fit',String(scale));
 }
