@@ -275,7 +275,7 @@ async function refreshDrafts(){
  draftsList.replaceChildren();
  try{
   const token=await window.academySession.getToken();
-  const r=await fetch(base+'/rest/v1/academy_publications?select=id,title,status,publish_at,created_at&order=created_at.desc&limit=30',{headers:{apikey:pub,Authorization:'Bearer '+token}});
+  const r=await fetch(base+'/rest/v1/academy_publications?select=id,title,status,publish_at,created_at,patch&order=created_at.desc&limit=30',{headers:{apikey:pub,Authorization:'Bearer '+token}});
   if(!r.ok)throw Error('Не удалось загрузить черновики '+r.status);
   const rows=await r.json();
   if(!rows.length)info(draftsList,'Черновиков пока нет');
@@ -285,9 +285,18 @@ async function refreshDrafts(){
    node('strong','',d.title,left);
    node('small','',d.status+(d.publish_at?' · '+new Date(d.publish_at).toLocaleString('ru-RU',{timeZone:'Asia/Almaty'}):''),left);
    if(['draft','scheduled'].includes(d.status)){
+    const patch=d.patch&&typeof d.patch==='object'?d.patch:{};
+    const check=node('details','v6-draft-review',null,item);
+    node('summary','', 'Изменения: '+Object.keys(patch).join(', '),check);
+    const preview=node('pre','v6-draft-json',null,check);
+    preview.textContent=JSON.stringify(patch,null,2);
+    const reviewed=node('label','v6-reviewed-label',null,check);
+    const checkbox=node('input','',null,reviewed);checkbox.type='checkbox';
+    node('span','', 'Я проверил содержимое этого черновика',reviewed);
     const right=node('div','v6-btns',null,item);
-    btn(right,'Опубликовать',async()=>{
-     if(!confirm('Опубликовать «'+d.title+'» сейчас?'))return;
+    btn(right,'Проверить и опубликовать',async()=>{
+     if(!check.open||!checkbox.checked){check.open=true;draftMsg.textContent='Сначала открой изменения и подтверди проверку содержания.';return}
+     if(!confirm('Опубликовать проверенные изменения «'+d.title+'» сейчас?'))return;
      try{await rpc('academy_manage_publication',{p_id:d.id,p_action:'publish'});draftMsg.textContent='Опубликовано';await refreshDrafts()}catch(e){draftMsg.textContent=e.message}
     });
     btn(right,'Отменить',async()=>{
