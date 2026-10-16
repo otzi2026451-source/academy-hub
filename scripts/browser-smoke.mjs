@@ -16,6 +16,7 @@ try{
  await page.route('**/rest/v1/cadets**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
  await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt',refresh_token:'mock-refresh',expires_in:3600})}));
  await page.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
+ await page.route('**/rest/v1/rpc/can_edit_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
  await page.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
  await page.waitForSelector('#dashboard.wallboard .wallboard-grid',{state:'attached'});
  assert(await page.locator('#academyLock').isVisible(),'Unauthorized screen must display login gate');
@@ -51,6 +52,11 @@ try{
  await page.waitForTimeout(600);
  assert(await page.locator('#adminContent').isVisible(),'Admin content did not unlock with mocked auth');
  assert(await page.locator('#academyVersionPanel').isVisible(),'History panel missing');
+ assert(await page.locator('#academy5Admin').isVisible(),'Academy 5 planning tools missing');
+ assert(await page.locator('#v5Group').count()===1,'Week group selector missing');
+ assert(await page.locator('#v5Excel').count()===1,'Excel bulk import missing');
+ assert(await page.locator('#v5ViewerEmail').count()===1,'TV read-only account management missing');
+
  await page.screenshot({path:'/tmp/academy-admin.png'});
  assert.equal(errors.length,0,'Browser exceptions: '+errors.join(' | '));
  console.log(JSON.stringify({ok:true,checks:['TV1920','TV1366','birthdays','clock','sidebar','login','history','JavaScript'],tv,scaled},null,2));
