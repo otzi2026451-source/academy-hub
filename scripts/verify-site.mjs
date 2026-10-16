@@ -65,7 +65,7 @@ assert.match(planner,/v5Excel/);
 assert.match(planner,/gradeSnapshots/);
 assert.match(auth,/academy_role/);
 assert.match(plannerCSS,/academy-viewer/);
-assert.match(html,/<script src="academy-auth\.js\?v=4\.4\.0"><\/script>/);
+assert.match(html,/<script src="academy-auth\.js\?v=4\.4\.1"><\/script>/);
 assert.match(html,/html:not\(\.academy-authorized\) body \.app/);
 assert.match(html,/id="academyLockForm"/);
 assert.match(auth,/\/rest\/v1\/rpc\/can_access_academy/);
