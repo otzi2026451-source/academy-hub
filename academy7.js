@@ -69,8 +69,18 @@ function deviceClientId(){
  try{
   let value=localStorage.getItem(key);
   if(value&&/^[0-9a-f-]{36}$/i.test(value))return value;
-  value=crypto.randomUUID();localStorage.setItem(key,value);return value;
- }catch{return crypto.randomUUID()}
+  value=makeId();localStorage.setItem(key,value);return value;
+ }catch{return makeId()}
+}
+function makeId(){
+ if(typeof crypto!=='undefined'&&typeof crypto.randomUUID==='function')return crypto.randomUUID();
+ const arr=new Uint8Array(16);
+ if(typeof crypto!=='undefined'&&typeof crypto.getRandomValues==='function')crypto.getRandomValues(arr);
+ else for(let i=0;i<16;i++)arr[i]=Math.floor(Math.random()*256);
+ arr[6]=(arr[6]&15)|64;arr[8]=(arr[8]&63)|128;
+ const h=Array.from(arr,b=>b.toString(16).padStart(2,'0')).join('');
+ return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+
 }
 const clientId=deviceClientId();
 const deviceLabel=()=>{
