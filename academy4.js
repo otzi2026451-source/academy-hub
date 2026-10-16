@@ -295,10 +295,12 @@
     if(fetching)return;
     fetching=true;
     try{
-      const response=await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+token},cache:'no-store'});
+      const role=window.academySession?.role?.()||'admin';
+      const reader=role==='admin'?'app_state?id=eq.1&select=content':'rpc/academy_tv_board';
+      const response=await fetch(base+'/rest/v1/'+reader,{method:role==='admin'?'GET':'POST',headers:{apikey:pub,Authorization:'Bearer '+token,'Content-Type':'application/json'},...(role==='admin'?{}:{body:'{}'}),cache:'no-store'});
       if(!response.ok)throw Error('HTTP '+response.status);
       const records=await response.json();
-      const data=records[0]?.content;
+      const data=role==='admin'?records[0]?.content:records;
       if(data){
         const signature=JSON.stringify(data);
         if(signature!==synced){
