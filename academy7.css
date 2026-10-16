@@ -58,3 +58,8 @@ html:not(.academy-admin) #v6-diagnostics7,
 html:not(.academy-admin) #v6-backups7{display:none!important}
 @media(max-width:850px){.a7-stats{grid-template-columns:1fr 1fr}.a7-event{grid-template-columns:90px minmax(0,1fr)}.a7-pill{grid-column:2;justify-self:start}}
 @media(max-width:600px){.a7-search-tools{grid-template-columns:1fr}.a7-diagnostic{display:block}.a7-diagnostic span{display:block;text-align:left;margin-top:4px}.a7-stats{grid-template-columns:1fr}}
+
+body.wallboard-mode #dashboard.wallboard .a7-tv-upcoming{
+ display:block;color:#efd6a1;font-size:11px;max-width:340px;line-height:1.2;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;
+}
