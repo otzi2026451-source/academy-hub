@@ -190,6 +190,59 @@ body.wallboard-mode .main{width:100%}
 @media(max-width:1300px){#dashboard.wallboard .wallboard-grid{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}#dashboard.wallboard .wb-study{grid-column:span 2;grid-row:span 2}#dashboard.wallboard .wb-sport,#dashboard.wallboard .wb-schedule,#dashboard.wallboard .wb-grades,#dashboard.wallboard .wb-birthdays,#dashboard.wallboard .wb-notice{grid-column:span 2}#dashboard.wallboard .wb-sections{grid-column:span 4}}
 @media(max-width:750px){#dashboard.wallboard{height:auto;overflow:visible}#dashboard.wallboard .wallboard-grid{display:block}#dashboard.wallboard .wallboard-grid>.panel{margin-bottom:10px}#dashboard.wallboard .topbar{display:block}#dashboard.wallboard .head-panel{display:none}}
 
+
+/* Purpose-built 1920 × 1080 kiosk canvas; scaled as one unit to screen. */
+html:has(body.wallboard-mode),body.wallboard-mode{width:100%;height:100%;overflow:hidden!important}
+body.wallboard-mode .app,body.wallboard-mode .main{height:100%;min-height:0!important;width:100%;overflow:hidden!important}
+body.wallboard-mode #dashboard.wallboard{position:absolute!important;top:0;left:0;width:1920px!important;height:1080px!important;min-height:0!important;margin:0!important;padding:18px 22px 12px!important;overflow:hidden!important;transform-origin:top left;transform:scale(var(--tv-fit,1));box-sizing:border-box}
+body.wallboard-mode #dashboard.wallboard>.wrap{height:100%!important;gap:12px!important}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{grid-template-columns:repeat(12,minmax(0,1fr))!important;grid-template-rows:minmax(0,1fr) minmax(0,.85fr)!important;gap:12px!important}
+body.wallboard-mode #dashboard.wallboard .wb-study{grid-column:span 3!important;grid-row:span 2!important}
+body.wallboard-mode #dashboard.wallboard .wb-sport,body.wallboard-mode #dashboard.wallboard .wb-schedule,body.wallboard-mode #dashboard.wallboard .wb-grades{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-sections{grid-column:span 6!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wb-birthdays,body.wallboard-mode #dashboard.wallboard .wb-notice{grid-column:span 3!important;grid-row:span 1!important}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{display:grid!important}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel{margin:0!important}
+body.wallboard-mode #dashboard.wallboard .topbar{display:flex!important}
+body.wallboard-mode #dashboard.wallboard .head-panel{display:block!important}
+body.wallboard-mode #dashboard.wallboard .rank-name b{font-size:14px!important}
+body.wallboard-mode #dashboard.wallboard .section-title{font-size:19px!important}
+body.wallboard-mode #dashboard.wallboard .sport-card h3{font-size:13px!important}
+body.wallboard-mode #dashboard.wallboard .sport-card .mini-rank b{font-size:11px!important}
+body.wallboard-mode #dashboard.wallboard .footer-note{font-size:11px!important}
+@media(max-width:750px){body.wallboard-mode #dashboard.wallboard{height:1080px!important;overflow:hidden!important}body.wallboard-mode #dashboard.wallboard .wallboard-grid{display:grid!important}}
+
+
+/* KIOSK 16:9 — information only, zero explanatory clutter */
+body.wallboard-mode #dashboard.wallboard .topbar .eyebrow,
+body.wallboard-mode #dashboard.wallboard .topbar .subtitle,
+body.wallboard-mode #dashboard.wallboard .section-header .eyebrow,
+body.wallboard-mode #dashboard.wallboard .group-meta,
+body.wallboard-mode #dashboard.wallboard .group-card .muted,
+body.wallboard-mode #dashboard.wallboard .rotation-tabs,
+body.wallboard-mode #dashboard.wallboard .rotation-toolbar>.muted,
+body.wallboard-mode #dashboard.wallboard .callout p {display:none!important}
+body.wallboard-mode #dashboard.wallboard .topbar{height:65px;min-height:65px!important;gap:12px!important}
+body.wallboard-mode #dashboard.wallboard .title{font-size:32px!important;letter-spacing:.12em!important;margin:0!important;color:#ecf0e9}
+body.wallboard-mode #dashboard.wallboard .head-panel{padding:6px 12px!important;background:none;box-shadow:none;border:0}
+body.wallboard-mode #dashboard.wallboard .clock{font-size:27px!important}
+body.wallboard-mode #dashboard.wallboard .clock-note{font-size:10px!important}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{grid-template-rows:minmax(0,1fr) minmax(0,.94fr)!important;gap:12px!important}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid>.panel{padding:14px 16px!important}
+body.wallboard-mode #dashboard.wallboard .section-header{margin:0 0 9px!important}
+body.wallboard-mode #dashboard.wallboard .section-title{font-size:21px!important;margin:0!important}
+body.wallboard-mode #dashboard.wallboard .rotation-toolbar{margin:0!important;min-height:0!important}
+body.wallboard-mode #dashboard.wallboard .group-card{padding:10px!important}
+body.wallboard-mode #dashboard.wallboard .schedule{gap:7px!important;margin:8px 0 0!important}
+body.wallboard-mode #dashboard.wallboard .schedule li{padding:8px!important}
+body.wallboard-mode #dashboard.wallboard .schedule li span,body.wallboard-mode #dashboard.wallboard .schedule time{font-size:14px!important}
+body.wallboard-mode #dashboard.wallboard .schedule time{min-width:60px!important}
+body.wallboard-mode #dashboard.wallboard .ranking li{padding:6px 8px!important}
+body.wallboard-mode #dashboard.wallboard .ranking{gap:5px!important}
+body.wallboard-mode #dashboard.wallboard .rank-name b{font-size:15px!important}
+body.wallboard-mode #dashboard.wallboard .rank-no{width:28px!important;height:28px!important}
+body.wallboard-mode #dashboard.wallboard .footer-note{padding:0!important;background:none!important;border:0!important;font-size:10px!important;color:#758388!important}
+
 </style>
 </head>
 <body>
@@ -231,7 +284,7 @@ body.wallboard-mode .main{width:100%}
         <div class="topbar">
           <div>
             <div class="eyebrow">КНБ Academy • Tactical Dashboard</div>
-            <h1 class="title">Единый командный центр курсантов</h1>
+            <h1 class="title">ACADEMY HUB <span style="color:var(--gold)">/ ТАБЛО</span></h1>
             <p class="subtitle">Военный дизайнерский интерфейс для академии: в одном месте собраны топы по учёбе и спорту, 6 учебных групп, спортивные секции, календарь дней рождения, направления КРД и ОТЗИ, а также оперативные объявления.</p>
           </div>
           <div class="head-panel">
@@ -950,9 +1003,19 @@ function enableWallboard(){
   if(!location.search.includes('tv=1')&&!location.hash)history.replaceState(null,'','#dashboard');
 }
 
+
+function fitWallboardToViewport(){
+  const board=$('dashboard');
+  if(!board||!board.classList.contains('wallboard'))return;
+  const scale=Math.min(window.innerWidth/1920,window.innerHeight/1080);
+  board.style.setProperty('--tv-fit',String(scale));
+}
+window.addEventListener('resize',fitWallboardToViewport,{passive:true});
+window.addEventListener('orientationchange',fitWallboardToViewport,{passive:true});
+
 function init(){
   const cfg=window.ACADEMY_CONFIG||{}; base=cfg.supabaseUrl||''; pub=cfg.supabaseAnonKey||''; configured=!!(base&&pub);
-  current=normalizeState(current); enableWallboard(); render(); updateClock();
+  current=normalizeState(current); enableWallboard(); fitWallboardToViewport(); render(); updateClock();
   fillAdmin();
   const hash=(location.hash||'#dashboard').slice(1);
   if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); }
