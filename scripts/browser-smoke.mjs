@@ -5,6 +5,7 @@ const base='http://127.0.0.1:8765/';
 try{
  const page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ page.on('dialog',dialog=>dialog.accept());
  const grades=Array.from({length:25},(_,i)=>['Тестовый курсант '+String(i+1),Math.max(50,100-i)]);
  const groups=Object.fromEntries(['KRD1','KRD2','KRD3','KRD4','OTZI1','OTZI2'].map(k=>[k,{label:k,direction:k.startsWith('OTZI')?'ОТЗИ':'КРД',cadets:25,schedule:['08:30 | Математика','10:20 | Физика','12:10 | Информатика','14:30 | Физическая подготовка']}]));
  const state={studyTop:grades.slice(0,10),sportTopOverall:grades.slice(0,5),groupGrades:Object.fromEntries(Object.keys(groups).map(k=>[k,grades])),groups,birthdays:['20.11 — Тестовый курсант А','27.11 — Тестовый курсант Б'],notice:'Тестовое объявление — проверка интерфейса',noticePriority:'important'};
@@ -18,6 +19,12 @@ try{
  await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt',refresh_token:'mock-refresh',expires_in:3600})}));
  await page.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
  await page.route('**/rest/v1/rpc/academy_role**',route=>route.fulfill({status:200,contentType:'application/json',body:'"admin"'}));
+ await page.route('**/rest/v1/rpc/academy_record_device**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
+ await page.route('**/rest/v1/rpc/academy_admin_device_report**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{device_id:'1',user_id:'admin-1',email:'test@example.invalid',role:'admin',device_label:'Компьютер',first_seen:new Date().toISOString(),last_seen:new Date().toISOString()}])}));
+ await page.route('**/rest/v1/academy_viewers**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.route('**/rest/v1/academy_editors**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.route('**/rest/v1/academy_state_backups**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{backup_id:1,created_at:new Date().toISOString()}])}));
+
  await page.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
  await page.waitForSelector('#dashboard.wallboard .wallboard-grid',{state:'attached'});
  assert(await page.locator('#academyLock').isVisible(),'Unauthorized screen must display login gate');
@@ -40,6 +47,7 @@ try{
  assert(/\d{2}:\d{2}:\d{2}/.test(tv.date),'Clock not updating');
 
  assert.equal(await page.locator('#studyList > li').count(),10,'TV must reserve all ten academic places');
+ assert(await page.locator('#tvHealth7').count()===1,'Live TV connection indicator missing');
  assert.equal(await page.locator('#sportSections .sport-card').count(),5,'All five sports disciplines must stay visible');
  await page.setViewportSize({width:1756,height:830});
  await page.waitForTimeout(300);
@@ -119,12 +127,31 @@ try{
  await page.locator('#v5Day').selectOption('2');
  await page.locator('#v5Schedule').fill('09:00 | Тестовая физика · кабинет 204');
  await page.locator('.v6-top-actions .btn.primary').click();
- await page.waitForTimeout(850);
+ await page.waitForTimeout(300);
+ assert(await page.locator('#v6-review7').isVisible(),'Save must open changed-data preview before publishing');
+ assert(await page.locator('#v6-review7 .a7-change').count()>0,'Preview must list changed sections');
+ await page.locator('#v6-review7 .a7-actions .btn.primary').click();
+ await page.waitForTimeout(950);
  assert(lastWrite&&lastWrite.content,'Saving weekly schedule should write data');
  assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
 
 
 
+ // Verify private devices and backups are visible only in administrator workspace.
+ await page.locator('[data-tab="security7"]').click();
+ await page.waitForTimeout(250);
+ assert(await page.locator('#v6-security7').isVisible(),'Security center missing');
+ assert((await page.locator('#v6-security7').textContent()).includes('test@example.invalid'),'Device register not shown');
+ await page.locator('[data-tab="diagnostics7"]').click();
+ await page.waitForTimeout(250);
+ assert(await page.locator('#v6-diagnostics7').isVisible(),'Diagnostics center missing');
+ await page.locator('[data-tab="backups7"]').click();
+ await page.waitForTimeout(250);
+ assert((await page.locator('#v6-backups7').textContent()).includes('1'),'Automatic backup row missing');
+ await page.locator('[data-tab="calendar7"]').click();
+ assert(await page.locator('#v6-calendar7').isVisible(),'Academic calendar missing');
+ await page.locator('[data-tab="search7"]').click();
+ assert(await page.locator('#v6-search7').isVisible(),'Cadet search missing');
  // End-to-end simulated Gemini chat from the new administrator AI tab.
  let aiRequest=null;
  await page.route('**/functions/v1/parse-document',route=>{
@@ -212,6 +239,7 @@ try{
   assert(!(await viewerPage.locator('#cadets').isVisible()),'Viewer must not see cadet registry');
   assert(!(await viewerPage.locator('#ai').isVisible()),'Viewer must not see AI center');
   assert(!(await viewerPage.locator('#academy6Workspace').isVisible()),'Viewer must not see management workspace');
+  assert(!(await viewerPage.locator('#v6-security7').isVisible()),'Viewer must not access security center');
   assert(!(await viewerPage.locator('.nav button[data-go="admin"]').isVisible()),'Viewer must not see admin navigation');
   assert.equal(responses.length,0,'Viewer script exceptions: '+responses.join(' | '));
  }finally{await viewerContext.close()}
