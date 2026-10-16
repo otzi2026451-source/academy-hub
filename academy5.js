@@ -94,9 +94,19 @@ const scheduleText=input(scheduleArea.body,'v5Schedule','Время | Предм
 scheduleText.placeholder='08:30 | Математика · 301\n10:20 | Физика · 204';
 scheduleText.rows=6;
 let weekDraft=cloneValue(current.weekSchedules);
+let weekTouched=false;
 let wkCurrent=grp.value+'#'+daySel.value;
-function saveWeekDraft(){const [k,d]=wkCurrent.split('#');if(!allowedGroups.has(k))return;weekDraft[k]=weekDraft[k]||{};weekDraft[k][d]=parseLines5(scheduleText.value,40)}
-function loadWeekDraft(){wkCurrent=grp.value+'#'+daySel.value;const list=weekDraft[grp.value]?.[daySel.value];scheduleText.value=Array.isArray(list)?list.join('\n'):safeArray(current.groups?.[grp.value]?.schedule).join('\n')}
+scheduleText.addEventListener('input',()=>{weekTouched=true});
+function saveWeekDraft(){
+ if(!weekTouched)return;
+ const [k,d]=wkCurrent.split('#');if(!allowedGroups.has(k))return;
+ weekDraft[k]=weekDraft[k]||{};weekDraft[k][d]=parseLines5(scheduleText.value,40);weekTouched=false;
+}
+function loadWeekDraft(){
+ wkCurrent=grp.value+'#'+daySel.value;const list=weekDraft[grp.value]?.[daySel.value];
+ scheduleText.value=Array.isArray(list)?list.join('\n'):safeArray(current.groups?.[grp.value]?.schedule).join('\n');
+ weekTouched=false;
+}
 const swapWeek=()=>{saveWeekDraft();loadWeekDraft()};
 grp.addEventListener('change',swapWeek);daySel.addEventListener('change',swapWeek);
 loadWeekDraft();
@@ -113,6 +123,19 @@ const sportsArea=section('02 · Матчи, результаты и лучшая
 line(sportsArea.body,'Одна строка: ДД.ММ.ГГГГ | Вид спорта | KRD1 | OTZI1 | 3:2. Можно учитывать футбол, волейбол, борьбу и другие секции.');
 const sportText=input(sportsArea.body,'v5Matches','Завершённые соревнования','textarea');
 sportText.rows=6;sportText.placeholder='16.10.2026 | Футбол | KRD1 | OTZI1 | 3:2';
+const sportsTable=E('div',{id:'v5GroupStandings',class:'v5-analytics'},sportsArea.body);
+function drawStandings(){
+ sportsTable.replaceChildren();
+ const matches=parseWins(parseLines5(sportText.value,300)),table=E('table',{class:'v5-analytics-table'},sportsTable);
+ const head=E('tr',{},table);['Место','Группа','Очки'].forEach(x=>E('th',{text:x},head));
+ for(const [i,[k,points]]of standings(matches).entries()){
+  const tr=E('tr',{},table);
+  E('td',{text:String(i+1)},tr);E('td',{text:groupName(k)},tr);E('td',{text:String(points)},tr);
+ }
+ E('p',{class:'v5-note',text:'Подсчёт: победа = 3 очка, ничья = 1. Учтено матчей: '+matches.length},sportsTable);
+}
+sportText.addEventListener('input',drawStandings);
+
 
 const eventsArea=section('03 · Мероприятия и обратный отсчёт');
 line(eventsArea.body,'Даты: ДД.ММ.ГГГГ | Событие | Место. Секретные мероприятия и адреса сюда не добавляй.');
@@ -308,7 +331,7 @@ function render5Fields(){
  sportText.value=safeArray(current.matches).join('\n');
  eventsText.value=safeArray(current.events).join('\n');
  achievementsText.value=safeArray(current.achievements).join('\n');
- drawAnalytics();showAudit(current);
+ drawStandings();drawAnalytics();showAudit(current);
 }
 const originalFillAdmin=fillAdmin;
 fillAdmin=function(){originalFillAdmin();render5Fields()};
