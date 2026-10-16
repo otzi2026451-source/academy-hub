@@ -3,7 +3,7 @@
 'use strict';
 const el=id=>document.getElementById(id);
 const storageKey='academy-hub-session-v1';
-let session=null,refreshPending=null,ready=false,adminRole=false;
+let session=null,refreshPending=null,ready=false,adminRole=false,editorRole=false;
 const lock=el('academyLock'),form=el('academyLockForm'),error=el('academyLockError'),submit=el('academyLockSubmit');
 const label=el('academyLockStatus'),email=el('academyLockEmail'),password=el('academyLockPassword');
 function msg(s,isError=false){if(error){error.textContent=s;error.classList.toggle('bad',isError)}}
@@ -20,8 +20,8 @@ async function authFetch(url,{method='POST',body,authorization}={}){
  return data;
 }
 async function verifyRole(jwt){
- const result=await authFetch('/rest/v1/rpc/can_edit_academy',{body:{},authorization:jwt});
- adminRole=result===true;
+ const role=await authFetch('/rest/v1/rpc/academy_role',{body:{},authorization:jwt});
+ adminRole=role==='admin';editorRole=role==='editor';
 }
 async function verifyAccess(jwt){
  const result=await authFetch('/rest/v1/rpc/can_access_academy',{body:{},authorization:jwt});
@@ -47,6 +47,7 @@ function authorize(){
  document.documentElement.classList.add('academy-authorized');
  document.documentElement.classList.toggle('academy-viewer',!adminRole);
  document.documentElement.classList.toggle('academy-admin',adminRole);
+ document.documentElement.classList.toggle('academy-editor',editorRole);
  if(lock)lock.hidden=true;
  if(el('loginBox'))el('loginBox').classList.add('hidden');
  if(el('adminContent'))el('adminContent').classList.toggle('hidden',!adminRole);
@@ -55,15 +56,16 @@ function authorize(){
  if(el('password'))el('password').value='';
  if(password)password.value='';
  if(adminRole&&typeof fillAdmin==='function')fillAdmin();
- if(!adminRole&&typeof go==='function')go('dashboard');
+ if(editorRole&&typeof go==='function')go('editor6');
+ else if(!adminRole&&typeof go==='function')go('dashboard');
  if(typeof load==='function')load();
  if(typeof loadBirthdays==='function')loadBirthdays();
  if(adminRole&&typeof loadRoster==='function')loadRoster();
 }
 function logout(message='Вы вышли из системы.'){
  const old=session?.access_token;
- ready=false;adminRole=false;session=null;token='';wipeStorage();
- document.documentElement.classList.remove('academy-authorized','academy-viewer','academy-admin');
+ ready=false;adminRole=false;editorRole=false;session=null;token='';wipeStorage();
+ document.documentElement.classList.remove('academy-authorized','academy-viewer','academy-admin','academy-editor');
  if(lock)lock.hidden=false;
  if(el('loginBox'))el('loginBox').classList.remove('hidden');
  if(el('adminContent'))el('adminContent').classList.add('hidden');
@@ -113,7 +115,7 @@ const legacyLogout=el('logoutBtn');if(legacyLogout)legacyLogout.onclick=()=>logo
 const originalLoad=load,originalBirthdayLoad=loadBirthdays;
 load=async function(){if(!ready)return;const fresh=await getToken();if(!fresh)return;return originalLoad()};
 loadBirthdays=async function(){if(!ready)return;const fresh=await getToken();if(!fresh)return;return originalBirthdayLoad()};
-window.academySession={getToken,signOut:()=>logout(),isAuthorized:()=>ready,canEdit:()=>ready&&adminRole};
+window.academySession={getToken,signOut:()=>logout(),isAuthorized:()=>ready,canEdit:()=>ready&&adminRole,canDraft:()=>ready&&(adminRole||editorRole),role:()=>adminRole?'admin':editorRole?'editor':ready?'viewer':'none'};
 setInterval(async()=>{if(!ready||!session)return;try{await verifyAccess(await getToken())}catch{logout('Доступ отозван. Пожалуйста, войдите снова.')}},60000);
 let latestRefresh=0;
 setInterval(async()=>{
