@@ -124,6 +124,72 @@
 .rotation-tabs button.active{background:var(--gold);color:#151718}
 .rotation-progress{height:3px;overflow:hidden;background:#334048;border-radius:10px;margin:14px 0 0}.rotation-progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s linear}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+#dashboard.wallboard>.wrap>:not(.topbar):not(.wallboard-grid):not(.footer-note){display:none!important}
+/* One-screen wallboard: important public blocks are visible without scrolling or a mouse. */
+#dashboard.wallboard{height:100vh;min-height:680px;overflow:hidden;padding:12px 16px 10px}
+#dashboard.wallboard>.wrap{height:100%;max-width:none;display:flex;flex-direction:column;gap:10px}
+#dashboard.wallboard>.wrap>.topbar{flex:none;margin:0;align-items:center}
+#dashboard.wallboard .title{font-size:clamp(20px,1.7vw,34px);margin:4px 0}
+#dashboard.wallboard .topbar .subtitle{display:none}
+#dashboard.wallboard .head-panel{padding:9px 14px;min-width:205px}
+#dashboard.wallboard .clock{font-size:23px}
+#dashboard.wallboard .eyebrow{font-size:9px}
+#dashboard.wallboard .wallboard-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:minmax(0,1fr) minmax(0,.83fr);gap:10px}
+#dashboard.wallboard .wallboard-grid>.panel{padding:12px 14px;min-height:0;overflow:hidden;border-radius:14px}
+#dashboard.wallboard .wallboard-grid .section-header{display:block;margin:0 0 8px}
+#dashboard.wallboard .wallboard-grid .section-header p{display:none}
+#dashboard.wallboard .wallboard-grid .section-title{font-size:clamp(13px,1.05vw,20px);margin:2px 0 5px}
+#dashboard.wallboard .ranking{gap:3px}
+#dashboard.wallboard .ranking li{padding:4px 7px;gap:7px;grid-template-columns:27px minmax(0,1fr) auto;border-radius:9px}
+#dashboard.wallboard .rank-no{width:25px;height:25px;border-radius:7px;font-size:11px}
+#dashboard.wallboard .rank-name b{font-size:clamp(10px,.8vw,13px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dashboard.wallboard .rank-name span{display:none}
+#dashboard.wallboard .score{font-size:clamp(12px,.95vw,17px)}
+#dashboard.wallboard .rotation-toolbar{gap:5px;margin:0 0 5px}
+#dashboard.wallboard .rotation-tabs{gap:3px}
+#dashboard.wallboard .rotation-tabs button{font-size:10px;padding:4px 6px;border-radius:6px}
+#dashboard.wallboard .rotation-toolbar>.muted{display:none}
+#dashboard.wallboard .group-card{padding:8px;border-radius:10px}
+#dashboard.wallboard .group-card h3{font-size:16px}
+#dashboard.wallboard .group-meta{margin:5px 0}
+#dashboard.wallboard .group-meta span{padding:4px 6px;font-size:10px}
+#dashboard.wallboard .schedule{gap:4px}
+#dashboard.wallboard .schedule li{padding:6px;gap:5px}
+#dashboard.wallboard .schedule li span,#dashboard.wallboard .schedule time{font-size:11px}
+#dashboard.wallboard .schedule time{min-width:43px}
+#dashboard.wallboard .sport-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+#dashboard.wallboard .sport-card{padding:8px;border-radius:10px}
+#dashboard.wallboard .sport-card h3{font-size:11px;margin:0 0 7px}
+#dashboard.wallboard .mini-rank{gap:3px}
+#dashboard.wallboard .mini-rank li{padding:4px;gap:3px}
+#dashboard.wallboard .mini-rank b{font-size:10px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dashboard.wallboard .mini-rank span{font-size:10px}
+#dashboard.wallboard .callout{padding:8px}
+#dashboard.wallboard .callout h3,#dashboard.wallboard .callout p{display:none}
+#dashboard.wallboard .list li{padding:6px 0;font-size:11px}
+#dashboard.wallboard #birthdayList{max-height:170px;overflow:hidden}
+#dashboard.wallboard .notice{padding:10px;font-size:clamp(11px,.82vw,14px);line-height:1.5}
+#dashboard.wallboard .footer-note{flex:none;padding:3px 7px;font-size:10px;border-radius:7px}
+#dashboard.wallboard .wb-study{grid-column:span 3;grid-row:span 2}
+#dashboard.wallboard .wb-sport{grid-column:span 3}
+#dashboard.wallboard .wb-schedule{grid-column:span 3}
+#dashboard.wallboard .wb-grades{grid-column:span 3}
+#dashboard.wallboard .wb-sections{grid-column:span 6}
+#dashboard.wallboard .wb-birthdays{grid-column:span 3}
+#dashboard.wallboard .wb-notice{grid-column:span 3}
+#dashboard.wallboard .wb-birthdays .panel{padding:0;background:transparent;box-shadow:none;border:0}
+#dashboard.wallboard .wb-birthdays .birthday-grid{display:block}
+#dashboard.wallboard .wb-birthdays .birthday-grid>.panel{margin-bottom:8px}
+#dashboard.wallboard .wb-birthdays .birthday-grid>.panel:last-child{margin-bottom:0}
+#dashboard.wallboard .wb-birthdays .birthday-grid .section-header{margin-bottom:4px}
+#dashboard.wallboard .wallboard-grid .rotation-progress{margin:5px 0 0}
+#dashboard.wallboard .wb-grades .ranking li{padding:4px 6px}
+body.wallboard-mode .sidebar{display:none}
+body.wallboard-mode .main{width:100%}
+@media(max-width:1300px){#dashboard.wallboard .wallboard-grid{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}#dashboard.wallboard .wb-study{grid-column:span 2;grid-row:span 2}#dashboard.wallboard .wb-sport,#dashboard.wallboard .wb-schedule,#dashboard.wallboard .wb-grades,#dashboard.wallboard .wb-birthdays,#dashboard.wallboard .wb-notice{grid-column:span 2}#dashboard.wallboard .wb-sections{grid-column:span 4}}
+@media(max-width:750px){#dashboard.wallboard{height:auto;overflow:visible}#dashboard.wallboard .wallboard-grid{display:block}#dashboard.wallboard .wallboard-grid>.panel{margin-bottom:10px}#dashboard.wallboard .topbar{display:block}#dashboard.wallboard .head-panel{display:none}}
+
 </style>
 </head>
 <body>
@@ -592,6 +658,7 @@ function updateClock(){
   $('clock').textContent=t; if($('adminClock')) $('adminClock').textContent=t;
 }
 function go(id){
+  document.body.classList.toggle('wallboard-mode',id==='dashboard'||location.search.includes('tv=1'));
   $$('.page').forEach(p=>p.classList.toggle('active',p.id===id));
   $$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
   if(location.search.includes('tv=1')) id='dashboard';
@@ -863,9 +930,29 @@ $('chatBtn').onclick = async () => {
   }catch(e){ $('chatInfo').textContent=e.message || String(e); }
 };
 
+
+function enableWallboard(){
+  const dash=$('dashboard');if(!dash || dash.classList.contains('wallboard'))return;
+  const wrap=dash.querySelector('.wrap');
+  const layout=document.createElement('div');layout.className='wallboard-grid';
+  const findPanel=id=>$(id)?.closest('.panel');
+  const study=findPanel('studyList'),sport=findPanel('sportList'),sched=findPanel('groupGrid'),grades=findPanel('gradeRotator'),sections=findPanel('sportSections'),notice=findPanel('noticeBox');
+  const birthdays=$('birthdayList')?.closest('.birthday-grid');
+  const birthdayShell=document.createElement('div');birthdayShell.className='panel wb-birthdays';
+  if(birthdays)birthdayShell.append(birthdays);
+  for(const [node,name] of [[study,'wb-study'],[sport,'wb-sport'],[sched,'wb-schedule'],[grades,'wb-grades'],[sections,'wb-sections'],[birthdayShell,'wb-birthdays'],[notice,'wb-notice']]){
+    if(node){node.classList.add(name);layout.append(node)}
+  }
+  wrap.append(layout);
+  const foot=wrap.querySelector('.footer-note');if(foot)wrap.append(foot);
+  dash.classList.add('wallboard');document.body.classList.add('wallboard-mode');
+  // Retain editable admin behind a direct URL while wallboard needs no mouse.
+  if(!location.search.includes('tv=1')&&!location.hash)history.replaceState(null,'','#dashboard');
+}
+
 function init(){
   const cfg=window.ACADEMY_CONFIG||{}; base=cfg.supabaseUrl||''; pub=cfg.supabaseAnonKey||''; configured=!!(base&&pub);
-  current=normalizeState(current); render(); updateClock();
+  current=normalizeState(current); enableWallboard(); render(); updateClock();
   fillAdmin();
   const hash=(location.hash||'#dashboard').slice(1);
   if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); }
