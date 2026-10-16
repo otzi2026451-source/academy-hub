@@ -8,8 +8,9 @@ try{
  const grades=Array.from({length:25},(_,i)=>['Тестовый курсант '+String(i+1),Math.max(50,100-i)]);
  const groups=Object.fromEntries(['KRD1','KRD2','KRD3','KRD4','OTZI1','OTZI2'].map(k=>[k,{label:k,direction:k.startsWith('OTZI')?'ОТЗИ':'КРД',cadets:25,schedule:['08:30 | Математика','10:20 | Физика','12:10 | Информатика','14:30 | Физическая подготовка']}]));
  const state={studyTop:grades.slice(0,10),sportTopOverall:grades.slice(0,5),groupGrades:Object.fromEntries(Object.keys(groups).map(k=>[k,grades])),groups,birthdays:['20.11 — Тестовый курсант А','27.11 — Тестовый курсант Б'],notice:'Тестовое объявление — проверка интерфейса',noticePriority:'important'};
+ let lastWrite=null;
  await page.route('**/rest/v1/app_state**',route=>{
-  if(route.request().method()==='PATCH')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])});
+  if(route.request().method()==='PATCH'){lastWrite=JSON.parse(route.request().postData()||'{}');return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:lastWrite.content||state}])});}
   return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])});
  });
  await page.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
@@ -56,6 +57,15 @@ try{
  assert(await page.locator('#v5Group').count()===1,'Week group selector missing');
  assert(await page.locator('#v5Excel').count()===1,'Excel bulk import missing');
  assert(await page.locator('#v5ViewerEmail').count()===1,'TV read-only account management missing');
+ await page.locator('#academy5Admin details').first().locator('summary').click();
+ await page.locator('#v5Group').selectOption('KRD1');
+ await page.locator('#v5Day').selectOption('2');
+ await page.locator('#v5Schedule').fill('09:00 | Тестовая физика · кабинет 204');
+ await page.locator('#saveBtn').click();
+ await page.waitForTimeout(850);
+ assert(lastWrite&&lastWrite.content,'Saving weekly schedule should write data');
+ assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
+
 
  await page.screenshot({path:'/tmp/academy-admin.png'});
 
