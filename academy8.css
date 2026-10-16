@@ -1,0 +1,17 @@
+/* Academy Hub 8 — protected structured-data workspace */
+#admin .v6-screen .a8-title{margin:14px 0 5px;color:#ebd09b;font-size:19px;line-height:1.25;letter-spacing:-.02em}
+#admin .v6-screen .a8-hint{white-space:pre-wrap;color:#bed0c9;font-size:13px;line-height:1.6;margin:5px 0 14px}
+#admin .v6-screen .a8-actions{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 15px}
+#admin .v6-screen .a8-actions .btn{font-size:12px;min-height:41px;padding:9px 12px}
+#admin .v6-screen .a8-result{min-height:32px;max-height:250px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#16262d;border:1px solid #4e5f60;border-radius:9px;color:#e7e8da;font:13px/1.55 ui-monospace,Menlo,monospace;padding:14px}
+#admin .v6-screen .a8-preview{max-width:100%;overflow:auto;margin:15px 0}
+#admin .v6-screen .a8-table{min-width:460px;width:100%;border-collapse:collapse;background:#17252b;border:1px solid rgba(225,208,176,.16);border-radius:9px}
+#admin .v6-screen .a8-table th{background:#32444b;color:#f2d8a0;text-align:left;padding:11px 13px;font-size:12px;white-space:nowrap}
+#admin .v6-screen .a8-table td{border-top:1px solid rgba(255,255,255,.09);color:#dce7e3;padding:9px 13px;font-size:13px}
+#admin .v6-screen .a8-ok{color:#b5e0ad!important;font-weight:700}
+#admin .v6-screen .a8-warning{color:#f9cb9a!important;font-weight:700}
+#admin .v6-screen .a8-panel{border-top:1px solid rgba(228,212,184,.18);margin-top:28px;padding-top:16px}
+#admin .v6-screen .a8-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+#admin .v6-screen .a8-fields>.input{width:100%;min-width:0}
+#admin .v6-screen .a8-sandbox-link{display:inline-flex;color:#ebca91;font-weight:750;font-size:14px;margin-top:14px;border-bottom:1px solid currentColor;text-decoration:none}
+@media(max-width:600px){#admin .v6-screen .a8-fields{grid-template-columns:1fr}}
