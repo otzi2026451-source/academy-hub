@@ -306,6 +306,9 @@ body.wallboard-mode #dashboard.wallboard .wb-notice #noticeBox{flex:1;min-width:
 body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays .birthday-calendar-item:nth-child(n+6){display:flex}
 body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays #birthdayList{max-height:none;overflow:visible}
 
+
+#dashboard.wallboard .wb-birthdays #birthdayList.is-empty{flex:1;display:flex;align-items:center;justify-content:center;min-height:45px}
+#dashboard.wallboard .wb-birthdays #birthdayList.is-empty .birthday-calendar-empty{font-size:13px!important;color:#aabbb9!important;text-align:center;line-height:1.5}
 </style>
 </head>
 <body>
@@ -853,7 +856,7 @@ function renderBirthdays(){
   const uniqueToday=[...new Set(today.map(v=>String(v).trim()).filter(Boolean))];
   $('birthdayTodayBadge').textContent='Сегодня · '+uniqueToday.length;
   $('todayBirthdays').innerHTML=uniqueToday.length
-    ?uniqueToday.slice(0,3).map(v=>`<li class="birthday-person"><span class="birthday-person-dot">✦</span><span>${esc(v.replace(/^🎉\s*/,''))}</span></li>`).join('')
+    ?uniqueToday.slice(0,3).map(v=>`<li class="birthday-person"><span class="birthday-person-dot">✦</span><span>${esc(v.replace(/^🎉\s*/,'').replace(/\s*[—–-]\s*сегодня\s*🎉?\s*$/i,''))}</span></li>`).join('')
       +(uniqueToday.length>3?`<li class="birthday-extra">И ещё ${uniqueToday.length-3}</li>`:'')
     :'<li class="birthday-none"><span class="birthday-none-symbol">✧</span><span>Сегодня без именинников</span></li>';
   const calendar=entries.filter(v=>!isToday(v)).map((text,index)=>{
@@ -868,6 +871,7 @@ function renderBirthdays(){
     }
     return {text,index,daysAway};
   }).sort((a,b)=>a.daysAway-b.daysAway||a.index-b.index);
+  $('birthdayList').classList.toggle('is-empty',!calendar.length);
   $('birthdayList').innerHTML=calendar.length
     ?calendar.map(({text})=>`<li class="birthday-calendar-item"><span class="birthday-calendar-marker"></span><span>${esc(text)}</span></li>`).join('')
     :'<li class="birthday-calendar-empty">Ближайшие даты пока не добавлены</li>';
