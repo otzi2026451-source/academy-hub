@@ -14,9 +14,16 @@ try{
  });
  await page.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
  await page.route('**/rest/v1/cadets**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
- await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt'})}));
+ await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt',refresh_token:'mock-refresh',expires_in:3600})}));
+ await page.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
  await page.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
  await page.waitForSelector('#dashboard.wallboard .wallboard-grid');
+ assert(await page.locator('#academyLock').isVisible(),'Unauthorized screen must display login gate');
+ assert(!(await page.locator('#dashboard').isVisible()),'Private dashboard must be hidden before login');
+ await page.locator('#academyLockEmail').fill('test@example.invalid');
+ await page.locator('#academyLockPassword').fill('fictional-test-password');
+ await page.locator('#academyLockSubmit').click();
+ await page.waitForSelector('html.academy-authorized');
  await page.waitForTimeout(1800);
  const tv=await page.evaluate(()=>{
   const board=document.querySelector('#dashboard'),birth=document.querySelector('.wb-birthdays');
@@ -38,11 +45,10 @@ try{
  await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});
  await page.waitForTimeout(500);
  assert(await page.locator('.sidebar').isVisible(),'Sidebar hidden in desktop mode');
- assert(await page.locator('#loginBox').isVisible(),'Admin login unavailable');
- await page.locator('#email').fill('test@example.invalid');
- await page.locator('#password').fill('test-pass-only');
- await page.locator('#loginBtn').click();
- await page.waitForTimeout(900);
+ await page.waitForSelector('html.academy-authorized');
+ assert(!(await page.locator('#academyLock').isVisible()),'Existing session should auto-restore');
+ assert(!(await page.locator('#loginBox').isVisible()),'Legacy login should be hidden after sign-in');
+ await page.waitForTimeout(600);
  assert(await page.locator('#adminContent').isVisible(),'Admin content did not unlock with mocked auth');
  assert(await page.locator('#academyVersionPanel').isVisible(),'History panel missing');
  await page.screenshot({path:'/tmp/academy-admin.png'});
