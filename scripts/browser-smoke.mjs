@@ -6,9 +6,12 @@ try{
  const page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  page.on('dialog',dialog=>dialog.accept());
+ const sizes={KRD1:25,KRD2:25,KRD3:25,KRD4:25,OTZI1:14,OTZI2:18};
  const grades=Array.from({length:25},(_,i)=>['Тестовый курсант '+String(i+1),Math.max(50,100-i)]);
- const groups=Object.fromEntries(['KRD1','KRD2','KRD3','KRD4','OTZI1','OTZI2'].map(k=>[k,{label:k,direction:k.startsWith('OTZI')?'ОТЗИ':'КРД',cadets:25,schedule:['08:30 | Математика','10:20 | Физика','12:10 | Информатика','14:30 | Физическая подготовка']}]));
- const state={studyTop:grades.slice(0,10),sportTopOverall:grades.slice(0,5),groupGrades:Object.fromEntries(Object.keys(groups).map(k=>[k,grades])),groups,birthdays:['20.11 — Тестовый курсант А','27.11 — Тестовый курсант Б'],notice:'Тестовое объявление — проверка интерфейса',noticePriority:'important'};
+ const groups=Object.fromEntries(Object.keys(sizes).map(k=>[k,{label:k,direction:k.startsWith('OTZI')?'ОТЗИ':'КРД',cadets:sizes[k],schedule:['08:30 | Математика','10:20 | Физика','12:10 | Информатика','14:30 | Физическая подготовка']}]));
+ const groupGrades=Object.fromEntries(Object.entries(sizes).map(([k,count])=>[k,Array.from({length:count},(_,i)=>[k+' — тестовый курсант '+(i+1),80+i%20])]));
+ assert.equal(Object.values(groupGrades).reduce((n,a)=>n+a.length,0),132);
+ const state={studyTop:grades.slice(0,10),sportTopOverall:grades.slice(0,5),groupGrades,groups,birthdays:['20.11 — Тестовый курсант А','27.11 — Тестовый курсант Б'],notice:'Тестовое объявление — проверка интерфейса',noticePriority:'important'};
  let lastWrite=null;
  await page.route('**/rest/v1/app_state**',route=>{
   if(route.request().method()==='PATCH'){lastWrite=JSON.parse(route.request().postData()||'{}');return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:lastWrite.content||state}])});}
