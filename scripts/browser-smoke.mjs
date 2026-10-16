@@ -127,6 +127,8 @@ try{
  assert(await page.locator('.v6-draft-area input[type="datetime-local"]').count()===1,'Scheduled publication time missing');
  await page.locator('[data-tab="preview"]').click();
  assert(await page.locator('#academy6PreviewHolder iframe').count()===1,'Samsung TV preview missing');
+ await page.frameLocator('#academy6PreviewHolder iframe').locator('html.academy-authorized').waitFor({timeout:10000});
+ assert(await page.frameLocator('#academy6PreviewHolder iframe').locator('#dashboard').isVisible(),'Embedded preview must reuse logged-in admin session');
  await page.locator('[data-tab="schedule"]').click();
 
   await page.locator('#v5Group').selectOption('KRD1');
