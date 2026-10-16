@@ -3,14 +3,16 @@
 'use strict';
 const el=id=>document.getElementById(id);
 const storageKey='academy-hub-session-v1';
+const usePersistentSession=new URLSearchParams(location.search).get('tv')==='1';
+const selectedStorage=usePersistentSession?localStorage:sessionStorage;
 let session=null,refreshPending=null,ready=false,adminRole=false,editorRole=false;
 const lock=el('academyLock'),form=el('academyLockForm'),error=el('academyLockError'),submit=el('academyLockSubmit');
 const label=el('academyLockStatus'),email=el('academyLockEmail'),password=el('academyLockPassword');
 function msg(s,isError=false){if(error){error.textContent=s;error.classList.toggle('bad',isError)}}
-function wipeStorage(){try{localStorage.removeItem(storageKey)}catch{}}
+function wipeStorage(){try{localStorage.removeItem(storageKey);sessionStorage.removeItem(storageKey)}catch{}}
 function storeSession(s){
   session={access_token:s.access_token,refresh_token:s.refresh_token,expires_at:Date.now()+Math.max(60,s.expires_in||3600)*1000};
-  try{localStorage.setItem(storageKey,JSON.stringify(session))}catch{}
+  try{selectedStorage.setItem(storageKey,JSON.stringify(session));if(!usePersistentSession)localStorage.removeItem(storageKey)}catch{}
   token=session.access_token;
 }
 async function authFetch(url,{method='POST',body,authorization}={}){
@@ -92,7 +94,13 @@ async function signIn(usr,pwd){
 }
 async function start(){
  if(!configured){msg('Не настроен config.js. Обратитесь к администратору.',true);return}
- let saved=null;try{saved=JSON.parse(localStorage.getItem(storageKey)||'null')}catch{}
+ let saved=null;
+ try{
+  const legacy=localStorage.getItem(storageKey);
+  const stored=selectedStorage.getItem(storageKey)||legacy;
+  saved=JSON.parse(stored||'null');
+  if(!usePersistentSession&&stored){sessionStorage.setItem(storageKey,stored);localStorage.removeItem(storageKey)}
+ }catch{}
  if(saved?.refresh_token){
   if(label)label.textContent='Восстановление сеанса…';
   try{await refresh(saved);authorize();return}catch(e){wipeStorage();session=null;token='';}
