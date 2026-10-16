@@ -58,7 +58,7 @@ function showTab(key){
  if(key==='overview')drawOverview();
  if(key==='preview')openPreview();
  if(key==='drafts')refreshDrafts();
- if(key==='grades')drawAwards();
+ /* Keep unsaved award field edits when switching sections. */
  if(key==='quality')drawQuality();
  if(key==='access')drawAccess();
 }
