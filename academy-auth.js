@@ -39,6 +39,11 @@ async function refresh(s){
 }
 async function getToken(){
  if(!ready||!session)return null;
+ if(isEmbeddedPreview){
+  const parentToken=await window.parent.academySession?.getToken?.();
+  if(!parentToken){logout('Администратор вышел из системы');return null}
+  token=parentToken;session.access_token=parentToken;return parentToken;
+ }
  if(session.expires_at-Date.now()<120000){
   if(!refreshPending)refreshPending=refresh(session).finally(()=>{refreshPending=null});
   try{await refreshPending}catch(e){logout('Сеанс истёк. Войдите снова.');return null}
@@ -95,6 +100,16 @@ async function signIn(usr,pwd){
 }
 async function start(){
  if(!configured){msg('Не настроен config.js. Обратитесь к администратору.',true);return}
+ if(isEmbeddedPreview){
+  try{
+   if(!window.parent.academySession?.isAuthorized?.())throw Error('Сначала войди в админ-панель');
+   const parentToken=await window.parent.academySession.getToken();
+   if(!parentToken)throw Error('Нет активной сессии администратора');
+   await verifyAccess(parentToken);
+   session={access_token:parentToken,refresh_token:'',expires_at:Date.now()+60000};
+   token=parentToken;authorize();return;
+  }catch(e){msg(e.message||'Не удалось открыть предпросмотр',true);return}
+ }
  let saved=null;
  try{
   const legacy=localStorage.getItem(storageKey);
