@@ -1,0 +1,43 @@
+
+/* Academy Hub 5.0 — restrained information architecture */
+:root{--v5-burn-x:0px;--v5-burn-y:0px}
+html.academy-viewer #admin,html.academy-viewer #cadets,html.academy-viewer #ai,
+html.academy-viewer .nav button[data-go="admin"],
+html.academy-viewer .nav button[data-go="cadets"],
+html.academy-viewer .nav button[data-go="ai"]{display:none!important}
+html.academy-viewer #dashboard.wallboard{display:block!important}
+html.academy-viewer .sidebar .side-footer{display:none!important}
+.v5-admin{border-top:1px solid rgba(217,188,130,.28);margin-top:24px;padding-top:20px}
+.v5-heading{font-size:23px;letter-spacing:-.02em;margin:0 0 14px;font-weight:800}
+.v5-section{background:#1c282d;border:1px solid rgba(226,202,155,.22);border-radius:12px;margin:11px 0;overflow:hidden}
+.v5-section summary{cursor:pointer;padding:16px 18px;display:block;font-weight:750;color:#f2e9db;line-height:1.4}
+.v5-section[open] summary{background:rgba(231,200,148,.075);border-bottom:1px solid rgba(255,255,255,.07)}
+.v5-body{padding:17px 18px 22px}
+.v5-note{font-size:13px;line-height:1.55;color:#bfcfcd;margin:8px 0 14px}
+.v5-inline{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.v5-inline select{min-width:0;min-height:49px}
+.v5-field{display:grid;gap:8px;margin:10px 0 16px;color:#e3eae6;font-size:13px;font-weight:650}
+.v5-field .input{font-size:15px}
+.v5-field textarea.input{min-height:132px;resize:vertical;white-space:pre-wrap}
+.v5-preview{max-height:230px;overflow:auto;white-space:pre-wrap;word-break:break-word;background:#172125;border:1px solid #35474b;color:#e1eae7;border-radius:10px;padding:15px;font-size:13px;line-height:1.55}
+.v5-issue{font-size:13px;color:#ead6ae;padding:7px 8px;border-top:1px solid rgba(255,255,255,.06)}
+.v5-analytics{overflow:auto;margin:12px 0}
+.v5-analytics-table{width:100%;border-collapse:collapse;font-size:13px;min-width:330px}
+.v5-analytics-table td,.v5-analytics-table th{padding:10px 9px;text-align:left;border-bottom:1px solid #435457}
+.v5-analytics-table th{color:#dec893;white-space:nowrap;font-weight:700}
+.v5-analytics-table tr:hover{background:rgba(255,255,255,.025)}
+.v5-viewers{max-height:160px;overflow:auto}
+.v5-tv-spotlight{display:flex;flex-direction:column;gap:10px;padding:4px;min-height:0;width:100%}
+.v5-tv-slide-title{font-size:17px;color:#e2c58b;font-weight:800;line-height:1.3;border-bottom:1px solid rgba(217,188,130,.25);padding-bottom:6px}
+.v5-tv-entry{display:flex;flex-direction:column;gap:3px;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.075);min-width:0}
+.v5-tv-entry strong{font-size:15px;font-weight:750;line-height:1.35;color:#f1f3ee;word-break:normal;overflow-wrap:anywhere}
+.v5-tv-entry small{font-size:12px;color:#c4d2ce;line-height:1.35;overflow-wrap:anywhere}
+.v5-empty{font-size:14px;color:#bbcbca}
+body.wallboard-mode #dashboard.wallboard .wb-sections .v5-tv-slide-title{font-size:19px}
+body.wallboard-mode #dashboard.wallboard .wb-sections .v5-tv-entry strong{font-size:17px}
+body.wallboard-mode #dashboard.wallboard .wb-sections .v5-tv-entry small{font-size:14px}
+body.wallboard-mode #dashboard.wallboard .wb-sections .v5-tv-spotlight{gap:7px}
+body.wallboard-mode #dashboard.wallboard .wallboard-grid{transform:translate(var(--v5-burn-x),var(--v5-burn-y))}
+body.wallboard-mode #dashboard.wallboard .wb-sections .v5-tv-entry:nth-of-type(n+5){display:none}
+@media(max-width:700px){.v5-inline{grid-template-columns:1fr}.v5-body{padding:12px}}
+@media(prefers-reduced-motion:reduce){body.wallboard-mode #dashboard.wallboard .wallboard-grid{transform:none!important}}
