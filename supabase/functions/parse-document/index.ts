@@ -22,7 +22,7 @@ Deno.serve(async(req)=>{
     const response=await fetch(baseModels+'?pageSize=100',{headers:{'x-goog-api-key':gemini},signal:AbortSignal.timeout(10000)});
     if(!response.ok)return json({connected:false,error:response.status===429?'Превышен лимит Gemini':response.status===403?'API-ключ Gemini отклонён':'Gemini models: HTTP '+response.status,code:response.status},200);
     const listing=await response.json();
-    const choices=(listing.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')&&/gemini.*flash/i.test(m.name)&&!/gemini-2\\.|audio|tts|live|image/i.test(m.name)).map((m:any)=>m.name).slice(0,12);
+    const choices=(listing.models||[]).filter((m:any)=>m.supportedGenerationMethods?.includes('generateContent')&&/gemini.*flash/i.test(m.name)&&!/gemini-2\.|audio|tts|live|image/i.test(m.name)).map((m:any)=>m.name).slice(0,12);
     return json({connected:choices.length>0,models:choices,hasSupportedModels:choices.length>0,checkedAt:new Date().toISOString()});
    }catch{return json({connected:false,error:'Gemini не ответил в течение 10 секунд',retryable:true})}
  }
