@@ -17,7 +17,7 @@ try{
  await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt',refresh_token:'mock-refresh',expires_in:3600})}));
  await page.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
  await page.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
- await page.waitForSelector('#dashboard.wallboard .wallboard-grid');
+ await page.waitForSelector('#dashboard.wallboard .wallboard-grid',{state:'attached'});
  assert(await page.locator('#academyLock').isVisible(),'Unauthorized screen must display login gate');
  assert(!(await page.locator('#dashboard').isVisible()),'Private dashboard must be hidden before login');
  await page.locator('#academyLockEmail').fill('test@example.invalid');
