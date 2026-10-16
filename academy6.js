@@ -6,9 +6,9 @@ const node=(tag,cls,text,parent)=>{const el=document.createElement(tag);if(cls)e
 const btn=(parent,text,handler,cls='btn secondary')=>{const b=node('button',cls,text,parent);b.type='button';b.addEventListener('click',handler);return b};
 const info=(parent,text)=>node('p','v6-note',text,parent);
 const safeText=s=>String(s||'').slice(0,1800);
-const panelIds=['overview','schedule','grades','sports','events','achievements','birthdays','cadets','ai','import','quality','drafts','access','history','preview'];
-const names={overview:'Обзор',schedule:'Расписание',grades:'Оценки и лидеры',sports:'Спорт',events:'Мероприятия',achievements:'Достижения',birthdays:'Дни рождения',cadets:'Курсанты',ai:'ИИ-центр',import:'Excel',quality:'Контроль качества',drafts:'Черновики',access:'Права доступа',history:'История',preview:'Предпросмотр ТВ'};
-const icons={overview:'◫',schedule:'▦',grades:'▤',sports:'◉',events:'◷',achievements:'✦',birthdays:'◇',cadets:'♙',ai:'✳',import:'⇪',quality:'✓',drafts:'▧',access:'⚿',history:'↺',preview:'▣'};
+const panelIds=['overview','schedule','grades','sports','events','calendar7','achievements','birthdays','cadets','search7','ai','import','quality','review7','drafts','access','security7','diagnostics7','history','backups7','preview'];
+const names={overview:'Обзор',schedule:'Расписание',grades:'Оценки и лидеры',sports:'Спорт',events:'Мероприятия',achievements:'Достижения',birthdays:'Дни рождения',cadets:'Курсанты',ai:'ИИ-центр',import:'Excel',quality:'Контроль качества',drafts:'Черновики',access:'Права доступа',history:'История',preview:'Предпросмотр ТВ',calendar7:'Календарь',search7:'Поиск курсантов',review7:'Проверка изменений',security7:'Безопасность',diagnostics7:'Диагностика',backups7:'Резервные копии'};
+const icons={overview:'◫',schedule:'▦',grades:'▤',sports:'◉',events:'◷',achievements:'✦',birthdays:'◇',cadets:'♙',ai:'✳',import:'⇪',quality:'✓',drafts:'▧',access:'⚿',history:'↺',preview:'▣',calendar7:'▦',search7:'⌕',review7:'☑',security7:'⚿',diagnostics7:'⌁',backups7:'▥'};
 let editorDraftForm=null,activeTab='overview';
 const adminSection=q('admin'),adminContent=q('adminContent');
 if(!adminSection||!adminContent)return;
