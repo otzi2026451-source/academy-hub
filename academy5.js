@@ -390,24 +390,13 @@ function achievementEntries(){
  html+=items.map(i=>{const p=String(i).split('|').map(t=>cap(t,100));return '<div class="v5-tv-entry"><strong>'+escapeHtml(p[0]||'Достижение')+'</strong><small>'+escapeHtml(p.slice(1).join(' · '))+'</small></div>'}).join('');
  return html||'<p class="v5-empty">Подтверждённые достижения пока не добавлены</p>';
 }
+// Stable five-discipline layout; announcements/events rotate in the bottom ticker instead.
 function renderSpotlight(){
  const target=$5('sportSections');if(!target)return;
- if(sportsSlide===0){
-   sportsSignature='sports';
-   priorRenderSports();
-   return;
- }
- const sig=JSON.stringify([sportsSlide,current.events,current.achievements,current.matches]);
- if(sig===sportsSignature&&target.dataset.view==='v5')return;
- sportsSignature=sig;target.dataset.view='v5';
- const title=sportsSlide===1?'Ближайшие мероприятия':'Спортивные достижения';
- target.innerHTML='<div class="v5-tv-spotlight"><div class="v5-tv-slide-title">'+escapeHtml(title)+'</div>'+(sportsSlide===1?upcomingEvents():achievementEntries())+'</div>';
+ target.dataset.view='disciplines';
+ priorRenderSports();
 }
-renderSports=function(){sportsSignature='';renderSpotlight()};
-setInterval(()=>{
- if(!document.documentElement.classList.contains('academy-authorized'))return;
- sportsSlide=(sportsSlide+1)%3; sportsSignature='';renderSpotlight();
-},20000);
+renderSports=function(){renderSpotlight()};
 
 let lastDow=dayToday();
 const priorRotators=renderRotators;
