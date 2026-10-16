@@ -837,7 +837,7 @@ function renderBirthdays(){
   const todayDay=Number(dateParts[0]),todayMonth=Number(dateParts[1]);
   const entries=Array.isArray(current.birthdays)?current.birthdays.filter(x=>typeof x==='string'&&x.trim()):[];
   function getBirthdayDate(value){
-    const m=String(value).match(/(?:^|[^\\d])(\\d{1,2})[.\\/-](\\d{1,2})(?!\\d)/);
+    const m=String(value).match(/(?:^|[^\d])(\d{1,2})[.\/-](\d{1,2})(?!\d)/);
     if(!m)return null;
     const day=Number(m[1]),month=Number(m[2]);
     if(month<1||month>12||day<1||day>31)return null;
@@ -853,7 +853,7 @@ function renderBirthdays(){
   const uniqueToday=[...new Set(today.map(v=>String(v).trim()).filter(Boolean))];
   $('birthdayTodayBadge').textContent='Сегодня · '+uniqueToday.length;
   $('todayBirthdays').innerHTML=uniqueToday.length
-    ?uniqueToday.slice(0,3).map(v=>`<li class="birthday-person"><span class="birthday-person-dot">✦</span><span>${esc(v.replace(/^🎉\\s*/,''))}</span></li>`).join('')
+    ?uniqueToday.slice(0,3).map(v=>`<li class="birthday-person"><span class="birthday-person-dot">✦</span><span>${esc(v.replace(/^🎉\s*/,''))}</span></li>`).join('')
       +(uniqueToday.length>3?`<li class="birthday-extra">И ещё ${uniqueToday.length-3}</li>`:'')
     :'<li class="birthday-none"><span class="birthday-none-symbol">✧</span><span>Сегодня без именинников</span></li>';
   const calendar=entries.filter(v=>!isToday(v)).map((text,index)=>{
