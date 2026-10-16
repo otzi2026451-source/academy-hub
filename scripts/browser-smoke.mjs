@@ -62,6 +62,7 @@ try{
  assert(await page.locator('#academy6Workspace').isVisible(),'Academy 6 admin console not visible');
  const overviewDebug=await page.locator('#v6-overview').evaluate(el=>({className:el.className,style:getComputedStyle(el).display,width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height,parent:el.parentElement?.id,adminVisible:document.querySelector('#admin')?.className}));
  console.log('ACADEMY6_OVERVIEW',JSON.stringify(overviewDebug));
+ console.log('ACADEMY6_PAGE_ERRORS',JSON.stringify(errors));
  assert(await page.locator('#v6-overview').isVisible(),'Academy 6 overview missing');
  await page.locator('[data-tab="drafts"]').click();
  assert(await page.locator('#v6-drafts').isVisible(),'Drafts tab missing');
