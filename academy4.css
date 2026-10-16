@@ -87,3 +87,10 @@ body.wallboard-mode #dashboard.wallboard .footer-note{font-size:12px!important}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+/* Fix crest squashing inside the 250px admin sidebar. */
+.sidebar .brand{display:grid!important;grid-template-columns:60px minmax(0,1fr)!important;gap:11px!important;align-items:start!important}
+.sidebar .brand>.crest.academy-seal{display:grid!important;place-items:center;flex:none!important;flex-shrink:0!important;width:60px!important;min-width:60px!important;max-width:60px!important;height:60px!important;min-height:60px!important;border-radius:50%!important;background:#f6f6f1!important;padding:3px!important;overflow:hidden!important}
+.sidebar .brand>.crest.academy-seal img{display:block!important;object-fit:contain!important;width:100%!important;height:100%!important;border-radius:50%!important}
+.sidebar .brand h1{font-size:18px!important;line-height:1.2!important;margin-top:4px}
+.sidebar .brand p{font-size:11px!important;line-height:1.48!important;letter-spacing:0!important}
