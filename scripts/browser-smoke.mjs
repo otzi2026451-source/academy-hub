@@ -81,6 +81,40 @@ try{
  assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
 
 
+
+ // End-to-end simulated Gemini chat from the new administrator AI tab.
+ let aiRequest=null;
+ await page.route('**/functions/v1/parse-document',route=>{
+  aiRequest=JSON.parse(route.request().postData()||'{}');
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({answer:'Тестовый ответ Gemini'})});
+ });
+ await page.locator('[data-tab="ai"]').click();
+ assert(await page.locator('#v6-ai').isVisible(),'AI tab not available from administrator workspace');
+ await page.locator('#chatPrompt').fill('Проверить AI чат');
+ await page.locator('#chatBtn').click();
+ await page.waitForTimeout(550);
+ assert(aiRequest?.mode==='chat','AI request missing or invalid mode');
+ assert(await page.locator('#chatReply').textContent()==='Тестовый ответ Gemini','AI chat response not displayed');
+ // Simulate server-managed scheduled publication without touching real data.
+ let draftCreated=null,draftScheduled=null;
+ await page.route('**/rest/v1/rpc/academy_create_publication',route=>{
+  draftCreated=JSON.parse(route.request().postData()||'{}');
+  return route.fulfill({status:200,contentType:'application/json',body:'"00000000-0000-0000-0000-000000000006"'});
+ });
+ await page.route('**/rest/v1/rpc/academy_manage_publication',route=>{
+  draftScheduled=JSON.parse(route.request().postData()||'{}');
+  return route.fulfill({status:200,contentType:'application/json',body:'"scheduled"'});
+ });
+ await page.route('**/rest/v1/academy_publications**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.locator('[data-tab="drafts"]').click();
+ await page.locator('.v6-draft-area input[type="text"]').first().fill('Тестовая публикация');
+ await page.locator('.v6-draft-area input[type="datetime-local"]').fill('2030-10-20T10:00');
+ await page.locator('#v6-drafts .v6-btns .btn.primary').click();
+ await page.waitForTimeout(600);
+ assert(draftCreated?.p_title==='Тестовая публикация','Draft creation missing');
+ assert(draftScheduled?.p_action==='schedule','Scheduled publication RPC not called');
+ assert(draftScheduled?.p_publish_at?.includes('2030-10-20'),'Publication timestamp invalid');
+ await page.locator('[data-tab="overview"]').click();
  await page.screenshot({path:'/tmp/academy-admin.png'});
 
 
