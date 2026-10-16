@@ -58,6 +58,30 @@ try{
  assert(await page.locator('#v5ViewerEmail').count()===1,'TV read-only account management missing');
 
  await page.screenshot({path:'/tmp/academy-admin.png'});
+
+ const viewerContext=await browser.newContext({viewport:{width:1920,height:1080}});
+ const viewerPage=await viewerContext.newPage();
+ try{
+  const responses=[];
+  viewerPage.on('pageerror',e=>responses.push(e.message));
+  await viewerPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])}));
+  await viewerPage.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+  await viewerPage.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
+  await viewerPage.route('**/rest/v1/rpc/can_edit_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'false'}));
+  await viewerPage.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'viewer-mock-jwt',refresh_token:'viewer-refresh',expires_in:3600})}));
+  await viewerPage.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
+  await viewerPage.waitForSelector('#academyLockForm');
+  await viewerPage.locator('#academyLockEmail').fill('viewer@example.invalid');
+  await viewerPage.locator('#academyLockPassword').fill('viewer-test-only');
+  await viewerPage.locator('#academyLockSubmit').click();
+  await viewerPage.waitForSelector('html.academy-viewer');
+  assert(await viewerPage.locator('#dashboard').isVisible(),'Viewer needs TV access');
+  assert(!(await viewerPage.locator('#admin').isVisible()),'Viewer must not see admin page');
+  assert(!(await viewerPage.locator('#cadets').isVisible()),'Viewer must not see cadet registry');
+  assert(!(await viewerPage.locator('#ai').isVisible()),'Viewer must not see AI center');
+  assert(!(await viewerPage.locator('.nav button[data-go="admin"]').isVisible()),'Viewer must not see admin navigation');
+  assert.equal(responses.length,0,'Viewer script exceptions: '+responses.join(' | '));
+ }finally{await viewerContext.close()}
  assert.equal(errors.length,0,'Browser exceptions: '+errors.join(' | '));
  console.log(JSON.stringify({ok:true,checks:['TV1920','TV1366','birthdays','clock','sidebar','login','history','JavaScript'],tv,scaled},null,2));
 }finally{await browser.close();}
