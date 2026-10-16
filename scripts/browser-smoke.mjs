@@ -1,0 +1,51 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const base='http://127.0.0.1:8765/';
+try{
+ const page=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const grades=Array.from({length:25},(_,i)=>['Тестовый курсант '+String(i+1),Math.max(50,100-i)]);
+ const groups=Object.fromEntries(['KRD1','KRD2','KRD3','KRD4','OTZI1','OTZI2'].map(k=>[k,{label:k,direction:k.startsWith('OTZI')?'ОТЗИ':'КРД',cadets:25,schedule:['08:30 | Математика','10:20 | Физика','12:10 | Информатика','14:30 | Физическая подготовка']}]));
+ const state={studyTop:grades.slice(0,10),sportTopOverall:grades.slice(0,5),groupGrades:Object.fromEntries(Object.keys(groups).map(k=>[k,grades])),groups,birthdays:['20.11 — Тестовый курсант А','27.11 — Тестовый курсант Б'],notice:'Тестовое объявление — проверка интерфейса',noticePriority:'important'};
+ await page.route('**/rest/v1/app_state**',route=>{
+  if(route.request().method()==='PATCH')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])});
+  return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])});
+ });
+ await page.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.route('**/rest/v1/cadets**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.route('**/auth/v1/token**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({access_token:'mock-test-jwt'})}));
+ await page.goto(base+'?tv=1#dashboard',{waitUntil:'domcontentloaded'});
+ await page.waitForSelector('#dashboard.wallboard .wallboard-grid');
+ await page.waitForTimeout(1800);
+ const tv=await page.evaluate(()=>{
+  const board=document.querySelector('#dashboard'),birth=document.querySelector('.wb-birthdays');
+  return {bodyClass:document.body.className,rect:board.getBoundingClientRect().toJSON(),w:innerWidth,h:innerHeight,birthHeight:birth.clientHeight,birthScrollHeight:birth.scrollHeight,scriptLoaded:!!document.querySelector('#academyVersionPanel'),cssLoaded:[...document.styleSheets].some(x=>String(x.href||'').includes('academy4.css')),date:document.querySelector('#clock')?.textContent};
+ });
+ assert(tv.bodyClass.includes('wallboard-mode'),'TV mode not active');
+ assert(tv.scriptLoaded,'Academy 4 JS not loaded');
+ assert(tv.cssLoaded,'Academy 4 CSS not loaded');
+ assert(tv.rect.width<=tv.w+3,'TV board wider than viewport');
+ assert(tv.rect.height<=tv.h+3,'TV board taller than viewport');
+ assert(tv.birthScrollHeight<=tv.birthHeight+8,'Birthday panel is clipped');
+ assert(/\d{2}:\d{2}:\d{2}/.test(tv.date),'Clock not updating');
+ await page.screenshot({path:'/tmp/academy-tv-1920.png'});
+ await page.setViewportSize({width:1366,height:768});
+ await page.waitForTimeout(400);
+ const scaled=await page.evaluate(()=>({rect:document.querySelector('#dashboard').getBoundingClientRect().toJSON(),w:innerWidth,h:innerHeight}));
+ assert(scaled.rect.width<=scaled.w+3&&scaled.rect.height<=scaled.h+3,'TV exceeds smaller viewport');
+ await page.screenshot({path:'/tmp/academy-tv-1366.png'});
+ await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});
+ await page.waitForTimeout(500);
+ assert(await page.locator('.sidebar').isVisible(),'Sidebar hidden in desktop mode');
+ assert(await page.locator('#loginBox').isVisible(),'Admin login unavailable');
+ await page.locator('#email').fill('test@example.invalid');
+ await page.locator('#password').fill('test-pass-only');
+ await page.locator('#loginBtn').click();
+ await page.waitForTimeout(900);
+ assert(await page.locator('#adminContent').isVisible(),'Admin content did not unlock with mocked auth');
+ assert(await page.locator('#academyVersionPanel').isVisible(),'History panel missing');
+ await page.screenshot({path:'/tmp/academy-admin.png'});
+ assert.equal(errors.length,0,'Browser exceptions: '+errors.join(' | '));
+ console.log(JSON.stringify({ok:true,checks:['TV1920','TV1366','birthdays','clock','sidebar','login','history','JavaScript'],tv,scaled},null,2));
+}finally{await browser.close();}
