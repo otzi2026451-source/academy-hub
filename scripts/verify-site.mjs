@@ -5,8 +5,8 @@ import assert from 'node:assert/strict';
 const html=readFileSync('index.html','utf8');
 const extJs=readFileSync('academy4.js','utf8');
 const css=readFileSync('academy4.css','utf8');
-assert.match(html,/<script src="academy4\.js\?v=4\.0\.0"><\/script>/);
-assert.match(html,/<link rel="stylesheet" href="academy4\.css\?v=4\.0\.0">/);
+assert.match(html,/<script src="academy4\.js\?v=4\.0\.1"><\/script>/);
+assert.match(html,/<link rel="stylesheet" href="academy4\.css\?v=4\.0\.1">/);
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
   .map(m=>m[1]).filter(Boolean);
 assert.equal(scripts.length,1,'expected exactly one inline application script');
