@@ -991,7 +991,7 @@ function renderBirthdays(){
   }).sort((a,b)=>a.daysAway-b.daysAway||a.index-b.index);
   $('birthdayList').classList.toggle('is-empty',!calendar.length);
   $('birthdayList').innerHTML=calendar.length
-    ?calendar.slice(0,3).map(({text})=>`<li class="birthday-calendar-item"><span class="birthday-calendar-marker"></span><span>${esc(text)}</span></li>`).join('')
+    ?calendar.map(({text})=>`<li class="birthday-calendar-item"><span class="birthday-calendar-marker"></span><span>${esc(text)}</span></li>`).join('')
     :'<li class="birthday-calendar-empty">Ближайшие даты пока не добавлены</li>';
   const hidden=Math.max(0,calendar.length-3);
   $('birthdayMoreCount').textContent=hidden?'Ещё '+hidden:'';
