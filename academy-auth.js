@@ -70,6 +70,7 @@ function authorize(){
  if(typeof load==='function')load();
  if(typeof loadBirthdays==='function')loadBirthdays();
  if(typeof window.academy7OnAuthorized==='function')window.academy7OnAuthorized();
+ if(typeof window.academy8OnAuthorized==='function')window.academy8OnAuthorized();
  if(adminRole&&typeof loadRoster==='function')loadRoster();
 }
 function logout(message='Вы вышли из системы.'){
