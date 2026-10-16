@@ -41,15 +41,16 @@ Deno.serve(async(req)=>{
  }catch(e){console.warn('Model discovery unavailable',String(e))}
  const configured=(Deno.env.get('GEMINI_MODEL')||'').trim();
  const preferred=[configured,'gemini-3.5-flash-lite','gemini-3.8-flash','gemini-3.1-flash-lite'].filter(Boolean);
- const approved=allowed.filter(m=>/gemini/i.test(m)&&/flash/i.test(m)&&!/preview|exp|image|audio|tts|live/i.test(m));
- const candidates=[...new Set([...preferred.filter(m=>!allowed.length||allowed.includes(m)),...approved])].slice(0,8);
+ const approved=allowed.filter(m=>/gemini/i.test(m)&&/flash/i.test(m)&&!/gemini-2\.|preview|exp|image|audio|tts|live/i.test(m));
+ const requested=[...preferred,...approved].filter(m=>!/^gemini-2\./.test(m));
+ const candidates=[...new Set(requested.filter(m=>!allowed.length||allowed.includes(m)))].slice(0,3);
  if(!candidates.length)return json({error:'Нет доступных моделей Gemini для этого API-ключа. Проверь доступ в Google AI Studio.',code:404},503);
  let g:Response|null=null,lastCode=0,lastError='';
  for(const model of candidates){
   try{
    g=await fetch(modelsApi+'/'+encodeURIComponent(model)+':generateContent',{
     method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gemini},body:payload,
-    signal:AbortSignal.timeout(30000)
+    signal:AbortSignal.timeout(16000)
    });
    if(g.ok)break;
    lastCode=g.status;
@@ -57,7 +58,7 @@ Deno.serve(async(req)=>{
    lastError=String(er.error?.message||'').slice(0,250);
    console.warn('Gemini unavailable:',model,lastCode,lastError);
    if(![404,429,500,502,503,504].includes(lastCode))break;
-   if(lastCode===503||lastCode===429)await new Promise(resolve=>setTimeout(resolve,250));
+   if(lastCode===503||lastCode===429||lastCode===504)await new Promise(resolve=>setTimeout(resolve,Math.min(2500,650*(candidates.indexOf(model)+1))));
   }catch(e){lastCode=504;lastError=String(e).slice(0,200);console.warn('Gemini request timed out',model)}
  }
  if(!g||!g.ok){
