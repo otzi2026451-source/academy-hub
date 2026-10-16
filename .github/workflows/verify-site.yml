@@ -16,3 +16,27 @@ jobs:
           node-version: '22'
       - name: Check frontend JavaScript, markup, and protection boundaries
         run: node scripts/verify-site.mjs
+
+  tv-browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: TV wallboard and administrator smoke test (fictional data only)
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/academy-http.log 2>&1 &
+          sleep 2
+          node scripts/browser-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: academy-tv-browser-previews
+          path: /tmp/academy-*.png
+          if-no-files-found: ignore
