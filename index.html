@@ -281,6 +281,31 @@ body.wallboard-mode #dashboard.wallboard .wb-notice{grid-column:1/-1!important;g
 body.wallboard-mode #dashboard.wallboard .wb-notice .section-header{margin:0!important;flex-shrink:0}
 body.wallboard-mode #dashboard.wallboard .wb-notice .section-title{margin:0!important}
 body.wallboard-mode #dashboard.wallboard .wb-notice #noticeBox{flex:1;min-width:0;font-size:20px!important;line-height:1.3!important;padding:6px 12px!important}
+
+/* Compact birthday calendar — one aligned module instead of two nested cards. */
+#dashboard.wallboard .wb-birthdays{display:flex;flex-direction:column;min-height:0}
+#dashboard.wallboard .wb-birthdays .birthday-grid{display:flex;flex-direction:column;gap:0;width:100%;height:100%;min-height:0}
+#dashboard.wallboard .wb-birthdays .birthday-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:1px 0 11px;border-bottom:1px solid rgba(226,197,139,.23)}
+#dashboard.wallboard .wb-birthdays .birthday-header h2{font-size:21px;line-height:1.2;margin:0;letter-spacing:-.03em;font-weight:800}
+#dashboard.wallboard .wb-birthdays .birthday-today-badge{font-size:11px;font-weight:700;color:#e4cb9c;background:rgba(226,197,139,.10);border:1px solid rgba(226,197,139,.21);padding:5px 10px;border-radius:99px;white-space:nowrap}
+#dashboard.wallboard .wb-birthdays .birthday-today-area{margin-top:11px;background:linear-gradient(110deg,rgba(226,197,139,.12),rgba(226,197,139,.03));border:1px solid rgba(226,197,139,.18);border-radius:12px;padding:9px 12px;min-height:52px}
+#dashboard.wallboard .wb-birthdays .birthday-today-list{display:flex;flex-direction:column;gap:5px}
+#dashboard.wallboard .wb-birthdays .birthday-today-list li{padding:0!important;border:0!important;font-size:14px!important;line-height:1.5;color:#f6f0e4}
+#dashboard.wallboard .wb-birthdays .birthday-person{display:flex;gap:10px;align-items:baseline}
+#dashboard.wallboard .wb-birthdays .birthday-person-dot{color:var(--gold);flex-shrink:0;font-size:18px}
+#dashboard.wallboard .wb-birthdays .birthday-extra{font-size:12px!important;color:var(--muted)!important}
+#dashboard.wallboard .wb-birthdays .birthday-none{display:flex;align-items:center;gap:10px;color:#d4dedb!important}
+#dashboard.wallboard .wb-birthdays .birthday-none-symbol{font-size:20px;color:var(--gold);line-height:1}
+#dashboard.wallboard .wb-birthdays .birthday-divider{display:flex;justify-content:space-between;gap:10px;padding:13px 1px 8px;color:#d3dcd8;font-size:12px;text-transform:uppercase;letter-spacing:.13em;font-weight:800}
+#dashboard.wallboard .wb-birthdays .birthday-divider span:last-child{color:var(--gold);text-transform:none;letter-spacing:0}
+#dashboard.wallboard .wb-birthdays #birthdayList{display:flex;flex-direction:column;gap:0;min-height:0;max-height:none;overflow:hidden}
+#dashboard.wallboard .wb-birthdays .birthday-calendar-item{display:flex;align-items:baseline;gap:9px;padding:8px 1px!important;border-bottom:1px solid rgba(255,255,255,.075);font-size:13px!important;line-height:1.3}
+#dashboard.wallboard .wb-birthdays .birthday-calendar-item:nth-child(n+6){display:none}
+#dashboard.wallboard .wb-birthdays .birthday-calendar-marker{width:5px;height:5px;border-radius:100%;background:#d6b77a;flex-shrink:0;align-self:center}
+#dashboard.wallboard .wb-birthdays .birthday-calendar-empty{color:#a6b6b7;font-size:13px!important;padding:12px 0!important;border:0!important}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays .birthday-calendar-item:nth-child(n+6){display:flex}
+body:not(.wallboard-mode) #dashboard.wallboard .wb-birthdays #birthdayList{max-height:none;overflow:visible}
+
 </style>
 </head>
 <body>
@@ -420,18 +445,15 @@ body.wallboard-mode #dashboard.wallboard .wb-notice #noticeBox{flex:1;min-width:
         <div class="spacer"></div>
 
         <div class="birthday-grid">
-          <div class="panel gold">
-            <div class="section-header"><div><div class="eyebrow">Today</div><h2 class="section-title">Именинники сегодня</h2></div></div>
-            <div class="callout">
-              <h3>Поздравляем курсантов</h3>
-              <p class="muted">Эта часть заполняется автоматически из разрешённой публичной таблицы дней рождения.</p>
-              <ul class="list" id="todayBirthdays"></ul>
-            </div>
+          <div class="birthday-header">
+            <h2>Дни рождения</h2>
+            <span class="birthday-today-badge" id="birthdayTodayBadge">Сегодня · 0</span>
           </div>
-          <div class="panel">
-            <div class="section-header"><div><div class="eyebrow">Birthday calendar</div><h2 class="section-title">Полный список дней рождения</h2></div><p>Сюда можно занести весь календарь дней рождения для отображения на одном экране.</p></div>
-            <ul class="list" id="birthdayList"></ul>
+          <div class="birthday-today-area">
+            <ul class="list birthday-today-list" id="todayBirthdays"></ul>
           </div>
+          <div class="birthday-divider"><span>Календарь</span><span id="birthdayMoreCount"></span></div>
+          <ul class="list birthday-calendar-list" id="birthdayList"></ul>
         </div>
 
         <div class="spacer"></div>
@@ -810,9 +832,47 @@ function renderRotators(animate=false){
 function renderGroups(){renderRotators(false)}
 function rotationTick(){if(document.hidden)return;const elapsed=Date.now()-lastRotation;if(elapsed>=15000){scheduleIndex=(scheduleIndex+1)%GROUPS.length;gradeIndex=(gradeIndex+1)%GROUPS.length;lastRotation=Date.now();renderRotators()};const width=Math.min(100,(Date.now()-lastRotation)/150);$('scheduleProgress').style.width=width+'%';$('gradeProgress').style.width=width+'%'}
 function renderBirthdays(){
-  const today=todayList();
-  $('todayBirthdays').innerHTML = (today.length?today:['Сегодня публичных поздравлений нет']).map(x=>`<li>${esc(x)}</li>`).join('');
-  $('birthdayList').innerHTML = (current.birthdays||[]).map(x=>`<li>${esc(x)}</li>`).join('') || '<li>Список дней рождения пока пуст.</li>';
+  const now=new Date();
+  const dateParts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Almaty',day:'2-digit',month:'2-digit'}).format(now).split('/');
+  const todayDay=Number(dateParts[0]),todayMonth=Number(dateParts[1]);
+  const entries=Array.isArray(current.birthdays)?current.birthdays.filter(x=>typeof x==='string'&&x.trim()):[];
+  function getBirthdayDate(value){
+    const m=String(value).match(/(?:^|[^\\d])(\\d{1,2})[.\\/-](\\d{1,2})(?!\\d)/);
+    if(!m)return null;
+    const day=Number(m[1]),month=Number(m[2]);
+    if(month<1||month>12||day<1||day>31)return null;
+    return {day,month};
+  }
+  function isToday(value){
+    if(/сегодня/i.test(String(value)))return true;
+    const date=getBirthdayDate(value);
+    return !!date&&date.day===todayDay&&date.month===todayMonth;
+  }
+  const manualToday=entries.filter(isToday);
+  const today=[...todayList(),...manualToday];
+  const uniqueToday=[...new Set(today.map(v=>String(v).trim()).filter(Boolean))];
+  $('birthdayTodayBadge').textContent='Сегодня · '+uniqueToday.length;
+  $('todayBirthdays').innerHTML=uniqueToday.length
+    ?uniqueToday.slice(0,3).map(v=>`<li class="birthday-person"><span class="birthday-person-dot">✦</span><span>${esc(v.replace(/^🎉\\s*/,''))}</span></li>`).join('')
+      +(uniqueToday.length>3?`<li class="birthday-extra">И ещё ${uniqueToday.length-3}</li>`:'')
+    :'<li class="birthday-none"><span class="birthday-none-symbol">✧</span><span>Сегодня без именинников</span></li>';
+  const calendar=entries.filter(v=>!isToday(v)).map((text,index)=>{
+    const date=getBirthdayDate(text);
+    let daysAway=9999;
+    if(date){
+      const year=Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Almaty',year:'numeric'}).format(now));
+      const nowDay=Date.UTC(year,todayMonth-1,todayDay);
+      let eventDay=Date.UTC(year,date.month-1,date.day);
+      if(eventDay<nowDay)eventDay=Date.UTC(year+1,date.month-1,date.day);
+      daysAway=(eventDay-nowDay)/86400000;
+    }
+    return {text,index,daysAway};
+  }).sort((a,b)=>a.daysAway-b.daysAway||a.index-b.index);
+  $('birthdayList').innerHTML=calendar.length
+    ?calendar.map(({text})=>`<li class="birthday-calendar-item"><span class="birthday-calendar-marker"></span><span>${esc(text)}</span></li>`).join('')
+    :'<li class="birthday-calendar-empty">Ближайшие даты пока не добавлены</li>';
+  const hidden=Math.max(0,calendar.length-5);
+  $('birthdayMoreCount').textContent=hidden?'Ещё '+hidden:'';
 }
 function renderOverview(){
   $('studyList').innerHTML = rankHtml(current.studyTop,'Академический результат');
