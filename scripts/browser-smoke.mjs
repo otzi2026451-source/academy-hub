@@ -140,6 +140,7 @@ try{
  errors
  }));
  assert(lastWrite&&lastWrite.content,'Saving weekly schedule should write data');
+ assert.equal(lastWrite.content.weekSchedules.KRD1['2'][0],'09:00 | Тестовая физика · кабинет 204');
  assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
 
 
@@ -200,6 +201,7 @@ try{
  try {
   const editorErr=[];editorPage.on('pageerror',e=>editorErr.push(e.message));
   await editorPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])}));
+  await editorPage.route('**/rest/v1/rpc/academy_tv_board**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(state)}));
   await editorPage.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
   await editorPage.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
   await editorPage.route('**/rest/v1/rpc/academy_role**',route=>route.fulfill({status:200,contentType:'application/json',body:'"editor"'}));
@@ -231,6 +233,7 @@ try{
   const responses=[];
   viewerPage.on('pageerror',e=>responses.push(e.message));
   await viewerPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])}));
+  await viewerPage.route('**/rest/v1/rpc/academy_tv_board**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(state)}));
   await viewerPage.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
   await viewerPage.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
   await viewerPage.route('**/rest/v1/rpc/academy_role**',route=>route.fulfill({status:200,contentType:'application/json',body:'"viewer"'}));
@@ -242,6 +245,7 @@ try{
   await viewerPage.locator('#academyLockSubmit').click();
   await viewerPage.waitForSelector('html.academy-viewer');
   assert(await viewerPage.locator('#dashboard').isVisible(),'Viewer needs TV access');
+  assert(await viewerPage.locator('#studyList > li').count()===10,'Viewer projection must render projected TV scores');
   assert(!(await viewerPage.locator('#admin').isVisible()),'Viewer must not see admin page');
   assert(!(await viewerPage.locator('#cadets').isVisible()),'Viewer must not see cadet registry');
   assert(!(await viewerPage.locator('#ai').isVisible()),'Viewer must not see AI center');
