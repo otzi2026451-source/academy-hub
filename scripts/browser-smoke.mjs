@@ -48,6 +48,9 @@ try{
  assert(tv.rect.height<=tv.h+3,'TV board taller than viewport');
  assert(tv.birthScrollHeight<=tv.birthHeight+8,'Birthday panel is clipped');
  assert(/\d{2}:\d{2}:\d{2}/.test(tv.date),'Clock not updating');
+ const expectedAlmaty=await page.evaluate(()=>new Intl.DateTimeFormat('ru-RU',{timeZone:'Asia/Almaty',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date()));
+ assert(String(tv.date).startsWith(expectedAlmaty),'Wallboard clock must use Asia/Almaty timezone');
+
 
  assert.equal(await page.locator('#studyList > li').count(),10,'TV must reserve all ten academic places');
  assert(await page.locator('#tvHealth7').count()===1,'Live TV connection indicator missing');
@@ -129,10 +132,15 @@ try{
   await page.locator('#v5Group').selectOption('KRD1');
  await page.locator('#v5Day').selectOption('2');
  await page.locator('#v5Schedule').fill('09:00 | Тестовая физика · кабинет 204');
+ await page.locator('#noticeEdit').evaluate(el=>{el.value='Непубликованный черновик объявления';el.dispatchEvent(new Event('input',{bubbles:true}))});
  await page.locator('.v6-top-actions .btn.primary').click();
  await page.waitForTimeout(300);
  assert(await page.locator('#v6-review7').isVisible(),'Save must open changed-data preview before publishing');
  assert(await page.locator('#v6-review7 .a7-change').count()>0,'Preview must list changed sections');
+ const noticeCheckbox=page.locator('#v6-review7 .a7-change input[value="notice"]');
+ assert(await noticeCheckbox.count()===1,'Unpublished notice change must be visible in review');
+ await noticeCheckbox.uncheck();
+
  await page.locator('#v6-review7 .a7-actions .btn.primary').click();
  await page.waitForTimeout(950);
  console.log('ACADEMY7_SAVE_DEBUG',JSON.stringify({
@@ -143,6 +151,9 @@ try{
  errors
  }));
  assert(lastWrite&&lastWrite.content,'Saving weekly schedule should write data');
+ assert.equal(lastWrite.content.notice,state.notice,'Unselected notice must not be published');
+ assert.equal(await page.locator('#noticeEdit').inputValue(),'Непубликованный черновик объявления','Unselected draft must remain editable after partial save');
+
  assert.equal(lastWrite.content.weekSchedules.KRD1['2'][0],'09:00 | Тестовая физика · кабинет 204');
  assert.deepEqual(lastWrite.content.weekSchedules.KRD1['2'],['09:00 | Тестовая физика · кабинет 204'],'Weekly Tuesday schedule not saved');
 
@@ -235,7 +246,7 @@ try{
  try{
   const responses=[];
   viewerPage.on('pageerror',e=>responses.push(e.message));
-  await viewerPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{content:state}])}));
+  await viewerPage.route('**/rest/v1/app_state**',route=>route.fulfill({status:403,contentType:'application/json',body:'{"message":"forbidden"}'}));
   await viewerPage.route('**/rest/v1/rpc/academy_tv_board**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(state)}));
   await viewerPage.route('**/rest/v1/birthday_public**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
   await viewerPage.route('**/rest/v1/rpc/can_access_academy**',route=>route.fulfill({status:200,contentType:'application/json',body:'true'}));
