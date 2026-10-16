@@ -1,50 +1,878 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090f1a"><title>Academy Hub — Command Center</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#080d16;--surface:#101927;--panel:#151f2e;--panel2:#1b2839;--line:#283448;--fg:#ecf1f7;--muted:#91a0b5;--gold:#e7c17d;--blue:#8aaeff;--good:#75dcb5;--red:#f49b9b;--r:20px;font-family:Manrope,'Segoe UI',sans-serif;color:var(--fg);background:var(--bg)}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 74% -15%,#233047 0%,transparent 40%),var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}button:disabled{opacity:.4;cursor:not-allowed}a{color:inherit;text-decoration:none}.app{display:flex;min-height:100vh}.sidebar{width:252px;flex-shrink:0;background:#0d1522;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:30px 18px;gap:20px}.brand{display:flex;align-items:center;gap:11px;padding:4px 7px 26px;border-bottom:1px solid var(--line)}.emblem{width:43px;height:43px;display:grid;place-items:center;border:1px solid #6a5939;background:linear-gradient(135deg,#3a3022,#191f27);border-radius:13px;color:var(--gold);font-size:22px}.brand strong{font-size:15px;letter-spacing:.12em}.brand small{display:block;font-size:10px;color:var(--muted);letter-spacing:.11em;margin-top:5px}.nav-label{font-size:10px;text-transform:uppercase;color:#667991;letter-spacing:.2em;font-weight:800;margin:14px 13px 2px}.nav{display:flex;flex-direction:column;gap:5px}.nav button{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;background:transparent;color:#aeb9c8;text-align:left;font-size:13px;font-weight:700}.nav button span{font-size:19px;width:22px;text-align:center}.nav button.active,.nav button:hover{background:#202b3b;color:var(--gold)}.sidebar-foot{margin-top:auto;padding:16px;border:1px solid var(--line);border-radius:15px;color:var(--muted);font-size:11px;line-height:1.7}.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:7px}.status-dot.on{background:var(--good)}main{flex:1;min-width:0;padding:29px clamp(18px,3vw,56px) 54px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:34px}.crumb{font-size:12px;color:var(--muted);letter-spacing:.02em}.crumb b{color:var(--fg)}.top-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.date{font-size:12px;color:#b4c2d1}.chip{border:1px solid #40506a;border-radius:30px;padding:8px 13px;font-size:11px;color:#c9d6e8;background:#192536}.pill-btn,.primary,.secondary,.danger{display:inline-flex;gap:8px;justify-content:center;align-items:center;padding:12px 18px;border-radius:11px;font-weight:800;font-size:12px;transition:.2s}.primary{background:var(--gold);color:#151c26}.primary:hover{background:#f3d79f}.secondary{background:#24334a;color:#ecf1f7;border:1px solid #37465b}.secondary:hover{background:#30425d}.danger{background:#392731;color:#ffb3b3}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:.22em;font-weight:800;text-transform:uppercase}.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:26px}.pagehead h1{font-size:clamp(29px,3.3vw,46px);letter-spacing:-.05em;margin:8px 0 10px;line-height:1.2}.subtitle{font-size:13px;color:var(--muted);max-width:630px;line-height:1.65;margin:0}.panel{background:linear-gradient(145deg,#172333,#121b29);border:1px solid var(--line);border-radius:var(--r);padding:24px}.panel h2{margin:0;font-size:17px;letter-spacing:-.035em}.panel .hint{font-size:11px;color:var(--muted);margin-top:6px}.panel-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}.stat{padding:21px 23px;border-radius:17px;background:linear-gradient(130deg,#1b293a,#14202f);border:1px solid #344050}.stat small{color:var(--muted);font-size:11px}.stat strong{display:block;font-size:30px;letter-spacing:-.05em;margin:9px 0 3px}.stat span{font-size:11px;color:var(--gold)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.gridwide{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}.rank{display:flex;align-items:center;gap:13px;padding:13px 2px;border-bottom:1px solid #303b4c}.rank:last-child{border:0}.rank-index{border-radius:10px;background:#243144;color:#c8d5e3;width:35px;height:35px;display:grid;place-items:center;font-size:12px;font-weight:800}.rank-index.top{background:#55442b;color:#f5d496}.rank-name{flex:1;font-size:13px;font-weight:750}.rank-track{width:28%;height:6px;border-radius:9px;background:#313c4b;overflow:hidden}.rank-track i{display:block;background:linear-gradient(90deg,#ad854d,#f4cf88);height:100%;border-radius:9px}.rank-score{color:#edcf95;font-size:14px;font-weight:800;width:50px;text-align:right}.schedule-line{display:flex;gap:16px;align-items:center;border-bottom:1px solid #2a3748;padding:14px 0;font-size:13px}.schedule-line:last-child{border:0}.time-tag{color:#e5c48e;font-size:12px;font-weight:800;min-width:65px}.notice{background:linear-gradient(100deg,#41321f,#2b2a2a);border:1px solid #72572f;padding:17px 20px;border-radius:13px;color:#f1debb;line-height:1.6;font-size:13px;white-space:pre-wrap}.empty{color:var(--muted);font-size:13px;padding:16px 0}.section{display:none}.section.active{display:block}.form-group{display:flex;flex-direction:column;gap:8px}.form-group label{font-size:12px;color:#c2cbda;font-weight:700}textarea,input,select{background:#0d1624;border:1px solid #36465d;color:var(--fg);padding:12px 14px;border-radius:12px;outline:0;width:100%;font-size:13px}textarea:focus,input:focus,select:focus{border-color:#cfaa6c;box-shadow:0 0 0 3px #c6a66c14}textarea{resize:vertical;min-height:125px;line-height:1.7}.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.btnrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.divider{border-top:1px solid var(--line);margin:20px 0}.alert{background:#242c38;border:1px solid #455169;border-radius:12px;padding:12px 16px;line-height:1.6;color:#b8c8d9;font-size:12px}.alert.warn{border-color:#796039;background:#30291f;color:#f2d49e}.alert.good{border-color:#396955;background:#1c302e;color:#9ceac7}.chat-wrap{display:grid;grid-template-columns:minmax(0,1fr) 305px;gap:18px;min-height:650px}.chat-box{display:flex;flex-direction:column;min-height:600px}.messages{flex:1;min-height:320px;max-height:620px;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:16px}.msg{display:flex;gap:10px;align-items:flex-start;max-width:91%}.msg.user{align-self:flex-end;flex-direction:row-reverse}.avatar{height:32px;width:32px;border-radius:11px;display:grid;place-items:center;font-size:16px;flex-shrink:0;background:#2d3749}.msg.user .avatar{background:#4a3e2a}.bubble{background:#253246;padding:13px 16px;border-radius:14px;font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}.msg.user .bubble{background:#473923;color:#f8e3b4}.composer{padding-top:15px;margin-top:15px;border-top:1px solid var(--line)}.composer textarea{min-height:80px}.uploadzone{border:1px dashed #586d87;padding:23px 14px;text-align:center;border-radius:15px;background:#162235;cursor:pointer;transition:.2s}.uploadzone:hover{border-color:var(--gold);background:#212d3c}.uploadzone strong{display:block;font-size:13px;margin:10px 0}.uploadzone p{color:var(--muted);font-size:11px;line-height:1.6;margin:0}.file-badges{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.filebadge{background:#29384c;border-radius:20px;padding:6px 10px;font-size:10px;color:#d7e0ee;max-width:100%;overflow:hidden;text-overflow:ellipsis}.reply-notes{border-left:2px solid var(--gold);padding:10px 14px;font-size:12px;color:#adbed0;line-height:1.65}.preview{max-height:360px;overflow:auto;white-space:pre-wrap;font-family:'DM Sans',monospace;font-size:12px;line-height:1.7;background:#0c1624;padding:17px;border:1px solid #334158;border-radius:13px}.checkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.checkgrid label{display:flex;gap:9px;align-items:center;font-size:12px}.checkgrid input{width:auto;accent-color:#e7c17d}.login{max-width:540px;margin:12px auto}.login .form-group{margin-top:16px}.tv .sidebar,.tv .topbar,.tv .pagehead .pill-btn,.tv #adminShortcut{display:none!important}.tv main{padding:30px 3.1vw}.tv .pagehead{margin-bottom:30px}.tv .pagehead h1{font-size:clamp(38px,4vw,70px)}.tv .rank{padding:18px 4px}.tv .rank-name{font-size:clamp(15px,1.25vw,22px)}.tv .rank-score{font-size:clamp(17px,1.5vw,24px)}.tv .schedule-line{font-size:clamp(15px,1.15vw,20px)}.tv .panel h2{font-size:clamp(20px,1.5vw,27px)}.tv .stat strong{font-size:clamp(35px,3vw,55px)}.tv .sidebar-foot{display:none}.tv .notice{font-size:clamp(15px,1.25vw,22px)}.tv .cards{gap:20px}.tv .panel{padding:25px 30px}.small{font-size:11px;color:var(--muted)}.hidden{display:none!important}.spacer{flex:1}@media(max-width:1100px){.sidebar{width:215px}.cards{grid-template-columns:repeat(2,1fr)}.chat-wrap{grid-template-columns:1fr}.chat-wrap>.panel:last-child{order:-1}.gridwide{grid-template-columns:1fr}}@media(max-width:720px){.app{display:block}.sidebar{width:100%;padding:13px;gap:6px}.brand{padding:4px 4px 10px}.nav-label,.sidebar-foot{display:none}.nav{flex-direction:row;overflow-x:auto}.nav button{white-space:nowrap;padding:10px}main{padding:22px 15px}.topbar{margin-bottom:22px}.date{display:none}.pagehead{display:block}.pagehead h1{font-size:30px}.cards,.grid2,.edit-grid{grid-template-columns:1fr}.panel{padding:17px}.rank-track{width:20%}.checkgrid{grid-template-columns:1fr}.tv .cards{grid-template-columns:repeat(2,1fr)}}
-</style></head><body><div class="app" id="app">
-<aside class="sidebar"><div class="brand"><div class="emblem">✦</div><div><strong>ACADEMY HUB</strong><small>COMMAND CENTER</small></div></div><div class="nav-label">РАБОЧЕЕ ПРОСТРАНСТВО</div><div class="nav"><button data-page="overview" class="active"><span>◫</span> Обзор</button><button data-page="display"><span>▣</span> ТВ-табло</button><button data-page="admin"><span>▤</span> Управление</button><button data-page="cadets"><span>♙</span> Курсанты</button><button data-page="ai"><span>✧</span> ИИ-помощник</button></div><div class="sidebar-foot"><span class="status-dot" id="sideDot"></span><span id="sideStatus">Подключение…</span><div style="margin-top:10px">Academy Hub 3.0<br>Данные обновляются автоматически</div></div></aside>
-<main><div class="topbar"><div class="crumb">Academy Hub <span style="color:#52627a">/</span> <b id="crumb">Обзор</b></div><div class="top-right"><span class="date" id="clock"></span><span class="chip" id="status">Подключение…</span><button class="secondary" id="fullBtn" type="button">⛶ Полный экран</button></div></div>
-<section class="section active" id="overview"><div class="pagehead"><div><div class="eyebrow">Информационная система</div><h1>Всё важное. На одном экране.</h1><p class="subtitle">Рейтинг курсантов, спортивные достижения, расписание и объявления в едином информационном пространстве.</p></div><button class="primary pill-btn" data-go="ai">✧ ИИ-помощник</button></div><div class="cards" id="stats"></div><div class="grid2"><div class="panel"><div class="panel-top"><div><h2>🏆 Академический рейтинг</h2><div class="hint">Лидеры по успеваемости</div></div><span class="chip">ТОП</span></div><div id="overviewStudy"></div></div><div class="panel"><div class="panel-top"><div><h2>🥇 Спортивный рейтинг</h2><div class="hint">Лучшие результаты</div></div><span class="chip">ТОП</span></div><div id="overviewSport"></div></div></div></section>
-<section class="section" id="display"><div class="pagehead"><div><div class="eyebrow">ACADEMY • LIVE INFORMATION</div><h1>Информационное табло</h1><p class="subtitle">Актуальные данные курса • <span id="displayTime"></span></p></div><button class="secondary pill-btn" id="tvToggle">⛶ Режим Samsung TV</button></div><div class="cards" id="tvStats"></div><div class="grid2"><div class="panel"><div class="panel-top"><h2>🏆 Рейтинг по учёбе</h2><span class="chip">TOP 10</span></div><div id="tvStudy"></div></div><div class="panel"><div class="panel-top"><h2>🥇 Рейтинг по спорту</h2><span class="chip">TOP 10</span></div><div id="tvSport"></div></div><div class="panel"><div class="panel-top"><h2>📅 Расписание занятий</h2><span class="chip">Сегодня</span></div><div id="tvSchedule"></div></div><div class="panel"><div class="panel-top"><h2>🎂 Дни рождения</h2><span class="chip">Поздравления</span></div><div id="tvBirthdays"></div></div></div><div class="panel" style="margin-top:18px"><div class="panel-top"><h2>📢 Объявления</h2><span class="chip">Важное</span></div><div class="notice" id="tvNotice"></div></div></section>
-<section class="section" id="admin"><div class="pagehead"><div><div class="eyebrow">Безопасное управление</div><h1>Панель администратора</h1><p class="subtitle">Изменения сохраняются в Supabase после подтверждения и отображаются на телевизоре.</p></div><button class="primary pill-btn" data-go="ai">✧ Импорт с ИИ</button></div><div class="panel login" id="loginBox"><h2>Вход администратора</h2><p class="small">Используй учётную запись Supabase Authentication</p><div class="form-group"><label>Email</label><input id="email" type="email" autocomplete="username" placeholder="example@gmail.com"></div><div class="form-group"><label>Пароль</label><input id="password" type="password" autocomplete="current-password" placeholder="••••••••"></div><div class="btnrow" style="margin-top:18px"><button class="primary" id="loginBtn">Войти</button><span class="small" id="loginInfo"></span></div></div><div id="adminContent" class="hidden"><div class="alert good" style="margin-bottom:18px">● Авторизация активна. Изменения будут видны всем посетителям табло.</div><div class="edit-grid"><div class="panel"><div class="panel-top"><h2>🏆 Учёба</h2></div><div class="form-group"><label>Каждый курсант — отдельная строка: Имя | Балл</label><textarea id="studyEdit" rows="9"></textarea></div></div><div class="panel"><div class="panel-top"><h2>🥇 Спорт</h2></div><div class="form-group"><label>Каждый курсант — отдельная строка: Имя | Балл</label><textarea id="sportEdit" rows="9"></textarea></div></div><div class="panel"><h2 style="margin-bottom:16px">📅 Расписание</h2><div class="form-group"><label>По одному занятию на строку</label><textarea id="scheduleEdit" rows="7"></textarea></div></div><div class="panel"><h2 style="margin-bottom:16px">🎂 Дни рождения</h2><div class="form-group"><label>По одному поздравлению на строку</label><textarea id="birthdaysEdit" rows="7"></textarea></div></div></div><div class="panel" style="margin-top:18px"><h2 style="margin-bottom:14px">📢 Объявление</h2><textarea id="noticeEdit" rows="3"></textarea><div class="btnrow" style="margin-top:15px"><button class="primary" id="saveBtn">✓ Сохранить на все экраны</button><button class="secondary" id="logoutBtn">Выйти</button><span class="small" id="saveInfo"></span></div></div></div></section>
-<section class="section" id="cadets"><div class="pagehead"><div><div class="eyebrow">PRIVATE • SECURE RECORDS</div><h1>Реестр курсантов</h1><p class="subtitle">Хранение карточек в закрытой таблице Supabase. Разрешённые поздравления появляются на табло автоматически в дату рождения (Алматы). Остальные данные не публикуются.</p></div></div>
-<div class="panel" id="cadetLocked"><div class="alert warn">Для доступа к реестру сначала войди в разделе «Управление», затем вернись сюда.</div><button class="primary" data-go="admin" style="margin-top:12px">Открыть вход</button></div>
-<div id="cadetArea" class="hidden"><div class="cards"><div class="stat"><small>Карточек в базе</small><strong id="cadetCount">0</strong><span>Только администраторам</span></div><div class="stat"><small>Поздравления</small><strong id="cadetApproved">0</strong><span>Разрешены к показу</span></div><div class="stat"><small>Именинников сегодня</small><strong id="cadetToday">0</strong><span>Автоматический показ</span></div><div class="stat"><small>Хранилище</small><strong style="font-size:19px">Supabase</strong><span>RLS и права доступа</span></div></div>
-<div class="gridwide"><div class="panel"><div class="panel-top"><h2>Карточка курсанта</h2><span class="chip">Закрытая запись</span></div><div class="edit-grid"><div class="form-group"><label>Уникальный код (не секретный)</label><input id="cCode" placeholder="K-001"></div><div class="form-group"><label>ФИО / имя в закрытой базе</label><input id="cName" placeholder="Иванов Иван"></div><div class="form-group"><label>Курс / группа</label><input id="cGroup" placeholder="1 курс"></div><div class="form-group"><label>Дата рождения</label><input id="cDob" type="date"></div><div class="form-group"><label>Имя для публичного поздравления</label><input id="cAlias" placeholder="Иванов И."></div><div class="form-group"><label>Показать поздравление в день рождения?</label><select id="cAllowed"><option value="false">Нет, не публиковать</option><option value="true">Да, разрешено</option></select></div></div><div class="btnrow" style="margin-top:18px"><button class="primary" id="cadetSave">Сохранить карточку</button><button class="secondary" id="cadetReset">Очистить поля</button><span class="small" id="cadetInfo"></span></div><div class="divider"></div><h2 style="font-size:15px">Загрузить много курсантов из Excel / CSV</h2><p class="small">Колонки: code, name, group, birthday, alias, show_birthday. Дата: ГГГГ-ММ-ДД. По умолчанию поздравления выключены. Перед сохранением показывается количество распознанных строк. Не загружай данные без разрешения Академии.</p><input id="rosterFile" type="file" accept=".xlsx,.xls,.csv" style="margin:12px 0"><div class="btnrow"><button class="secondary" id="rosterPreview">Проверить файл</button><button class="primary" id="rosterCommit" disabled>Сохранить проверенные записи</button></div><div class="small" id="rosterInfo" style="margin-top:12px"></div></div><div class="panel"><div class="panel-top"><h2>Список курсантов</h2><button class="secondary" id="cadetRefresh">↻ Обновить</button></div><input id="cadetSearch" placeholder="Поиск по имени, коду или группе"><div id="cadetList" style="margin-top:15px;max-height:650px;overflow:auto"></div><div class="alert warn" style="margin-top:16px">Не размещай в реестре ИИН, номера документов, адреса, медицинские сведения или служебные данные. Реальные записи допустимы только в одобренной Академией системе.</div></div></div></div></section>
-<section class="section" id="ai"><div class="pagehead"><div><div class="eyebrow">GEMINI • INTELLIGENCE</div><h1>Твой ИИ-помощник</h1><p class="subtitle">Задавай вопросы, прикрепляй документы, фото и презентации. Gemini помогает анализировать файлы и подготавливать данные для табло.</p></div><span class="chip">✧ Gemini AI</span></div><div class="alert warn" style="margin-bottom:18px">Используй только вымышленные или разрешённые к передаче данные. Файлы и вопросы отправляются внешнему сервису Google Gemini; публичное табло не предназначено для конфиденциальных данных курсантов.</div><div class="chat-wrap"><div class="panel chat-box"><div class="panel-top"><div><h2>✧ Чат с Gemini</h2><div class="hint">Обсуди документ или попроси подготовить рейтинг</div></div><button class="secondary" id="clearChat">Очистить чат</button></div><div class="messages" id="messages"><div class="msg"><div class="avatar">✧</div><div class="bubble">Привет! Я ИИ-помощник Academy Hub. Прикрепи Word, Excel, PowerPoint, PDF, фото или текстовый файл. Можешь спросить, что в документе, или попросить составить данные для табло.</div></div></div><div class="composer"><textarea id="chatInput" placeholder="Например: проанализируй оценки и составь рейтинг топ-10…" rows="3"></textarea><div class="btnrow" style="margin-top:12px"><button class="primary" id="sendChat">➤ Отправить</button><button class="secondary" id="importBtn">✧ Извлечь данные для табло</button><span class="small" id="aiStatus"></span></div></div></div><div class="panel"><div class="panel-top"><h2>Файлы и импорт</h2><span class="chip">до 8 МБ</span></div><label class="uploadzone" id="dropzone" for="fileInput"><span style="font-size:35px;color:var(--gold)">⇧</span><strong>Прикрепить файлы</strong><p>Нажми или перетащи сюда<br>DOCX · XLSX · XLS · PPTX · PDF · JPG · PNG · WEBP · TXT · CSV</p></label><input id="fileInput" type="file" accept=".docx,.xlsx,.xls,.pptx,.pdf,.jpg,.jpeg,.png,.webp,.txt,.csv" multiple hidden><div class="file-badges" id="filesList"></div><div class="small" id="fileInfo">Можно добавить до 5 файлов, каждый не больше 8 МБ.</div><div class="divider"></div><h2 style="font-size:14px">Предпросмотр импорта</h2><p class="small">После обработки проверь значения перед записью в базу.</p><div class="preview" id="preview">Здесь появится результат распознавания.</div><div class="reply-notes" id="notes" style="margin-top:12px">ИИ не сохраняет данные автоматически.</div><div class="divider"></div><div class="checkgrid" id="checks"><label><input type="checkbox" id="cstudy" checked> Учёба</label><label><input type="checkbox" id="csport" checked> Спорт</label><label><input type="checkbox" id="cschedule" checked> Расписание</label><label><input type="checkbox" id="cbirthdays" checked> Дни рождения</label><label><input type="checkbox" id="cnotice" checked> Объявления</label></div><button class="primary" id="applyBtn" style="width:100%;margin-top:20px" disabled>✓ Перенести в редактор</button><p class="small">Потом открой «Управление» и нажми «Сохранить на все экраны».</p></div></div></section>
-</main></div><script src="config.js"></script><script>
-'use strict';const $=id=>document.getElementById(id),config=window.ACADEMY_CONFIG||{},base=String(config.supabaseUrl||'').replace(/\/$/,''),pub=config.supabaseAnonKey||'',configured=base.startsWith('https://')&&base.includes('.supabase.co')&&pub.length>15&&!pub.includes('PASTE_');let token='',roster=[],pendingRoster=[],publicBirthdays=[],current={study:[],sport:[],schedule:[],birthdays:[],notice:''},imported=null,files=[],history=[],busy=false;const pageNames={overview:'Обзор',display:'ТВ-табло',admin:'Управление',ai:'ИИ-помощник',cadets:'Реестр курсантов'};
-function html(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function go(page){if(!pageNames[page])page='overview';document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===page));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));$('crumb').textContent=pageNames[page];location.hash=page; if(document.body.classList.contains('tv')&&page!=='display')document.body.classList.remove('tv')}document.querySelectorAll('[data-page]').forEach(x=>x.onclick=()=>go(x.dataset.page));document.querySelectorAll('[data-go]').forEach(x=>x.onclick=()=>go(x.dataset.go));$('fullBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();$('tvToggle').onclick=()=>{document.body.classList.toggle('tv');if(document.body.classList.contains('tv'))document.documentElement.requestFullscreen?.()};function clock(){let d=new Date();$('clock').textContent=d.toLocaleString('ru-RU',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});$('displayTime').textContent=d.toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}clock();setInterval(clock,1000);
-function rank(list,max=10){if(!Array.isArray(list)||!list.length)return '<p class="empty">Пока нет данных</p>';return [...list].filter(x=>Array.isArray(x)).sort((a,b)=>Number(b[1])-Number(a[1])).slice(0,max).map((x,i)=>`<div class="rank"><span class="rank-index ${i<3?'top':''}">${i===0?'✦':String(i+1).padStart(2,'0')}</span><span class="rank-name">${html(x[0])}</span><div class="rank-track"><i style="width:${Math.min(100,Math.max(0,Number(x[1])||0))}%"></i></div><span class="rank-score">${html(x[1])}</span></div>`).join('')}
-function lines(data){if(!Array.isArray(data)||!data.length)return '<div class="empty">Нет записей</div>';return data.map(s=>`<div class="schedule-line"><span style="color:var(--gold)">●</span><span>${html(s)}</span></div>`).join('')}
-function stats(){let a=[['Курсантов в рейтинге',new Set([...current.study.map(v=>v[0]),...current.sport.map(v=>v[0])]).size,'Учёба и спорт'],['Средний балл учёбы',current.study.length?(current.study.reduce((s,v)=>s+Number(v[1]||0),0)/current.study.length).toFixed(1):'—','На основе рейтинга'],['Занятий в списке',current.schedule.length,'Расписание'],['Поздравлений',current.birthdays.length,'В календаре']];return a.map(v=>`<div class="stat"><small>${v[0]}</small><strong>${v[1]}</strong><span>${v[2]}</span></div>`).join('')}
-function render(){for(let id of ['stats','tvStats'])$(id).innerHTML=stats();$('overviewStudy').innerHTML=rank(current.study,5);$('overviewSport').innerHTML=rank(current.sport,5);$('tvStudy').innerHTML=rank(current.study);$('tvSport').innerHTML=rank(current.sport);$('tvSchedule').innerHTML=lines(current.schedule);$('tvBirthdays').innerHTML=lines([...publicBirthdays.map(x=>'🎉 Сегодня поздравляем: '+x.display_name),...current.birthdays]);$('tvNotice').textContent=current.notice||'Нет объявлений'}
-async function loadBirthdays(){if(!configured)return;try{let r=await fetch(base+'/rest/v1/birthday_public?select=display_name',{headers:{apikey:pub,Authorization:'Bearer '+pub}});if(r.ok){publicBirthdays=await r.json();$('cadetToday').textContent=publicBirthdays.length;render();}}catch(e){console.warn('Calendar not configured',e)}}
-function setStatus(s,ok){$('status').textContent=s;$('sideStatus').textContent=s;$('sideDot').classList.toggle('on',!!ok)}async function load(){if(!configured){setStatus('Настрой config.js',false);return}try{let r=await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+pub}});if(!r.ok)throw Error('Supabase: '+r.status);let d=await r.json();if(d[0]?.content){current={...current,...d[0].content};render()}setStatus('Синхронизировано · '+new Date().toLocaleTimeString('ru-RU'),true)}catch(e){setStatus('Нет связи с базой',false);console.error(e)}}
-function fill(){for(let k of ['study','sport'])$(k+'Edit').value=(current[k]||[]).map(x=>x[0]+' | '+x[1]).join('\n');for(let k of ['schedule','birthdays'])$(k+'Edit').value=(current[k]||[]).join('\n');$('noticeEdit').value=current.notice||''}
-function authHeaders(){return{apikey:pub,Authorization:'Bearer '+token,'Content-Type':'application/json'}}$('loginBtn').onclick=async()=>{let email=$('email').value.trim(),password=$('password').value;if(!configured)return $('loginInfo').textContent='Настрой config.js';$('loginInfo').textContent='Вход…';try{let r=await fetch(base+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:pub,'Content-Type':'application/json'},body:JSON.stringify({email,password})}),d=await r.json();if(!r.ok||!d.access_token)throw Error(d.error_description||d.msg||'Неверный email или пароль');token=d.access_token;$('cadetLocked').classList.add('hidden');$('cadetArea').classList.remove('hidden');loadRoster();$('loginBox').classList.add('hidden');$('adminContent').classList.remove('hidden');$('loginInfo').textContent='';$('password').value='';fill()}catch(e){$('loginInfo').textContent=String(e.message)}};
-$('logoutBtn').onclick=()=>{token='';roster=[];$('cadetArea').classList.add('hidden');$('cadetLocked').classList.remove('hidden');$('loginBox').classList.remove('hidden');$('adminContent').classList.add('hidden');$('saveInfo').textContent='';go('admin')};function parsePairs(text){return text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map(s=>{let p=s.split('|');if(p.length!==2)throw Error('Строка рейтинга должна быть «Имя | Балл»: '+s.slice(0,70));let v=Number(p[1].trim().replace(',','.'));if(!p[0].trim()||!Number.isFinite(v)||v<0||v>100)throw Error('Неверный балл: '+s);return[p[0].trim(),v]})}function parseLines(s){return s.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)}
-$('saveBtn').onclick=async()=>{if(!token)return;try{let next={study:parsePairs($('studyEdit').value),sport:parsePairs($('sportEdit').value),schedule:parseLines($('scheduleEdit').value),birthdays:parseLines($('birthdaysEdit').value),notice:$('noticeEdit').value.trim()};$('saveInfo').textContent='Сохранение…';let r=await fetch(base+'/rest/v1/app_state?id=eq.1',{method:'PATCH',headers:{...authHeaders(),Prefer:'return=representation'},body:JSON.stringify({content:next})});if(!r.ok)throw Error('Ошибка базы '+r.status+' '+(await r.text()).slice(0,150));let data=await r.json();if(!data.length)throw Error('Изменения не приняты: проверь права UID администратора');current=next;render();$('saveInfo').textContent='✓ Сохранено';setStatus('Синхронизировано',true)}catch(e){$('saveInfo').textContent=e.message}};
-const libs={mammoth:'https://cdn.jsdelivr.net/npm/mammoth@1.10.0/mammoth.browser.min.js',xlsx:'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',zip:'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',pdf:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'};async function lib(name,symbol){if(window[symbol])return;let sc=document.createElement('script');sc.src=libs[name];await new Promise((ok,err)=>{sc.onload=ok;sc.onerror=()=>err(Error('Не удалось загрузить библиотеку '+name));document.head.append(sc)})}
-function readText(f){return f.text()}async function extract(f){let ext=f.name.split('.').pop().toLowerCase();if(['txt','csv'].includes(ext))return(await readText(f)).slice(0,45000);if(ext==='docx'){await lib('mammoth','mammoth');let r=await mammoth.extractRawText({arrayBuffer:await f.arrayBuffer()});return r.value.slice(0,45000)}if(['xlsx','xls'].includes(ext)){await lib('xlsx','XLSX');let w=XLSX.read(await f.arrayBuffer(),{type:'array'});return w.SheetNames.map(n=>'Лист '+n+'\n'+XLSX.utils.sheet_to_csv(w.Sheets[n])).join('\n').slice(0,45000)}if(ext==='pptx'){await lib('zip','JSZip');let zip=await JSZip.loadAsync(await f.arrayBuffer());let names=Object.keys(zip.files).filter(x=>/^ppt\/slides\/slide\d+\.xml$/.test(x)).sort((a,b)=>Number(a.match(/slide(\d+)/)[1])-Number(b.match(/slide(\d+)/)[1]));let slides=[];for(let n of names){let xml=await zip.file(n).async('string'),doc=new DOMParser().parseFromString(xml,'application/xml');slides.push('Слайд '+n.match(/slide(\d+)/)[1]+'\n'+[...doc.getElementsByTagNameNS('*','t')].map(x=>x.textContent).join(' · '))}return slides.join('\n').slice(0,45000)}if(ext==='pdf'){await lib('pdf','pdfjsLib');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';let pdf=await pdfjsLib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise,out=[];for(let i=1;i<=Math.min(pdf.numPages,35);i++){let p=await pdf.getPage(i),t=await p.getTextContent();out.push('Страница '+i+'\n'+t.items.map(x=>x.str).join(' '))}return out.join('\n').slice(0,45000)}if(['jpg','jpeg','png','webp'].includes(ext)){return null}throw Error('Формат '+ext+' пока не поддерживается')}
-function dataUrl(f){return new Promise((ok,err)=>{let r=new FileReader();r.onload=()=>ok(r.result);r.onerror=err;r.readAsDataURL(f)})}function fileLabel(){let el=$('filesList');el.replaceChildren();files.forEach((f,i)=>{let b=document.createElement('button');b.className='filebadge';b.textContent='✕ '+f.name;b.title='Убрать файл';b.onclick=()=>{files.splice(i,1);fileLabel()};el.append(b)});$('fileInfo').textContent=files.length+' файл(ов) · максимум 5 файлов по 8 МБ'}$('fileInput').onchange=e=>{for(let f of e.target.files){if(f.size>8*1024*1024){$('fileInfo').textContent='Файл слишком большой: '+f.name;continue}if(files.length<5)files.push(f)}fileLabel();e.target.value=''};let dz=$('dropzone');dz.ondragover=e=>{e.preventDefault();dz.style.borderColor='var(--gold)'};dz.ondragleave=()=>dz.style.borderColor='';dz.ondrop=e=>{e.preventDefault();dz.style.borderColor='';for(let f of e.dataTransfer.files){if(files.length<5&&f.size<=8*1024*1024)files.push(f)}fileLabel()};
-async function prepare(){let texts=[],images=[];for(let f of files){let kind=f.type||'image/jpeg';if(/\.(png|jpg|jpeg|webp)$/i.test(f.name)){let url=await dataUrl(f);images.push({mimeType:kind,data:String(url).split(',')[1],name:f.name})}else{let t=await extract(f);texts.push('### '+f.name+'\n'+t)}}return{text:texts.join('\n\n').slice(0,50000),images}}
-function message(role,text){let el=document.createElement('div');el.className='msg '+(role==='user'?'user':'');let avatar=document.createElement('div');avatar.className='avatar';avatar.textContent=role==='user'?'●':'✧';let b=document.createElement('div');b.className='bubble';b.textContent=text;el.append(avatar,b);$('messages').append(el);$('messages').scrollTop=$('messages').scrollHeight}
-async function ask(mode){if(busy)return;if(!token){$('aiStatus').textContent='Сначала войди через «Управление»';go('admin');return}let q=$('chatInput').value.trim();if(mode==='chat'&&!q&&!files.length)return;if(!configured){$('aiStatus').textContent='Настрой config.js';return}busy=true;$('sendChat').disabled=true;$('importBtn').disabled=true;$('aiStatus').textContent='Обработка…';try{let prepared=await prepare();if(!prepared.text&&!prepared.images.length&&!q)throw Error('Прикрепи файл или введи вопрос');let question=q||(mode==='import'?'Извлеки данные для табло':'Проанализируй прикреплённые материалы');message('user',question+(files.length?'\n📎 '+files.map(f=>f.name).join(', '):''));let payload={mode,question,text:prepared.text,images:prepared.images,history:history.slice(-8)};let r=await fetch(base+'/functions/v1/parse-document',{method:'POST',headers:authHeaders(),body:JSON.stringify(payload)});let d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Ошибка сервера: '+r.status);if(mode==='chat'){let answer=String(d.answer||'Ответ не получен');message('assistant',answer);history.push({role:'user',text:question},{role:'assistant',text:answer});$('chatInput').value=''}else{imported=d.data||{};$('preview').textContent=JSON.stringify(imported,null,2);$('notes').textContent=d.notes||'Проверь распознанные данные.';$('applyBtn').disabled=!Object.keys(imported).length;message('assistant','Данные извлечены. Проверь предпросмотр справа и перенеси только нужные разделы в редактор.');} $('aiStatus').textContent='Готово'}catch(e){message('assistant','Ошибка: '+e.message);$('aiStatus').textContent='Ошибка обработки'}finally{busy=false;$('sendChat').disabled=false;$('importBtn').disabled=false}}$('sendChat').onclick=()=>ask('chat');$('importBtn').onclick=()=>ask('import');$('chatInput').onkeydown=e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();ask('chat')}};$('clearChat').onclick=()=>{history=[];$('messages').innerHTML='';message('assistant','Новый диалог начат. Прикрепи файл или задай вопрос.')};$('applyBtn').onclick=()=>{if(!imported)return;const pairs=a=>a.map(x=>x[0]+' | '+x[1]).join('\n');for(let k of ['study','sport'])if($('c'+k).checked&&Array.isArray(imported[k]))$(k+'Edit').value=pairs(imported[k]);for(let k of ['schedule','birthdays'])if($('c'+k).checked&&Array.isArray(imported[k]))$(k+'Edit').value=imported[k].join('\n');if($('cnotice').checked&&typeof imported.notice==='string')$('noticeEdit').value=imported.notice;go('admin');$('saveInfo').textContent='Данные перенесены. Проверь поля и нажми «Сохранить на все экраны».'};
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0a0e12" />
+  <title>Academy Hub — Tactical Command Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#090d10;--bg2:#0e1317;--surface:#12181d;--surface-2:#182128;--surface-3:#1f2a32;
+      --line:#2b3841;--line-2:#394952;--fg:#eef3f3;--muted:#9fb0b8;--gold:#d2b06a;--gold-2:#a7894e;
+      --olive:#81916c;--olive-2:#536149;--alert:#f2c98c;--good:#8ed2b0;--bad:#f1a2a2;--blue:#90b0d8;
+      --radius:20px;--shadow:0 24px 60px rgba(0,0,0,.28);--max:1620px;
+      font-family:Manrope,system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--fg);background:
+        radial-gradient(circle at 85% -10%,rgba(210,176,106,.14),transparent 27%),
+        radial-gradient(circle at 20% -10%,rgba(129,145,108,.14),transparent 32%),
+        linear-gradient(180deg,#0a0e12,#0b1014 30%,#090d10);
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-height:100vh;background:transparent}
+    button,input,select,textarea{font:inherit} button{cursor:pointer;border:0} a{text-decoration:none;color:inherit}
+    .hidden{display:none!important}
+    .app{display:flex;min-height:100vh}
+    .sidebar{width:286px;flex-shrink:0;background:linear-gradient(180deg,#0d1216,#0e1418 55%,#0b1014);border-right:1px solid rgba(210,176,106,.18);padding:22px 18px 18px;position:sticky;top:0;height:100vh;overflow:auto}
+    .brand{display:flex;align-items:flex-start;gap:14px;padding:14px;border:1px solid rgba(210,176,106,.18);background:linear-gradient(180deg,rgba(210,176,106,.08),rgba(255,255,255,.01));border-radius:22px;box-shadow:var(--shadow)}
+    .crest{width:58px;height:58px;border-radius:16px;background:linear-gradient(145deg,#20302c,#121a19);border:1px solid rgba(210,176,106,.34);display:grid;place-items:center;color:var(--gold);font-weight:800;letter-spacing:.08em;font-size:13px;position:relative;overflow:hidden}
+    .crest:before,.crest:after{content:'';position:absolute;inset:6px;border:1px solid rgba(210,176,106,.18);border-radius:12px}.crest:after{inset:auto 17px 12px;height:1px;background:rgba(210,176,106,.18);border:0}
+    .brand h1{margin:0;font-size:19px;letter-spacing:.06em;text-transform:uppercase}
+    .brand p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+    .side-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+    .mini{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)}
+    .mini b{display:block;font-size:20px;color:var(--gold)} .mini span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+    .status{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.02);font-size:12px;color:var(--muted);margin-bottom:18px}
+    .dot{width:9px;height:9px;border-radius:50%;background:#56626d;box-shadow:0 0 0 4px rgba(255,255,255,.03)} .dot.on{background:var(--good);box-shadow:0 0 0 4px rgba(142,210,176,.16)}
+    .nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .nav button{display:flex;align-items:center;justify-content:space-between;width:100%;padding:13px 14px;border-radius:15px;background:transparent;border:1px solid transparent;color:#dce6e8;text-align:left;transition:.2s}
+    .nav button span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+    .nav button:hover,.nav button.active{background:linear-gradient(90deg,rgba(210,176,106,.12),rgba(255,255,255,.01));border-color:rgba(210,176,106,.22)}
+    .nav .emoji{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:rgba(255,255,255,.04);font-size:16px;margin-right:12px;flex-shrink:0}
+    .nav .left{display:flex;align-items:center;min-width:0}.nav strong{display:block;font-size:14px}.nav i{font-style:normal;color:var(--gold)}
+    .side-footer{margin-top:18px;padding:14px;border-radius:18px;background:linear-gradient(180deg,rgba(129,145,108,.08),rgba(255,255,255,.02));border:1px solid rgba(129,145,108,.2)}
+    .side-footer .eyebrow{color:var(--gold);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
+    .side-footer p{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
 
-// Private cadet roster: RLS is enforced by Supabase, not the UI.
-const cFields=['cCode','cName','cGroup','cDob','cAlias'];function clearCadet(){for(let k of cFields)$(k).value='';$('cAllowed').value='false';$('cadetInfo').textContent=''}
-$('cadetReset').onclick=clearCadet;
-async function cadetRequest(method,path,body){if(!token)throw Error('Войди как администратор');let r=await fetch(base+'/rest/v1/'+path,{method,headers:{...authHeaders(),Prefer:method==='GET'?'':'return=representation,resolution=merge-duplicates'},...(body?{body:JSON.stringify(body)}:{})});if(!r.ok)throw Error('Ошибка базы '+r.status+': '+(await r.text()).slice(0,260));return r.status===204?[]:r.json()}
-async function loadRoster(){if(!token)return;try{roster=await cadetRequest('GET','cadets?select=cadet_code,full_name,group_name,birth_date,display_name,show_birthday&order=full_name.asc');$('cadetCount').textContent=roster.length;$('cadetApproved').textContent=roster.filter(x=>x.show_birthday).length;drawRoster()}catch(e){$('cadetList').textContent='Реестр пока не настроен: '+e.message+' — выполни файл supabase/cadets.sql в SQL Editor.'}}
-function drawRoster(){const q=$('cadetSearch').value.trim().toLowerCase();let shown=roster.filter(x=>[x.full_name,x.cadet_code,x.group_name].join(' ').toLowerCase().includes(q));let el=$('cadetList');el.replaceChildren();for(let c of shown){let row=document.createElement('div');row.className='rank';let t=document.createElement('div');t.style.flex='1';let st=document.createElement('strong');st.textContent=c.full_name;let d=document.createElement('div');d.className='small';d.textContent=[c.cadet_code,c.group_name,c.birth_date,c.show_birthday?'🎂 разрешено':'приватно'].filter(Boolean).join(' · ');t.append(st,d);let b=document.createElement('button');b.className='secondary';b.textContent='Изменить';b.onclick=()=>{ $('cCode').value=c.cadet_code;$('cName').value=c.full_name;$('cGroup').value=c.group_name||'';$('cDob').value=c.birth_date||'';$('cAlias').value=c.display_name||'';$('cAllowed').value=String(!!c.show_birthday);$('cName').focus()};row.append(t,b);el.append(row)}if(!shown.length)el.textContent='Нет записей'}
-$('cadetSearch').oninput=drawRoster;$('cadetRefresh').onclick=loadRoster;
-function validateCadet(x){if(!x.cadet_code||!x.full_name)throw Error('Укажи код и имя');if(x.show_birthday&&(!x.birth_date||!x.display_name))throw Error('Для поздравления нужны дата и публичное имя');if(x.birth_date&&!/^\d{4}-\d{2}-\d{2}$/.test(x.birth_date))throw Error('Дата должна быть ГГГГ-ММ-ДД');return x}
-$('cadetSave').onclick=async()=>{let x={cadet_code:$('cCode').value.trim(),full_name:$('cName').value.trim(),group_name:$('cGroup').value.trim(),birth_date:$('cDob').value||null,display_name:$('cAlias').value.trim()||null,show_birthday:$('cAllowed').value==='true'};try{validateCadet(x);$('cadetInfo').textContent='Сохранение…';await cadetRequest('POST','cadets?on_conflict=cadet_code',[x]);$('cadetInfo').textContent='✓ Сохранено';await loadRoster();await loadBirthdays()}catch(e){$('cadetInfo').textContent=e.message}};
-function headerKey(s){s=String(s||'').trim().toLowerCase();return ({'код':'cadet_code','code':'cadet_code','id':'cadet_code','cadet_code':'cadet_code','фио':'full_name','фамилия имя':'full_name','name':'full_name','full_name':'full_name','группа':'group_name','group':'group_name','group_name':'group_name','дата рождения':'birth_date','др':'birth_date','birthday':'birth_date','birth_date':'birth_date','имя для табло':'display_name','alias':'display_name','display_name':'display_name','показывать':'show_birthday','show_birthday':'show_birthday'})[s]||null}
-$('rosterPreview').onclick=async()=>{let f=$('rosterFile').files[0];if(!f)return $('rosterInfo').textContent='Выбери Excel или CSV';try{await lib('xlsx','XLSX');let book=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:true});let matrix=XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]],{header:1,raw:false,defval:''});let keys=matrix[0].map(headerKey);if(!keys.includes('cadet_code')||!keys.includes('full_name'))throw Error('Не найдены заголовки code и name (или код и ФИО)');let rows=matrix.slice(1).filter(a=>a.some(v=>String(v).trim())).map(a=>{let x={cadet_code:'',full_name:'',group_name:'',birth_date:null,display_name:null,show_birthday:false};keys.forEach((k,i)=>{if(k&&k!=='show_birthday')x[k]=String(a[i]||'').trim()||null;else if(k==='show_birthday')x[k]=/^(да|yes|true|1)$/i.test(String(a[i]||'').trim())});if(x.birth_date){let m=x.birth_date.match(/^(\d{2})[.\/](\d{2})[.\/](\d{4})$/);if(m)x.birth_date=m[3]+'-'+m[2]+'-'+m[1]}return validateCadet(x)});if(rows.length>500)throw Error('Максимум 500 строк за загрузку');if(!rows.length)throw Error('Нет записей');pendingRoster=rows;$('rosterCommit').disabled=false;$('rosterInfo').textContent='Найдено '+rows.length+' записей. Разрешён показ поздравления для '+rows.filter(x=>x.show_birthday).length+'. Проверь файл: сохранение заменяет записи с одинаковым кодом.'}catch(e){pendingRoster=[];$('rosterCommit').disabled=true;$('rosterInfo').textContent='Ошибка: '+e.message}};
-$('rosterCommit').onclick=async()=>{if(!pendingRoster.length)return;if(!confirm('Сохранить '+pendingRoster.length+' записей в закрытый реестр?'))return;try{$('rosterInfo').textContent='Загрузка…';for(let i=0;i<pendingRoster.length;i+=50)await cadetRequest('POST','cadets?on_conflict=cadet_code',pendingRoster.slice(i,i+50));$('rosterInfo').textContent='✓ Загружено '+pendingRoster.length+' записей';pendingRoster=[];$('rosterCommit').disabled=true;await loadRoster();await loadBirthdays()}catch(e){$('rosterInfo').textContent='Ошибка: '+e.message}};
+    .main{flex:1;min-width:0}.page{display:none;padding:24px 26px 36px}.page.active{display:block}
+    .wrap{max-width:var(--max);margin:0 auto}
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:24px}
+    .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+    .title{margin:8px 0 0;font-size:clamp(28px,3vw,46px);line-height:1.05;letter-spacing:.03em;text-transform:uppercase}
+    .subtitle{margin:12px 0 0;color:var(--muted);max-width:960px;line-height:1.65}
+    .head-panel{padding:18px 18px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(210,176,106,.08),rgba(255,255,255,.02));border:1px solid rgba(210,176,106,.14);min-width:300px;box-shadow:var(--shadow)}
+    .clock{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold);text-align:right}.clock-note{color:var(--muted);font-size:12px;text-align:right}
 
-render();load();loadBirthdays();setInterval(()=>{if(document.visibilityState==='visible'){load();loadBirthdays()}},15000);if(location.search.includes('tv=1')){go('display');document.body.classList.add('tv')}else go(location.hash.slice(1)||'overview');
-</script></body></html>
+    .hero{display:grid;grid-template-columns:1.4fr .9fr;gap:18px;margin-bottom:18px}
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;min-width:0;position:relative;overflow:hidden}
+    .panel.gold{border-color:rgba(210,176,106,.18);background:linear-gradient(180deg,rgba(210,176,106,.07),rgba(255,255,255,.02))}
+    .panel:before{content:'';position:absolute;inset:0;background:linear-gradient(130deg,rgba(255,255,255,.035),transparent 35%);pointer-events:none}
+    .hero h2,.section-title{margin:0 0 8px;font-size:26px;line-height:1.15}.muted{color:var(--muted)}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.chip{padding:9px 12px;border-radius:999px;background:#12181d;border:1px solid rgba(255,255,255,.07);font-size:12px;color:#dbe3e6}
+    .hero-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .stat-card{padding:16px 16px;border-radius:18px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06)}
+    .stat-card small{display:block;color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase}.stat-card strong{display:block;margin-top:8px;font-size:30px;color:var(--gold)}.stat-card span{display:block;margin-top:6px;color:#cfd8db;font-size:13px;line-height:1.5}
+
+    .metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .metric{padding:18px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06)}
+    .metric small{display:block;color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase}.metric strong{display:block;margin-top:10px;font-size:29px;color:var(--gold)}.metric span{display:block;margin-top:6px;color:#d2dcde;font-size:13px}
+
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .grid-6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+    .spacer{height:18px}
+    .section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:6px 0 14px}
+    .section-header p{margin:0;color:var(--muted);max-width:760px;line-height:1.55}
+
+    .ranking{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}.ranking li{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.05)}
+    .rank-no{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#1a252d;border:1px solid rgba(255,255,255,.08);font-weight:800;color:#f3f5f6}.ranking li:nth-child(1) .rank-no{background:linear-gradient(180deg,#af9257,#7a6538);border-color:rgba(255,255,255,.12)}.ranking li:nth-child(2) .rank-no{background:linear-gradient(180deg,#798188,#556068)}.ranking li:nth-child(3) .rank-no{background:linear-gradient(180deg,#8a6d5a,#614c3d)}
+    .rank-name b{display:block;font-size:15px}.rank-name span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.score{font-weight:800;font-size:24px;color:var(--gold);font-variant-numeric:tabular-nums}
+
+    .sport-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}.sport-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)}.sport-card h3{margin:0 0 12px;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+    .mini-rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}.mini-rank li{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.18)}.mini-rank b{flex:1;font-size:13px}.mini-rank span{font-size:12px;color:var(--gold);font-weight:700}
+
+    .group-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.group-card{padding:18px;border-radius:20px;background:linear-gradient(180deg,rgba(129,145,108,.06),rgba(255,255,255,.02));border:1px solid rgba(129,145,108,.18)}
+    .group-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.group-top h3{margin:0;font-size:22px}.group-top .badge{padding:7px 11px;border-radius:999px;background:#11181d;border:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+    .group-meta{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 14px}.group-meta span{padding:7px 10px;border-radius:999px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06);font-size:12px;color:#d7dfe2}
+    .schedule{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}.schedule li{display:flex;gap:10px;padding:10px 11px;border-radius:14px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.05)}.schedule time{min-width:64px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}.schedule span{color:#dce4e7;font-size:13px;line-height:1.45}
+
+    .birthday-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:18px}.callout{padding:18px;border-radius:18px;background:linear-gradient(180deg,rgba(210,176,106,.09),rgba(255,255,255,.02));border:1px solid rgba(210,176,106,.18)}.callout h3{margin:0 0 8px;font-size:20px}.list{list-style:none;margin:0;padding:0}.list li{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}.list li:last-child{border-bottom:0}
+
+    .direction-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.direction{padding:20px;border-radius:20px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))}.direction h3{margin:0 0 10px;font-size:24px;color:var(--gold)}.direction p{margin:0;color:#d7e0e3;line-height:1.7}.direction ul{margin:14px 0 0 0;padding-left:18px;color:var(--muted);line-height:1.7}
+
+    .notice{padding:20px 22px;border-radius:18px;background:linear-gradient(90deg,rgba(210,176,106,.15),rgba(255,255,255,.03));border-left:4px solid var(--gold);font-size:18px;line-height:1.65;color:#f0f4f2}
+    .footer-note{padding:18px;border-radius:18px;background:#0f1519;border:1px solid rgba(210,176,106,.12);color:var(--muted);text-align:center;line-height:1.6}
+    .footer-note b{color:var(--gold)}
+
+    .admin-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}.stack{display:flex;flex-direction:column;gap:18px}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field,.textarea-field{display:flex;flex-direction:column;gap:7px}.field label,.textarea-field label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .input,textarea,select{width:100%;padding:13px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:#0d1317;color:#eef3f3;outline:none}.input:focus,textarea:focus,select:focus{border-color:rgba(210,176,106,.42);box-shadow:0 0 0 4px rgba(210,176,106,.08)} textarea{min-height:124px;resize:vertical}
+    .textarea-lg textarea{min-height:170px}.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{padding:12px 16px;border-radius:14px;font-weight:800;letter-spacing:.03em}.btn.primary{background:linear-gradient(180deg,#d8b775,#b59250);color:#1b160d}.btn.secondary{background:#141c21;color:#eaf0f2;border:1px solid rgba(255,255,255,.08)}.btn.ghost{background:transparent;color:#eef3f3;border:1px dashed rgba(255,255,255,.1)}
+    .info{font-size:13px;color:var(--muted)} .info.good{color:var(--good)} .info.bad{color:var(--bad)}
+    .accordions{display:flex;flex-direction:column;gap:12px}.acc{border-radius:18px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);overflow:hidden}.acc summary{list-style:none;padding:16px 18px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center}.acc summary::-webkit-details-marker{display:none}.acc .acc-body{padding:0 18px 18px}
+
+    .cadet-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.cadet-list{display:flex;flex-direction:column;gap:10px;max-height:600px;overflow:auto}.cadet-row{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.05)}.cadet-row strong{display:block}.cadet-row .meta{color:var(--muted);font-size:12px;margin-top:3px}
+    .upload-box{padding:18px;border-radius:18px;background:rgba(255,255,255,.02);border:1px dashed rgba(210,176,106,.2)}
+    .preview{padding:14px 16px;border-radius:16px;background:#0c1216;border:1px solid rgba(255,255,255,.06);white-space:pre-wrap;max-height:340px;overflow:auto;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#dce4e5;line-height:1.55}
+    .checkrow{display:flex;flex-wrap:wrap;gap:14px}.checkrow label{display:flex;align-items:center;gap:8px;color:#dfe6e8;font-size:13px}
+    .pill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.pill{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+
+    .tv .sidebar,.tv .admin-only{display:none!important}.tv .page{padding:14px}.tv .topbar{margin-bottom:14px}.tv .hero,.tv .metrics,.tv .grid-2,.tv .direction-grid,.tv .birthday-grid{gap:12px}.tv .group-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tv .sport-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.tv .panel{padding:16px}.tv .title{font-size:34px}.tv .section-title{font-size:20px}.tv .ranking li{padding:10px 12px}.tv .schedule li{padding:8px 10px}.tv .metric strong{font-size:24px}
+
+    @media (max-width:1450px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.sport-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-6{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media (max-width:1220px){.sidebar{width:250px}.hero,.admin-grid,.birthday-grid,.grid-2,.direction-grid{grid-template-columns:1fr}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:900px){.app{display:block}.sidebar{position:relative;top:auto;height:auto;width:auto}.page{padding:18px 14px 24px}.metrics,.cadet-stats,.pill-grid,.hero-grid,.fields,.sport-grid,.group-grid{grid-template-columns:1fr}.topbar{display:block}.head-panel{margin-top:14px}.grid-3{grid-template-columns:1fr}}
+  
+/* Motion system — respects reduced-motion preferences */
+@keyframes entrance{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes swapin{from{opacity:0;transform:translateX(15px) scale(.985)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 rgba(210,176,106,0)}50%{box-shadow:0 0 22px rgba(210,176,106,.15)}}
+.panel,.metric,.group-card,.sport-card{animation:entrance .55s cubic-bezier(.2,.75,.3,1) both;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.panel:hover,.group-card:hover,.sport-card:hover{transform:translateY(-3px);border-color:rgba(210,176,106,.3)}
+.rank-no{animation:glow 5s infinite}.rotating-card{animation:swapin .42s ease-out both}
+.rotation-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.rotation-tabs{display:flex;gap:8px;flex-wrap:wrap}.rotation-tabs button{border:1px solid var(--line-2);border-radius:10px;padding:8px 13px;background:#142026;color:var(--fg)}
+.rotation-tabs button.active{background:var(--gold);color:#151718}
+.rotation-progress{height:3px;overflow:hidden;background:#334048;border-radius:10px;margin:14px 0 0}.rotation-progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s linear}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="crest">A.H</div>
+      <div>
+        <h1>Academy Hub</h1>
+        <p>Информационно-командный центр для курсантов. Военный академический интерфейс для единого контроля учёбы, спорта, расписания и событий.</p>
+      </div>
+    </div>
+
+    <div class="side-meta">
+      <div class="mini"><b id="sideCadetTotal">132</b><span>Курсантов</span></div>
+      <div class="mini"><b>6</b><span>Групп</span></div>
+      <div class="mini"><b>2</b><span>Направления</span></div>
+      <div class="mini"><b id="sideTodayBirthdays">0</b><span>ДР сегодня</span></div>
+    </div>
+
+    <div class="status"><span class="dot" id="sideDot"></span><span id="sideStatus">Подключение…</span></div>
+
+    <nav class="nav">
+      <button data-go="dashboard" class="active"><div class="left"><div class="emoji">🛡️</div><div><strong>Командный центр</strong><span>Полная обзорная панель</span></div></div><i>01</i></button>
+      <button data-go="admin"><div class="left"><div class="emoji">⚙️</div><div><strong>Управление</strong><span>Контент, группы и топы</span></div></div><i>02</i></button>
+      <button data-go="cadets"><div class="left"><div class="emoji">📁</div><div><strong>Реестр курсантов</strong><span>Закрытое хранение</span></div></div><i>03</i></button>
+      <button data-go="ai"><div class="left"><div class="emoji">🤖</div><div><strong>AI-центр</strong><span>Импорт и чат</span></div></div><i>04</i></button>
+    </nav>
+
+    <div class="side-footer">
+      <div class="eyebrow">TACTICAL NOTE</div>
+      <p>Режим TV: добавь <b>?tv=1</b> к адресу. Для полного экрана используй F11. Публичное табло читает только разрешённые данные.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <section class="page active" id="dashboard">
+      <div class="wrap">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">КНБ Academy • Tactical Dashboard</div>
+            <h1 class="title">Единый командный центр курсантов</h1>
+            <p class="subtitle">Военный дизайнерский интерфейс для академии: в одном месте собраны топы по учёбе и спорту, 6 учебных групп, спортивные секции, календарь дней рождения, направления КРД и ОТЗИ, а также оперативные объявления.</p>
+          </div>
+          <div class="head-panel">
+            <div class="clock" id="clock">--:--:--</div>
+            <div class="clock-note" id="status">Подключение…</div>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="panel gold">
+            <div class="eyebrow">Operational Overview</div>
+            <h2>Академическая сводка</h2>
+            <p class="muted">Система показывает реальную картину по всем ключевым блокам: учебный рейтинг, спортивная активность, группы, календарь и служебные объявления. Данные синхронизируются из Supabase, а закрытый реестр отделён от публичного табло.</p>
+            <div class="chips">
+              <div class="chip">Топ-10 по учёбе</div>
+              <div class="chip">Топ-5 по спорту</div>
+              <div class="chip">5 спортивных секций</div>
+              <div class="chip">6 учебных групп</div>
+              <div class="chip">132 курсанта</div>
+              <div class="chip">КРД и ОТЗИ</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="hero-grid">
+              <div class="stat-card"><small>Личный состав</small><strong id="heroCadets">132</strong><span>Общий контингент по всем группам</span></div>
+              <div class="stat-card"><small>Группы</small><strong>6</strong><span>4 КРД и 2 ОТЗИ</span></div>
+              <div class="stat-card"><small>Учебные топы</small><strong>10</strong><span>Лучшие по общей успеваемости</span></div>
+              <div class="stat-card"><small>Спортивный топ</small><strong>5</strong><span>Лучшие по общему зачёту</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics" id="metricRow"></div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="section-header"><div><div class="eyebrow">Academic ranking</div><h2 class="section-title">Топ-10 по учёбе</h2></div><p>Общий академический рейтинг. Внутри можно учитывать разницу профилей: для ОТЗИ нагрузка выше по математике и физике, для КРД — по гуманитарным дисциплинам.</p></div>
+            <ol class="ranking" id="studyList"></ol>
+          </div>
+          <div class="panel">
+            <div class="section-header"><div><div class="eyebrow">Athletic ranking</div><h2 class="section-title">Топ-5 по спорту</h2></div><p>Общий спортивный рейтинг по суммарным результатам. Отдельные списки по видам спорта размещены ниже.</p></div>
+            <ol class="ranking" id="sportList"></ol>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="panel">
+          <div class="section-header"><div><div class="eyebrow">Sports sections</div><h2 class="section-title">Спортивные дисциплины</h2></div><p>В систему встроены отдельные блоки для рукопашного боя, борьбы, лёгкой атлетики, футбола и волейбола.</p></div>
+          <div class="sport-grid" id="sportSections"></div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="panel">
+          <div class="section-header"><div><div class="eyebrow">Directions</div><h2 class="section-title">Направления подготовки</h2></div><p>КРД и ОТЗИ отображаются отдельно, чтобы отличать учебную специфику и профильную нагрузку.</p></div>
+          <div class="direction-grid">
+            <div class="direction">
+              <h3>КРД</h3>
+              <p>Профиль с акцентом на гуманитарно-правовой, аналитический и прикладной контур подготовки. На дашборде для КРД можно выделять дисциплины, связанные с правом, историей, языковой и общественной подготовкой.</p>
+              <ul>
+                <li>4 группы по 25 курсантов</li>
+                <li>Удобный отдельный блок расписания</li>
+                <li>Можно сравнивать с ОТЗИ по общему рейтингу</li>
+              </ul>
+            </div>
+            <div class="direction">
+              <h3>ОТЗИ</h3>
+              <p>Более сложное техническое направление: повышенная роль математики, физики, информационной безопасности и профильных дисциплин. В интерфейсе для ОТЗИ сохранён отдельный акцент как для направления с более высокой вычислительной нагрузкой.</p>
+              <ul>
+                <li>2 группы: 14 и 18 курсантов</li>
+                <li>Поддержка технического расписания</li>
+                <li>Отдельный учёт для более сложного профиля</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="panel">
+          <div class="section-header"><div><div class="eyebrow">Group command board</div><h2 class="section-title">Все группы и их уроки</h2></div><p>Расписание каждой из 6 групп вынесено в отдельную карточку. Здесь можно показать весь учебный день и различать КРД и ОТЗИ.</p></div>
+          <div class="rotation-toolbar"><div class="rotation-tabs" id="scheduleTabs"></div><div class="muted">Автоматически каждые 15 секунд · ручной выбор</div></div>
+          <div id="groupGrid" aria-live="polite"></div><div class="rotation-progress"><i id="scheduleProgress"></i></div>
+        </div>
+
+        <div class="spacer"></div>
+        <div class="panel">
+          <div class="section-header"><div><div class="eyebrow">Group performance</div><h2 class="section-title">Оценки по группам</h2></div><p>Отдельный рейтинг каждой группы с переключением каждые 15 секунд. Видны только данные, разрешённые для табло.</p></div>
+          <div class="rotation-toolbar"><div class="rotation-tabs" id="gradeTabs"></div><span class="muted">Оценки в отдельном окне</span></div>
+          <div id="gradeRotator" aria-live="polite"></div><div class="rotation-progress"><i id="gradeProgress"></i></div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="birthday-grid">
+          <div class="panel gold">
+            <div class="section-header"><div><div class="eyebrow">Today</div><h2 class="section-title">Именинники сегодня</h2></div></div>
+            <div class="callout">
+              <h3>Поздравляем курсантов</h3>
+              <p class="muted">Эта часть заполняется автоматически из разрешённой публичной таблицы дней рождения.</p>
+              <ul class="list" id="todayBirthdays"></ul>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-header"><div><div class="eyebrow">Birthday calendar</div><h2 class="section-title">Полный список дней рождения</h2></div><p>Сюда можно занести весь календарь дней рождения для отображения на одном экране.</p></div>
+            <ul class="list" id="birthdayList"></ul>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="panel">
+          <div class="section-header"><div><div class="eyebrow">Command note</div><h2 class="section-title">Объявление</h2></div></div>
+          <div class="notice" id="noticeBox">Нет объявлений.</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="footer-note">Разработчик сайта — <b>курсант Пренебек Н. ОТЗИ-1</b></div>
+      </div>
+    </section>
+
+    <section class="page" id="admin">
+      <div class="wrap">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">Administration center</div>
+            <h1 class="title">Управление контентом</h1>
+            <p class="subtitle">Единый редактор для топов, спортивных секций, 6 групп, дней рождения и объявлений. После авторизации можно сохранять изменения на все экраны.</p>
+          </div>
+          <div class="head-panel admin-only">
+            <div class="clock" id="adminClock">--:--:--</div>
+            <div class="clock-note">Только для администратора</div>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="stack">
+            <div class="panel" id="loginBox">
+              <div class="eyebrow">Secure access</div>
+              <h2 class="section-title">Вход администратора</h2>
+              <div class="fields">
+                <div class="field"><label>Email</label><input class="input" id="email" type="email" autocomplete="username"></div>
+                <div class="field"><label>Пароль</label><input class="input" id="password" type="password" autocomplete="current-password"></div>
+              </div>
+              <div class="btnrow" style="margin-top:14px"><button class="btn primary" id="loginBtn">Войти</button><span class="info" id="loginInfo"></span></div>
+            </div>
+
+            <div class="panel hidden" id="adminContent">
+              <div class="section-header"><div><div class="eyebrow">Core ratings</div><h2 class="section-title">Основные рейтинги</h2></div></div>
+              <div class="fields">
+                <div class="textarea-field textarea-lg"><label>Топ-10 по учёбе — формат «Имя | Балл»</label><textarea id="studyEdit"></textarea></div>
+                <div class="textarea-field textarea-lg"><label>Топ-5 по спорту — формат «Имя | Балл»</label><textarea id="sportEdit"></textarea></div>
+              </div>
+
+              <div class="spacer"></div>
+              <div class="section-header"><div><div class="eyebrow">Birthday & notice</div><h2 class="section-title">Календарь и объявление</h2></div></div>
+              <div class="fields">
+                <div class="textarea-field"><label>Полный список дней рождения — по строкам</label><textarea id="birthdaysEdit"></textarea></div>
+                <div class="textarea-field"><label>Главное объявление</label><textarea id="noticeEdit"></textarea></div>
+              </div>
+
+              <div class="spacer"></div>
+              <div class="section-header"><div><div class="eyebrow">Sports blocks</div><h2 class="section-title">Спортивные секции</h2></div></div>
+              <div class="fields">
+                <div class="textarea-field"><label>Рукопашка — формат «Имя | Балл»</label><textarea id="handToHandEdit"></textarea></div>
+                <div class="textarea-field"><label>Борьба — формат «Имя | Балл»</label><textarea id="wrestlingEdit"></textarea></div>
+                <div class="textarea-field"><label>Лёгкая атлетика — формат «Имя | Балл»</label><textarea id="athleticsEdit"></textarea></div>
+                <div class="textarea-field"><label>Футбол — формат «Имя | Балл»</label><textarea id="footballEdit"></textarea></div>
+                <div class="textarea-field"><label>Волейбол — формат «Имя | Балл»</label><textarea id="volleyballEdit"></textarea></div>
+              </div>
+
+              <div class="spacer"></div>
+              <div class="section-header"><div><div class="eyebrow">Group schedules</div><h2 class="section-title">Расписание 6 групп</h2></div></div>
+              <div class="accordions" id="groupEditors"></div>
+
+              <div class="btnrow" style="margin-top:18px">
+                <button class="btn primary" id="saveBtn">Сохранить на все экраны</button>
+                <button class="btn secondary" id="logoutBtn">Выйти</button>
+                <span class="info" id="saveInfo"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="panel">
+              <div class="eyebrow">Configuration</div>
+              <h2 class="section-title">Структура системы</h2>
+              <div class="pill-grid">
+                <div class="pill"><b>КРД-1</b><div class="muted">25 курсантов</div></div>
+                <div class="pill"><b>КРД-2</b><div class="muted">25 курсантов</div></div>
+                <div class="pill"><b>КРД-3</b><div class="muted">25 курсантов</div></div>
+                <div class="pill"><b>КРД-4</b><div class="muted">25 курсантов</div></div>
+                <div class="pill"><b>ОТЗИ-1</b><div class="muted">14 курсантов</div></div>
+                <div class="pill"><b>ОТЗИ-2</b><div class="muted">18 курсантов</div></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="eyebrow">Guideline</div>
+              <h2 class="section-title">Как заполнять</h2>
+              <ul class="muted" style="margin:0;padding-left:18px;line-height:1.8">
+                <li>Рейтинги вводи строками в формате <b>Имя | Балл</b>.</li>
+                <li>Для дней рождения — одна строка на одного курсанта.</li>
+                <li>Для каждой группы указывай уроки по строкам в формате <b>08:30 | Предмет</b>.</li>
+                <li>Секция ОТЗИ отдельно выделена как более сложное направление.</li>
+                <li>Подпись разработчика уже добавлена в публичный интерфейс.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="cadets">
+      <div class="wrap">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">Secure roster</div>
+            <h1 class="title">Закрытый реестр курсантов</h1>
+            <p class="subtitle">Таблица хранится в Supabase c RLS. Публично выводятся только разрешённые поздравления. Здесь можно добавлять, изменять и массово загружать карточки курсантов.</p>
+          </div>
+        </div>
+
+        <div class="panel" id="cadetLocked">
+          <div class="notice" style="font-size:16px">Для доступа к реестру сначала войди в разделе «Управление».</div>
+          <div class="btnrow" style="margin-top:14px"><button class="btn primary" data-go="admin">Открыть вход</button></div>
+        </div>
+
+        <div id="cadetArea" class="hidden">
+          <div class="cadet-stats">
+            <div class="metric"><small>Карточек</small><strong id="cadetCount">0</strong><span>Записей в закрытой базе</span></div>
+            <div class="metric"><small>Публичные ДР</small><strong id="cadetApproved">0</strong><span>Разрешены к показу</span></div>
+            <div class="metric"><small>Сегодня</small><strong id="cadetToday">0</strong><span>Именинников автоматически</span></div>
+            <div class="metric"><small>Доступ</small><strong>RLS</strong><span>Только администратор</span></div>
+          </div>
+          <div class="spacer"></div>
+          <div class="grid-2">
+            <div class="panel">
+              <div class="section-header"><div><div class="eyebrow">Record editor</div><h2 class="section-title">Карточка курсанта</h2></div></div>
+              <div class="fields">
+                <div class="field"><label>Код курсанта</label><input class="input" id="cCode"></div>
+                <div class="field"><label>ФИО</label><input class="input" id="cName"></div>
+                <div class="field"><label>Группа</label><input class="input" id="cGroup"></div>
+                <div class="field"><label>Дата рождения</label><input class="input" id="cDob" type="date"></div>
+                <div class="field"><label>Имя для табло</label><input class="input" id="cAlias"></div>
+                <div class="field"><label>Показывать поздравление</label><select id="cAllowed"><option value="false">Нет</option><option value="true">Да</option></select></div>
+              </div>
+              <div class="btnrow" style="margin-top:14px"><button class="btn primary" id="cadetSave">Сохранить</button><button class="btn secondary" id="cadetReset">Очистить</button><span class="info" id="cadetInfo"></span></div>
+            </div>
+            <div class="panel">
+              <div class="section-header"><div><div class="eyebrow">Bulk import</div><h2 class="section-title">Массовая загрузка</h2></div></div>
+              <div class="upload-box">
+                <p class="muted" style="margin-top:0">Загрузить Excel / CSV с колонками: <b>код</b>, <b>ФИО</b>, <b>группа</b>, <b>дата рождения</b>, <b>имя для табло</b>, <b>показывать</b>.</p>
+                <input class="input" id="rosterFile" type="file" accept=".csv,.xlsx,.xls">
+                <div class="btnrow" style="margin-top:14px"><button class="btn secondary" id="rosterPreview">Проверить файл</button><button class="btn primary" id="rosterCommit" disabled>Загрузить в реестр</button></div>
+                <div class="info" style="margin-top:12px" id="rosterInfo"></div>
+              </div>
+            </div>
+          </div>
+          <div class="spacer"></div>
+          <div class="panel">
+            <div class="section-header"><div><div class="eyebrow">Stored roster</div><h2 class="section-title">Список курсантов</h2></div><div class="btnrow"><input class="input" id="cadetSearch" placeholder="Поиск по ФИО, коду или группе" style="min-width:260px"><button class="btn secondary" id="cadetRefresh">Обновить</button></div></div>
+            <div class="cadet-list" id="cadetList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="ai">
+      <div class="wrap">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">AI center</div>
+            <h1 class="title">Импорт документов и AI-чат</h1>
+            <p class="subtitle">ИИ помогает разобрать файлы и перенести их в редактор. Также есть чат для работы с документами. Для доступа нужен вход администратора.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="section-header"><div><div class="eyebrow">Document import</div><h2 class="section-title">Разобрать документ</h2></div></div>
+            <div class="upload-box">
+              <input class="input" id="docFile" type="file" accept=".txt,.csv,.docx,.xlsx,.xls,.pptx,.pdf,.jpg,.jpeg,.png,.webp" multiple>
+              <div class="btnrow" style="margin-top:14px"><button class="btn primary" id="parseBtn">Разобрать документ</button><span class="info" id="parseInfo"></span></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="checkrow">
+              <label><input type="checkbox" id="cstudy" checked> Учёба</label>
+              <label><input type="checkbox" id="csport" checked> Спорт</label>
+              <label><input type="checkbox" id="cbirthdays" checked> Дни рождения</label>
+              <label><input type="checkbox" id="cnotice" checked> Объявления</label>
+            </div>
+            <div class="spacer"></div>
+            <div class="preview" id="previewBox">Здесь появится структурированный результат разбора.</div>
+            <div class="info" style="margin-top:10px" id="notesBox">ИИ не сохраняет данные автоматически.</div>
+            <div class="btnrow" style="margin-top:14px"><button class="btn secondary" id="applyBtn" disabled>Перенести в редактор</button><button class="btn ghost" data-go="admin">Открыть управление</button></div>
+          </div>
+          <div class="panel">
+            <div class="section-header"><div><div class="eyebrow">Assistant</div><h2 class="section-title">AI-чат</h2></div></div>
+            <div class="textarea-field"><label>Вопрос для ИИ</label><textarea id="chatPrompt" placeholder="Например: Сравни результаты по направлениям КРД и ОТЗИ или подготовь краткое объявление."></textarea></div>
+            <div class="btnrow" style="margin-top:14px"><button class="btn primary" id="chatBtn">Отправить</button><span class="info" id="chatInfo"></span></div>
+            <div class="spacer"></div>
+            <div class="preview" id="chatReply">Ответ ИИ появится здесь.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const $$ = sel => [...document.querySelectorAll(sel)];
+const GROUPS = [
+  {key:'KRD1',label:'КРД-1',direction:'КРД',cadets:25,color:'КРД'},
+  {key:'KRD2',label:'КРД-2',direction:'КРД',cadets:25,color:'КРД'},
+  {key:'KRD3',label:'КРД-3',direction:'КРД',cadets:25,color:'КРД'},
+  {key:'KRD4',label:'КРД-4',direction:'КРД',cadets:25,color:'КРД'},
+  {key:'OTZI1',label:'ОТЗИ-1',direction:'ОТЗИ',cadets:14,color:'ОТЗИ'},
+  {key:'OTZI2',label:'ОТЗИ-2',direction:'ОТЗИ',cadets:18,color:'ОТЗИ'}
+];
+const SPORTS = [
+  {key:'handToHand',label:'Рукопашка'},
+  {key:'wrestling',label:'Борьба'},
+  {key:'athletics',label:'Лёгкая атлетика'},
+  {key:'football',label:'Футбол'},
+  {key:'volleyball',label:'Волейбол'}
+];
+const defaultGroupSchedules = {
+  KRD1:['08:30 | История Казахстана','10:20 | Конституционное право','12:10 | Иностранный язык','14:30 | Строевая подготовка'],
+  KRD2:['08:30 | Теория государства и права','10:20 | Русский язык','12:10 | Тактическая подготовка','14:30 | Физическая подготовка'],
+  KRD3:['08:30 | История','10:20 | Казахский язык','12:10 | Психология','14:30 | Огневая подготовка'],
+  KRD4:['08:30 | Правовые дисциплины','10:20 | Философия','12:10 | Аналитическая работа','14:30 | Самоподготовка'],
+  OTZI1:['08:30 | Математика','10:20 | Физика','12:10 | Информационная безопасность','14:30 | Лабораторная работа'],
+  OTZI2:['08:30 | Высшая математика','10:20 | Физика','12:10 | Криптография','14:30 | Программирование']
+};
+const defaultState = {
+  studyTop:[['Курсант 1',99],['Курсант 2',98],['Курсант 3',97],['Курсант 4',96],['Курсант 5',95],['Курсант 6',94],['Курсант 7',93],['Курсант 8',92],['Курсант 9',91],['Курсант 10',90]],
+  sportTopOverall:[['Курсант A',98],['Курсант B',96],['Курсант C',94],['Курсант D',92],['Курсант E',90]],
+  sportCategories:{
+    handToHand:[['Курсант Р1',96],['Курсант Р2',92],['Курсант Р3',89]],
+    wrestling:[['Курсант Б1',95],['Курсант Б2',93],['Курсант Б3',90]],
+    athletics:[['Курсант Л1',97],['Курсант Л2',95],['Курсант Л3',91]],
+    football:[['Курсант Ф1',94],['Курсант Ф2',92],['Курсант Ф3',89]],
+    volleyball:[['Курсант В1',95],['Курсант В2',91],['Курсант В3',88]]
+  },
+  groups:Object.fromEntries(GROUPS.map(g=>[g.key,{label:g.label,direction:g.direction,cadets:g.cadets,schedule:[...(defaultGroupSchedules[g.key]||[])]}])),
+  birthdays:['15.10 — Курсант Арман','02.11 — Курсант Нуржан','18.11 — Курсант Айдын'],
+  notice:'Подготовка к учебной неделе идёт в штатном режиме. Актуализируйте расписание групп, спортивные результаты и персональные поздравления.',
+  overviewSchedule:['08:30 — Первая пара','10:20 — Вторая пара','12:10 — Третья пара','14:30 — Четвёртая пара'],
+  study:[['Курсант 1',99]], sport:[['Курсант A',98]], schedule:['08:30 — Первая пара']
+};
+let current = structuredClone(defaultState);
+let token='';
+let configured=false;
+let base='';
+let pub='';
+let publicBirthdays=[];
+let roster=[];
+let importedData=null;
+let pendingRoster=[];
+let chatHistory=[];
+
+function clone(v){return JSON.parse(JSON.stringify(v));}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function parsePairs(text,limit=100){
+  return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,limit).map(s=>{
+    const p=s.split('|');
+    if(p.length!==2) throw Error('Строка должна быть в формате «Имя | Балл»: '+s.slice(0,80));
+    const name=p[0].trim(); const val=Number(p[1].trim().replace(',','.'));
+    if(!name || !Number.isFinite(val) || val<0 || val>100) throw Error('Неверный балл: '+s.slice(0,80));
+    return [name,val];
+  });
+}
+function parseLines(text,limit=300){return String(text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,limit)}
+function parseTimedLines(text){return parseLines(text,50).map(line=>{const parts=line.split('|');return parts.length===2?{time:parts[0].trim(),text:parts[1].trim()}:{time:'—',text:line}})}
+function pairLines(arr){return (arr||[]).map(x=>x[0]+' | '+x[1]).join('\n')}
+function normalizeState(data){
+  const out=clone(defaultState);
+  data=data||{};
+  out.studyTop = Array.isArray(data.studyTop)?data.studyTop:(Array.isArray(data.study)?data.study:out.studyTop);
+  out.sportTopOverall = Array.isArray(data.sportTopOverall)?data.sportTopOverall:(Array.isArray(data.sport)?data.sport:out.sportTopOverall);
+  out.birthdays = Array.isArray(data.birthdays)?data.birthdays:out.birthdays;
+  out.notice = typeof data.notice==='string'?data.notice:out.notice;
+  out.overviewSchedule = Array.isArray(data.overviewSchedule)?data.overviewSchedule:(Array.isArray(data.schedule)?data.schedule:out.overviewSchedule);
+  out.study = out.studyTop;
+  out.sport = out.sportTopOverall;
+  out.schedule = out.overviewSchedule;
+  out.sportCategories = {...out.sportCategories,...(data.sportCategories||{})};
+  if(data.groups){
+    for(const g of GROUPS){
+      out.groups[g.key] = {...out.groups[g.key],...(data.groups[g.key]||{})};
+      if(!Array.isArray(out.groups[g.key].schedule)) out.groups[g.key].schedule=[...(defaultGroupSchedules[g.key]||[])];
+    }
+  }
+  out.groupGrades = {...(data.groupGrades||{})};
+  if(data.groupSchedules){
+    for(const g of GROUPS){
+      if(Array.isArray(data.groupSchedules[g.key])) out.groups[g.key].schedule = data.groupSchedules[g.key];
+    }
+  }
+  return out;
+}
+function buildPayloadFromState(st){
+  return {
+    ...st,
+    studyTop:st.studyTop,
+    sportTopOverall:st.sportTopOverall,
+    groups:st.groups,
+    sportCategories:st.sportCategories,
+    overviewSchedule:st.overviewSchedule,
+    study:st.studyTop,
+    sport:st.sportTopOverall,
+    schedule:st.overviewSchedule
+  };
+}
+function totalCadets(){ return GROUPS.reduce((sum,g)=>sum+(Number(current.groups[g.key]?.cadets)||g.cadets),0)}
+function todayList(){ return publicBirthdays.map(x=>'🎉 '+x.display_name) }
+function setStatus(msg,ok=false){$('status').textContent=msg;$('sideStatus').textContent=msg;$('sideDot').classList.toggle('on',!!ok)}
+function updateClock(){
+  const d=new Date();
+  const t=d.toLocaleTimeString('ru-RU');
+  $('clock').textContent=t; if($('adminClock')) $('adminClock').textContent=t;
+}
+function go(id){
+  $$('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+  $$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+  if(location.search.includes('tv=1')) id='dashboard';
+  if(!location.search.includes('tv=1')) history.replaceState(null,'','#'+id);
+}
+$$('.nav button,[data-go]').forEach(btn=>btn.addEventListener('click',()=>go(btn.dataset.go)));
+
+function rankHtml(items, subLabel){
+  return (items||[]).map((x,i)=>`<li><div class="rank-no">${i+1}</div><div class="rank-name"><b>${esc(x[0])}</b><span>${subLabel||'Результат подтверждён'}</span></div><div class="score">${esc(x[1])}</div></li>`).join('') || '<li><div class="rank-name"><b>Нет данных</b><span>Добавь записи в разделе «Управление»</span></div></li>';
+}
+function miniRankHtml(items){
+  return (items||[]).slice(0,5).map((x,i)=>`<li><b>${i+1}. ${esc(x[0])}</b><span>${esc(x[1])}</span></li>`).join('') || '<li><b>Нет данных</b><span>—</span></li>';
+}
+function scheduleHtml(lines){
+  return parseTimedLines((lines||[]).join('\n')).map(row=>`<li><time>${esc(row.time)}</time><span>${esc(row.text)}</span></li>`).join('');
+}
+function renderMetrics(){
+  const krd=GROUPS.filter(g=>g.direction==='КРД').reduce((s,g)=>s+(Number(current.groups[g.key]?.cadets)||g.cadets),0);
+  const otzi=GROUPS.filter(g=>g.direction==='ОТЗИ').reduce((s,g)=>s+(Number(current.groups[g.key]?.cadets)||g.cadets),0);
+  const html=[
+    ['Курсанты',totalCadets(),'Общий состав по системе'],
+    ['КРД',krd,'Гуманитарно-правовой профиль'],
+    ['ОТЗИ',otzi,'Технический усиленный профиль'],
+    ['Спортсекции',SPORTS.length,'Рукопашка, борьба, Л/А, футбол, волейбол'],
+    ['Именинники сегодня',publicBirthdays.length,'Автопоказ из закрытого реестра']
+  ].map(x=>`<div class="metric"><small>${esc(x[0])}</small><strong>${esc(x[1])}</strong><span>${esc(x[2])}</span></div>`).join('');
+  $('metricRow').innerHTML=html;
+}
+function renderSports(){
+  $('sportSections').innerHTML = SPORTS.map(sp=>`<div class="sport-card"><h3>${esc(sp.label)}</h3><ol class="mini-rank">${miniRankHtml(current.sportCategories[sp.key])}</ol></div>`).join('');
+}
+let scheduleIndex=0,gradeIndex=0,lastRotation=Date.now();
+function tabs(el,selected,onSelect){
+  el.replaceChildren();
+  GROUPS.forEach((g,i)=>{const b=document.createElement('button');b.textContent=g.label;b.className=i===selected?'active':'';b.setAttribute('aria-pressed',String(i===selected));b.onclick=()=>{onSelect(i);lastRotation=Date.now();renderRotators()};el.appendChild(b)})
+}
+function renderRotators(){
+  const g=GROUPS[scheduleIndex], row=current.groups[g.key]||{};
+  tabs($('scheduleTabs'),scheduleIndex,i=>scheduleIndex=i);
+  $('groupGrid').innerHTML=`<div class="group-card rotating-card"><div class="group-top"><div><h3>${esc(row.label||g.label)}</h3><div class="muted">Направление ${esc(g.direction)} · ${Number(row.cadets)||g.cadets} курсантов</div></div><span class="badge">Расписание ${esc(g.label)}</span></div><ul class="schedule" style="margin-top:14px">${scheduleHtml(row.schedule||[])}</ul></div>`;
+  const gg=GROUPS[gradeIndex], grades=(current.groupGrades||{})[gg.key]||[];
+  tabs($('gradeTabs'),gradeIndex,i=>gradeIndex=i);
+  $('gradeRotator').innerHTML=`<div class="rotating-card"><div class="eyebrow" style="margin-bottom:12px">${esc(gg.label)} · ${esc(gg.direction)}</div><ol class="ranking">${rankHtml(grades,'Результат группы')}</ol></div>`;
+}
+function renderGroups(){renderRotators()}
+function rotationTick(){if(document.hidden)return;const elapsed=Date.now()-lastRotation;if(elapsed>=15000){scheduleIndex=(scheduleIndex+1)%GROUPS.length;gradeIndex=(gradeIndex+1)%GROUPS.length;lastRotation=Date.now();renderRotators()};const width=Math.min(100,(Date.now()-lastRotation)/150);$('scheduleProgress').style.width=width+'%';$('gradeProgress').style.width=width+'%'}
+function renderBirthdays(){
+  const today=todayList();
+  $('todayBirthdays').innerHTML = (today.length?today:['Сегодня публичных поздравлений нет']).map(x=>`<li>${esc(x)}</li>`).join('');
+  $('birthdayList').innerHTML = (current.birthdays||[]).map(x=>`<li>${esc(x)}</li>`).join('') || '<li>Список дней рождения пока пуст.</li>';
+}
+function renderOverview(){
+  $('studyList').innerHTML = rankHtml(current.studyTop,'Академический результат');
+  $('sportList').innerHTML = rankHtml(current.sportTopOverall,'Общий спортивный зачёт');
+  $('noticeBox').textContent = current.notice || 'Нет объявлений.';
+  $('heroCadets').textContent = totalCadets();
+  $('sideCadetTotal').textContent = totalCadets();
+  $('sideTodayBirthdays').textContent = publicBirthdays.length;
+  renderMetrics(); renderSports(); renderGroups(); renderBirthdays();
+}
+function render(){ renderOverview(); }
+
+function fillAdmin(){
+  $('studyEdit').value = pairLines(current.studyTop);
+  $('sportEdit').value = pairLines(current.sportTopOverall);
+  $('birthdaysEdit').value = (current.birthdays||[]).join('\n');
+  $('noticeEdit').value = current.notice || '';
+  for(const sp of SPORTS) $(sp.key+'Edit').value = pairLines(current.sportCategories[sp.key]||[]);
+  $('groupEditors').innerHTML = GROUPS.map(g=>{
+    const row=current.groups[g.key]||g;
+    return `<details class="acc" open><summary><span>${esc(row.label||g.label)} — ${esc(row.direction||g.direction)} · ${Number(row.cadets)||g.cadets} курсантов</span><span class="muted">раскрыть / скрыть</span></summary><div class="acc-body"><div class="fields"><div class="field"><label>Название группы</label><input class="input" id="label_${g.key}" value="${esc(row.label||g.label)}"></div><div class="field"><label>Количество курсантов</label><input class="input" id="count_${g.key}" type="number" min="1" max="100" value="${Number(row.cadets)||g.cadets}"></div></div><div class="textarea-field" style="margin-top:14px"><label>Расписание — формат «08:30 | Предмет»</label><textarea id="sched_${g.key}">${esc((row.schedule||[]).join('\n'))}</textarea></div><div class="textarea-field" style="margin-top:14px"><label>Оценки этой группы — «Имя | Балл» (только разрешённые к публикации)</label><textarea id="grades_${g.key}">${esc(pairLines(current.groupGrades?.[g.key]||[]))}</textarea></div></div></details>`;
+  }).join('');
+}
+function readAdminState(){
+  const next = normalizeState(current);
+  next.studyTop = parsePairs($('studyEdit').value,10);
+  next.sportTopOverall = parsePairs($('sportEdit').value,5);
+  next.birthdays = parseLines($('birthdaysEdit').value,300);
+  next.notice = $('noticeEdit').value.trim();
+  for(const sp of SPORTS) next.sportCategories[sp.key] = parsePairs($(sp.key+'Edit').value,20);
+  for(const g of GROUPS){
+    next.groups[g.key] = {
+      ...next.groups[g.key],
+      label: $('label_'+g.key).value.trim() || g.label,
+      direction: g.direction,
+      cadets: Math.max(1, Number($('count_'+g.key).value || g.cadets)),
+      schedule: parseLines($('sched_'+g.key).value,30)
+    };
+  }
+  next.groupGrades={...(current.groupGrades||{})};
+  for(const g of GROUPS) next.groupGrades[g.key]=parsePairs($('grades_'+g.key).value,50);
+  next.study = next.studyTop; next.sport = next.sportTopOverall; next.overviewSchedule = next.groups[GROUPS[0].key].schedule;
+  next.schedule = next.overviewSchedule;
+  return next;
+}
+function authHeaders(){ return {apikey:pub,Authorization:'Bearer '+token,'Content-Type':'application/json'} }
+async function load(){
+  if(!configured){ setStatus('Настрой config.js',false); return; }
+  try{
+    const r = await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+pub}});
+    if(!r.ok) throw Error('Supabase: '+r.status);
+    const d = await r.json();
+    if(d[0]?.content) current = normalizeState(d[0].content); else current = normalizeState(current);
+    render();
+    setStatus('Синхронизировано · '+new Date().toLocaleTimeString('ru-RU'),true);
+  }catch(e){ console.error(e); setStatus('Нет связи с базой',false); }
+}
+async function loadBirthdays(){
+  if(!configured) return;
+  try{
+    const r = await fetch(base+'/rest/v1/birthday_public?select=display_name',{headers:{apikey:pub,Authorization:'Bearer '+pub}});
+    if(r.ok){ publicBirthdays = await r.json(); $('cadetToday').textContent=publicBirthdays.length; render(); }
+  }catch(e){ console.warn(e); }
+}
+async function saveState(next){
+  const payload=buildPayloadFromState(next);
+  let r = await fetch(base+'/rest/v1/app_state?id=eq.1',{method:'PATCH',headers:{...authHeaders(),Prefer:'return=representation'},body:JSON.stringify({content:payload})});
+  if(r.ok){ const data=await r.json(); if(data.length) return data; }
+  r = await fetch(base+'/rest/v1/app_state',{method:'POST',headers:{...authHeaders(),Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify([{id:1,content:payload}])});
+  if(!r.ok) throw Error('Ошибка базы '+r.status+' '+(await r.text()).slice(0,160));
+  return r.json();
+}
+$('loginBtn').onclick = async () => {
+  const email=$('email').value.trim(), password=$('password').value;
+  if(!configured) return $('loginInfo').textContent='Настрой config.js';
+  $('loginInfo').textContent='Вход…';
+  try{
+    const r = await fetch(base+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:pub,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const d = await r.json();
+    if(!r.ok || !d.access_token) throw Error(d.error_description || d.msg || 'Неверный email или пароль');
+    token=d.access_token; $('password').value=''; $('loginInfo').textContent='';
+    $('loginBox').classList.add('hidden'); $('adminContent').classList.remove('hidden');
+    $('cadetLocked').classList.add('hidden'); $('cadetArea').classList.remove('hidden');
+    fillAdmin(); loadRoster(); go('admin');
+  }catch(e){ $('loginInfo').textContent = e.message || String(e); }
+};
+$('logoutBtn').onclick = () => {
+  token=''; roster=[]; pendingRoster=[];
+  $('loginBox').classList.remove('hidden'); $('adminContent').classList.add('hidden');
+  $('cadetLocked').classList.remove('hidden'); $('cadetArea').classList.add('hidden');
+  $('saveInfo').textContent='';
+  go('admin');
+};
+$('saveBtn').onclick = async () => {
+  if(!token) return;
+  try{
+    const next = readAdminState();
+    $('saveInfo').textContent='Сохранение…';
+    await saveState(next);
+    current=normalizeState(next); render(); fillAdmin();
+    $('saveInfo').textContent='✓ Сохранено'; $('saveInfo').className='info good'; setStatus('Синхронизировано',true);
+  }catch(e){ $('saveInfo').textContent=e.message || String(e); $('saveInfo').className='info bad'; }
+};
+
+async function cadetRequest(method,path,body){
+  if(!token) throw Error('Войди как администратор');
+  const r = await fetch(base+'/rest/v1/'+path,{method,headers:{...authHeaders(),Prefer:method==='GET'?'':'return=representation,resolution=merge-duplicates'},...(body?{body:JSON.stringify(body)}:{})});
+  if(!r.ok) throw Error('Ошибка базы '+r.status+': '+(await r.text()).slice(0,220));
+  return r.status===204?[]:r.json();
+}
+async function loadRoster(){
+  if(!token) return;
+  try{
+    roster = await cadetRequest('GET','cadets?select=cadet_code,full_name,group_name,birth_date,display_name,show_birthday&order=full_name.asc');
+    $('cadetCount').textContent = roster.length;
+    $('cadetApproved').textContent = roster.filter(x=>x.show_birthday).length;
+    drawRoster();
+  }catch(e){ $('cadetList').innerHTML='<div class="notice" style="font-size:15px">Реестр пока не настроен: '+esc(e.message || e)+'</div>'; }
+}
+function drawRoster(){
+  const q = $('cadetSearch').value.trim().toLowerCase();
+  const rows = roster.filter(x => [x.full_name,x.cadet_code,x.group_name].join(' ').toLowerCase().includes(q));
+  const html = rows.map(c=>`<div class="cadet-row"><div style="flex:1"><strong>${esc(c.full_name)}</strong><div class="meta">${esc(c.cadet_code)} · ${esc(c.group_name||'—')} · ${esc(c.birth_date||'без даты')} · ${c.show_birthday?'🎂 разрешено':'приватно'}</div></div><button class="btn secondary" data-edit="${esc(c.cadet_code)}">Изменить</button></div>`).join('') || '<div class="muted">Нет записей</div>';
+  $('cadetList').innerHTML=html;
+  $$('[data-edit]').forEach(btn=>btn.onclick=()=>{
+    const c=roster.find(x=>x.cadet_code===btn.dataset.edit); if(!c) return;
+    $('cCode').value=c.cadet_code; $('cName').value=c.full_name; $('cGroup').value=c.group_name||''; $('cDob').value=c.birth_date||''; $('cAlias').value=c.display_name||''; $('cAllowed').value=String(!!c.show_birthday); $('cName').focus();
+  });
+}
+$('cadetSearch').oninput = drawRoster;
+$('cadetRefresh').onclick = loadRoster;
+$('cadetReset').onclick = () => { ['cCode','cName','cGroup','cDob','cAlias'].forEach(id=>$(id).value=''); $('cAllowed').value='false'; $('cadetInfo').textContent=''; };
+function validateCadet(x){
+  if(!x.cadet_code || !x.full_name) throw Error('Укажи код и ФИО');
+  if(x.show_birthday && (!x.birth_date || !x.display_name)) throw Error('Для поздравления нужны дата и имя для табло');
+  if(x.birth_date && !/^\d{4}-\d{2}-\d{2}$/.test(x.birth_date)) throw Error('Дата должна быть в формате ГГГГ-ММ-ДД');
+  return x;
+}
+$('cadetSave').onclick = async () => {
+  const x=validateCadet({cadet_code:$('cCode').value.trim(),full_name:$('cName').value.trim(),group_name:$('cGroup').value.trim()||null,birth_date:$('cDob').value||null,display_name:$('cAlias').value.trim()||null,show_birthday:$('cAllowed').value==='true'});
+  try{ $('cadetInfo').textContent='Сохранение…'; await cadetRequest('POST','cadets?on_conflict=cadet_code',[x]); $('cadetInfo').textContent='✓ Сохранено'; await loadRoster(); await loadBirthdays(); } catch(e){ $('cadetInfo').textContent=e.message || String(e); }
+};
+function headerKey(s){
+  s=String(s||'').trim().toLowerCase();
+  return ({'код':'cadet_code','code':'cadet_code','id':'cadet_code','cadet_code':'cadet_code','фио':'full_name','фамилия имя':'full_name','name':'full_name','full_name':'full_name','группа':'group_name','group':'group_name','group_name':'group_name','дата рождения':'birth_date','др':'birth_date','birthday':'birth_date','birth_date':'birth_date','имя для табло':'display_name','alias':'display_name','display_name':'display_name','показывать':'show_birthday','show_birthday':'show_birthday'})[s] || null;
+}
+const libs={mammoth:'https://cdn.jsdelivr.net/npm/mammoth@1.10.0/mammoth.browser.min.js',xlsx:'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',zip:'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',pdf:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'};
+async function lib(name,symbol){ if(window[symbol]) return; const sc=document.createElement('script'); sc.src=libs[name]; await new Promise((ok,err)=>{sc.onload=ok; sc.onerror=()=>err(Error('Не удалось загрузить библиотеку '+name)); document.head.append(sc);}); }
+async function extractText(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(['txt','csv'].includes(ext)) return (await file.text()).slice(0,45000);
+  if(ext==='docx'){ await lib('mammoth','mammoth'); const r=await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()}); return r.value.slice(0,45000); }
+  if(['xlsx','xls'].includes(ext)){ await lib('xlsx','XLSX'); const wb=XLSX.read(await file.arrayBuffer(),{type:'array'}); return wb.SheetNames.map(n=>'Лист '+n+'\n'+XLSX.utils.sheet_to_csv(wb.Sheets[n])).join('\n').slice(0,45000); }
+  if(ext==='pptx'){ await lib('zip','JSZip'); const zip=await JSZip.loadAsync(await file.arrayBuffer()); const names=Object.keys(zip.files).filter(x=>/^ppt\/slides\/slide\d+\.xml$/.test(x)).sort((a,b)=>Number(a.match(/slide(\d+)/)[1])-Number(b.match(/slide(\d+)/)[1])); const slides=[]; for(const n of names){ const xml=await zip.file(n).async('string'); const doc=new DOMParser().parseFromString(xml,'application/xml'); slides.push('Слайд '+n.match(/slide(\d+)/)[1]+'\n'+[...doc.getElementsByTagNameNS('*','t')].map(x=>x.textContent).join(' · ')); } return slides.join('\n').slice(0,45000); }
+  if(ext==='pdf'){ await lib('pdf','pdfjsLib'); pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; const out=[]; for(let i=1;i<=Math.min(pdf.numPages,35);i++){ const p=await pdf.getPage(i); const t=await p.getTextContent(); out.push('Страница '+i+'\n'+t.items.map(x=>x.str).join(' ')); } return out.join('\n').slice(0,45000); }
+  return '';
+}
+async function extractImages(files){ const out=[]; for(const f of files){ const ext=f.name.split('.').pop().toLowerCase(); if(['jpg','jpeg','png','webp'].includes(ext)){ const b=await f.arrayBuffer(); let bin=''; const bytes=new Uint8Array(b); for(let i=0;i<bytes.length;i++) bin+=String.fromCharCode(bytes[i]); out.push({mimeType:f.type||('image/'+ext.replace('jpg','jpeg')),data:btoa(bin)}); } } return out; }
+$('rosterPreview').onclick = async () => {
+  const f=$('rosterFile').files[0]; if(!f) return $('rosterInfo').textContent='Выбери Excel или CSV';
+  try{
+    await lib('xlsx','XLSX');
+    const book=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:true});
+    const matrix=XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]],{header:1,raw:false,defval:''});
+    const keys=(matrix[0]||[]).map(headerKey);
+    if(!keys.includes('cadet_code') || !keys.includes('full_name')) throw Error('Не найдены заголовки code и name (или код и ФИО)');
+    const rows=matrix.slice(1).filter(r=>r.some(v=>String(v).trim())).map(a=>{
+      const x={cadet_code:'',full_name:'',group_name:null,birth_date:null,display_name:null,show_birthday:false};
+      keys.forEach((k,i)=>{ if(!k) return; if(k==='show_birthday') x[k]=/^(да|yes|true|1)$/i.test(String(a[i]||'').trim()); else x[k]=String(a[i]||'').trim()||null; });
+      if(x.birth_date){ const m=String(x.birth_date).match(/^(\d{2})[.\/](\d{2})[.\/](\d{4})$/); if(m) x.birth_date=m[3]+'-'+m[2]+'-'+m[1]; }
+      return validateCadet(x);
+    });
+    if(rows.length>500) throw Error('Максимум 500 строк за загрузку');
+    if(!rows.length) throw Error('Нет записей');
+    pendingRoster=rows; $('rosterCommit').disabled=false; $('rosterInfo').textContent='Найдено '+rows.length+' записей. Разрешён показ поздравления для '+rows.filter(x=>x.show_birthday).length+'.';
+  }catch(e){ pendingRoster=[]; $('rosterCommit').disabled=true; $('rosterInfo').textContent='Ошибка: '+(e.message||e); }
+};
+$('rosterCommit').onclick = async () => {
+  if(!pendingRoster.length) return;
+  if(!confirm('Сохранить '+pendingRoster.length+' записей в закрытый реестр?')) return;
+  try{
+    $('rosterInfo').textContent='Загрузка…';
+    for(let i=0;i<pendingRoster.length;i+=50) await cadetRequest('POST','cadets?on_conflict=cadet_code',pendingRoster.slice(i,i+50));
+    $('rosterInfo').textContent='✓ Загружено '+pendingRoster.length+' записей'; pendingRoster=[]; $('rosterCommit').disabled=true; await loadRoster(); await loadBirthdays();
+  }catch(e){ $('rosterInfo').textContent='Ошибка: '+(e.message||e); }
+};
+async function callAI(payload){
+  if(!token) throw Error('Сначала войди как администратор');
+  const r=await fetch(base+'/functions/v1/parse-document',{method:'POST',headers:{apikey:pub,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok) throw Error(data.error || ('Ошибка функции '+r.status));
+  return data;
+}
+$('parseBtn').onclick = async () => {
+  try{
+    const files=[...$('docFile').files]; if(!files.length) throw Error('Выбери хотя бы один файл');
+    $('parseInfo').textContent='Обработка…'; $('applyBtn').disabled=true; $('previewBox').textContent='Чтение файла…';
+    const texts=[]; for(const f of files){ const txt=await extractText(f); if(txt) texts.push('Файл: '+f.name+'\n'+txt); }
+    const images=await extractImages(files);
+    const res=await callAI({mode:'import',text:texts.join('\n\n').slice(0,50000),images});
+    importedData=res.data||{}; $('previewBox').textContent=JSON.stringify(importedData,null,2); $('notesBox').textContent=res.notes || 'Проверь значения перед переносом.'; $('applyBtn').disabled=false; $('parseInfo').textContent='✓ Готово';
+  }catch(e){ $('parseInfo').textContent=e.message || String(e); $('previewBox').textContent='Ошибка разбора'; $('notesBox').textContent=''; }
+};
+$('applyBtn').onclick = () => {
+  if(!importedData) return;
+  if(importedData.study && $('cstudy').checked) $('studyEdit').value = pairLines(importedData.study);
+  if(importedData.sport && $('csport').checked) $('sportEdit').value = pairLines(importedData.sport);
+  if(importedData.birthdays && $('cbirthdays').checked) $('birthdaysEdit').value = (importedData.birthdays||[]).join('\n');
+  if(importedData.notice && $('cnotice').checked) $('noticeEdit').value = importedData.notice;
+  $('notesBox').textContent='Данные перенесены в редактор. Открой раздел «Управление» и сохрани изменения.';
+  if(token) $('adminContent').classList.remove('hidden');
+};
+$('chatBtn').onclick = async () => {
+  try{
+    const question=$('chatPrompt').value.trim(); if(!question) throw Error('Напиши вопрос');
+    $('chatInfo').textContent='Отправка…';
+    const res=await callAI({mode:'chat',question,history:chatHistory.slice(-8)});
+    $('chatReply').textContent=res.answer || 'Пустой ответ'; chatHistory.push({role:'user',content:question},{role:'assistant',content:res.answer||''}); $('chatInfo').textContent='✓ Готово';
+  }catch(e){ $('chatInfo').textContent=e.message || String(e); }
+};
+
+function init(){
+  const cfg=window.ACADEMY_CONFIG||{}; base=cfg.supabaseUrl||''; pub=cfg.supabaseAnonKey||''; configured=!!(base&&pub);
+  current=normalizeState(current); render(); updateClock();
+  fillAdmin();
+  const hash=(location.hash||'#dashboard').slice(1);
+  if(location.search.includes('tv=1')){ document.body.classList.add('tv'); go('dashboard'); }
+  else if(['dashboard','admin','cadets','ai'].includes(hash)) go(hash); else go('dashboard');
+  load(); loadBirthdays(); setInterval(rotationTick,200); setInterval(()=>{updateClock(); if(document.visibilityState==='visible'){load(); loadBirthdays();}},15000);
+}
+init();
+</script>
+</body>
+</html>
