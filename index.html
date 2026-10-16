@@ -798,31 +798,16 @@ const SPORTS = [
   {key:'football',label:'Футбол'},
   {key:'volleyball',label:'Волейбол'}
 ];
-const defaultGroupSchedules = {
-  KRD1:['08:30 | История Казахстана','10:20 | Конституционное право','12:10 | Иностранный язык','14:30 | Строевая подготовка'],
-  KRD2:['08:30 | Теория государства и права','10:20 | Русский язык','12:10 | Тактическая подготовка','14:30 | Физическая подготовка'],
-  KRD3:['08:30 | История','10:20 | Казахский язык','12:10 | Психология','14:30 | Огневая подготовка'],
-  KRD4:['08:30 | Правовые дисциплины','10:20 | Философия','12:10 | Аналитическая работа','14:30 | Самоподготовка'],
-  OTZI1:['08:30 | Математика','10:20 | Физика','12:10 | Информационная безопасность','14:30 | Лабораторная работа'],
-  OTZI2:['08:30 | Высшая математика','10:20 | Физика','12:10 | Криптография','14:30 | Программирование']
+const defaultGroupSchedules=Object.fromEntries(GROUPS.map(g=>[g.key,[]]));
+const defaultState={
+ studyTop:[],sportTopOverall:[],
+ sportCategories:Object.fromEntries(SPORTS.map(sp=>[sp.key,[]])),
+ groups:Object.fromEntries(GROUPS.map(g=>[g.key,{label:g.label,direction:g.direction,cadets:g.cadets,schedule:[]}])),
+ groupGrades:{},
+ birthdays:[],notice:'',overviewSchedule:[],study:[],sport:[],schedule:[],
+ noticePriority:'normal',noticeExpires:'',lessonMinutes:90
 };
-const defaultState = {
-  studyTop:[['Курсант 1',99],['Курсант 2',98],['Курсант 3',97],['Курсант 4',96],['Курсант 5',95],['Курсант 6',94],['Курсант 7',93],['Курсант 8',92],['Курсант 9',91],['Курсант 10',90]],
-  sportTopOverall:[['Курсант A',98],['Курсант B',96],['Курсант C',94],['Курсант D',92],['Курсант E',90]],
-  sportCategories:{
-    handToHand:[['Курсант Р1',96],['Курсант Р2',92],['Курсант Р3',89]],
-    wrestling:[['Курсант Б1',95],['Курсант Б2',93],['Курсант Б3',90]],
-    athletics:[['Курсант Л1',97],['Курсант Л2',95],['Курсант Л3',91]],
-    football:[['Курсант Ф1',94],['Курсант Ф2',92],['Курсант Ф3',89]],
-    volleyball:[['Курсант В1',95],['Курсант В2',91],['Курсант В3',88]]
-  },
-  groups:Object.fromEntries(GROUPS.map(g=>[g.key,{label:g.label,direction:g.direction,cadets:g.cadets,schedule:[...(defaultGroupSchedules[g.key]||[])]}])),
-  birthdays:['15.10 — Курсант Арман','02.11 — Курсант Нуржан','18.11 — Курсант Айдын'],
-  notice:'Подготовка к учебной неделе идёт в штатном режиме. Актуализируйте расписание групп, спортивные результаты и персональные поздравления.',
-  overviewSchedule:['08:30 — Первая пара','10:20 — Вторая пара','12:10 — Третья пара','14:30 — Четвёртая пара'],
-  study:[['Курсант 1',99]], sport:[['Курсант A',98]], schedule:['08:30 — Первая пара']
-};
-let current = structuredClone(defaultState);
+let current = JSON.parse(JSON.stringify(defaultState));
 let token='';
 let configured=false;
 let base='';
@@ -848,7 +833,7 @@ function parseLines(text,limit=300){return String(text||'').split(/\r?\n/).map(s
 function parseTimedLines(text){return parseLines(text,50).map(line=>{const parts=line.split('|');return parts.length===2?{time:parts[0].trim(),text:parts[1].trim()}:{time:'—',text:line}})}
 function pairLines(arr){return (arr||[]).map(x=>x[0]+' | '+x[1]).join('\n')}
 function normalizeState(data){
-  const out=clone(defaultState);
+  const out={...clone(defaultState),...(data&&typeof data==="object"?data:{})};
   data=data||{};
   out.studyTop = Array.isArray(data.studyTop)?data.studyTop:(Array.isArray(data.study)?data.study:out.studyTop);
   out.sportTopOverall = Array.isArray(data.sportTopOverall)?data.sportTopOverall:(Array.isArray(data.sport)?data.sport:out.sportTopOverall);
