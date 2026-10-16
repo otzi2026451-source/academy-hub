@@ -209,6 +209,37 @@ try{
  assert(draftScheduled?.p_action==='schedule','Scheduled publication RPC not called');
  assert(draftScheduled?.p_publish_at?.includes('2030-10-20'),'Publication timestamp invalid');
  await page.locator('[data-tab="overview"]').click();
+
+ // Academy 8 admin-only tools, all RPCs mocked: no production records modified.
+ await page.route('**/rest/v1/rpc/academy_sandbox_report**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({isolated:true,synthetic:true,total:132,groups:{KRD1:25,KRD2:25,KRD3:25,KRD4:25,OTZI1:14,OTZI2:18},duplicates:0})}));
+ await page.route('**/rest/v1/rpc/academy_tv_health_report**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{device_id:'00000000-0000-0000-0000-000000000001',user_id:'00000000-0000-0000-0000-000000000002',online:true,seconds_since_ping:3,screen_width:1920,screen_height:1080,app_version:'8.0',visible:true}])}));
+ await page.route('**/rest/v1/rpc/academy_prepare_roster_import**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({batch_id:'00000000-0000-0000-0000-000000000080',rows:132,groups:{KRD1:25,KRD2:25,KRD3:25,KRD4:25,OTZI1:14,OTZI2:18},status:'prepared',has_real_writes:false})}));
+ await page.route('**/rest/v1/rpc/academy_commit_roster_import**',route=>route.fulfill({status:200,contentType:'application/json',body:'{"imported":132,"status":"committed"}'}));
+ await page.locator('[data-tab="import8"]').click();
+ assert(await page.locator('#v6-import8').isVisible(),'Academy 8 roster importer missing');
+ assert(await page.locator('#academy8RosterFile').count()===1,'Academy 8 file upload missing');
+ assert((await page.locator('#v6-import8').textContent()).includes('IMPORT_CONFIRMED')===false,'Do not expose import confirmation phrase in static UI');
+ await page.locator('[data-tab="monitor8"]').click();
+ assert(await page.locator('#v6-monitor8').isVisible(),'Academy 8 TV monitoring missing');
+ await page.locator('#v6-monitor8 button').first().click();
+ await page.waitForTimeout(350);
+ assert((await page.locator('#v6-monitor8').textContent()).includes('1920×1080'),'TV heartbeat data missing');
+ await page.locator('[data-tab="testing8"]').click();
+ assert(await page.locator('#v6-testing8').isVisible(),'Academy 8 isolated sandbox missing');
+ await page.locator('#v6-testing8 button').first().click();
+ await page.waitForTimeout(350);
+ assert((await page.locator('#v6-testing8').textContent()).includes('132'),'Synthetic sandbox not reported');
+ await page.locator('[data-tab="ai8"]').click();
+ assert(await page.locator('#v6-ai8').isVisible(),'Gemini model probe tab missing');
+ await page.locator('[data-tab="overview"]').click();
+ const demo=await browser.newPage({viewport:{width:1280,height:800}});
+ try{
+  await demo.goto(base+'academy8-sandbox.html',{waitUntil:'domcontentloaded'});
+  await demo.locator('#check').click();
+  assert((await demo.locator('#status').textContent()).includes('ПРОЙДЕНО'),'Offline 132-cadet sandbox checks failed');
+  await demo.locator('#dup').click();
+  assert((await demo.locator('#fault').textContent()).includes('Повтор имени'),'Sandbox duplicate detector failed');
+ }finally{await demo.close()}
  await page.screenshot({path:'/tmp/academy-admin.png'});
 
 
