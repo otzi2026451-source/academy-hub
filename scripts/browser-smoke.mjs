@@ -107,7 +107,7 @@ try{
  });
  await page.route('**/rest/v1/academy_publications**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
  await page.locator('[data-tab="drafts"]').click();
- await page.locator('.v6-draft-area input[type="text"]').first().fill('Тестовая публикация');
+ await page.locator('.v6-draft-area input.input').first().fill('Тестовая публикация');
  await page.locator('.v6-draft-area input[type="datetime-local"]').fill('2030-10-20T10:00');
  await page.locator('#v6-drafts .v6-btns .btn.primary').click();
  await page.waitForTimeout(600);
