@@ -295,7 +295,7 @@
     if(fetching)return;
     fetching=true;
     try{
-      const response=await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+pub},cache:'no-store'});
+      const response=await fetch(base+'/rest/v1/app_state?id=eq.1&select=content',{headers:{apikey:pub,Authorization:'Bearer '+token},cache:'no-store'});
       if(!response.ok)throw Error('HTTP '+response.status);
       const records=await response.json();
       const data=records[0]?.content;
@@ -320,7 +320,7 @@
   loadBirthdays=async function(){
     if(!configured)return;
     try{
-      const r=await fetch(base+'/rest/v1/birthday_public?select=display_name',{headers:{apikey:pub,Authorization:'Bearer '+pub},cache:'no-store'});
+      const r=await fetch(base+'/rest/v1/birthday_public?select=display_name',{headers:{apikey:pub,Authorization:'Bearer '+token},cache:'no-store'});
       if(!r.ok)throw Error('Birthday API '+r.status);
       const value=await r.json(),signature=JSON.stringify(value);
       if(signature!==birthdaysSignature){
