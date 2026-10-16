@@ -909,7 +909,7 @@ function todayList(){ return publicBirthdays.map(x=>'🎉 '+x.display_name) }
 function setStatus(msg,ok=false){$('status').textContent=msg;$('sideStatus').textContent=msg;$('sideDot').classList.toggle('on',!!ok)}
 let lastClock='';
 function updateClock(){
-  const t=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  const t=new Date().toLocaleTimeString('ru-RU',{timeZone:'Asia/Almaty',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
   if(t===lastClock)return;lastClock=t;
   if($('clock'))$('clock').textContent=t;
   if($('adminClock'))$('adminClock').textContent=t;
